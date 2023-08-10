@@ -1,0 +1,29 @@
+.rake_tasks
+.DS_Store
+tags
+nohup.*
+.stfolder
+.stversions
+.bash_hist
+.envrc
+# spago.dhall
+# packages.dhall
+.spago/
+output/
+.psc-ide-port
+# https://github.com/scalameta/metals-vscode
+.metals/
+.bloop/
+.ammonite/
+metals.sbt
+
+brainflow_svm.model
+libBoardController.so
+libDataHandler.so
+libGanglionLib.so
+libMLModule.so
+libunicorn.so
+
+myDataDir/
+myGenesis.json
+.gcroots/

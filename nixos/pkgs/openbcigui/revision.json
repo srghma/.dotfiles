@@ -1,0 +1,11 @@
+{
+  "url": "https://github.com/srghma/nixpkgs",
+  "rev": "d3f075228adf7ed741e882a91efd17d6e6f5298b",
+  "date": "2022-08-09T18:38:09+01:00",
+  "path": "/nix/store/6zbg3ipfwayksjx3b78947zbx0phlilb-nixpkgs",
+  "sha256": "1f09wz6f7vrx0swpwlihcfq62p5kgkr041nyyb1rpxamxdmxpyxq",
+  "fetchLFS": false,
+  "fetchSubmodules": false,
+  "deepClone": false,
+  "leaveDotGit": false
+}

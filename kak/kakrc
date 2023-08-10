@@ -1,0 +1,138 @@
+# Preamble |────────────────────────────────────────────────────────────────────
+def ed %{ edit *debug* }
+
+# Basic options ├───────────────────────────────────────────────────────────────
+set global makecmd 'make --jobs=8'
+set global grepcmd 'ag --filename --column'
+set global incsearch true
+set global aligntab false
+set global autoreload yes
+set global tabstop     2
+set global indentwidth 2
+
+add-highlighter global/ number-lines -hlcursor
+add-highlighter global/ show-matching
+add-highlighter global/ regex '\h+$' 0:Error # show trailing whitespace as an error
+add-highlighter global/ show-whitespaces -tab "▏" -lf "⋅" -nbsp "⋅" -spc "⋅"
+add-highlighter global/ dynregex '%reg{/}' 0:white,rgb:cc1010+ub
+
+source "%val{config}/plugins/plug.kak/rc/plug.kak"
+source "%val{config}/bindings.kak"
+# source "%val{config}/clipboard.kak"
+source "%val{config}/tools/cleanup-on-save.kak"
+
+plug "alexherbo2/kakoune-dracula-theme" theme config %{
+  colorscheme dracula
+}
+
+plug "delapouite/kakoune-text-objects" %{
+  text-object-map
+}
+
+plug "alexherbo2/prelude.kak" config %{require-module prelude}
+
+# from https://alexherbo2.github.io/projects/#kakoune--highlighters
+# plug "alexherbo2/current-word-highlighter.kak" config %{
+#   require-module current-word-highlighter
+#   set-face global CurrentWord "default,%opt{dimmed_background}"
+# }
+# plug "alexherbo2/search-highlighter.kak" config %{require-module search-highlighter}
+# plug "alexherbo2/volatile-highlighter.kak" config %{require-module volatile-highlighter}
+# plug "alexherbo2/out-of-view.kak" config %{require-module out-of-view}
+# plug "alexherbo2/palette.kak" config %{require-module palette}
+
+plug "alexherbo2/auto-pairs.kak" config %{
+    require-module auto-pairs
+    auto-pairs-enable
+}
+# plug "alexherbo2/surround.kak" config %{
+#     require-module surround
+#     map -docstring 'Surround' global normal q ':enter-user-mode surround<ret>'
+#     map -docstring 'Surround insert' global normal Q ':surround-enter-insert-mode<ret>'
+# }
+
+# plug "krornus/kakoune-toggle-map" %{
+#     plug "krornus/kakoune-hlsearch" %{
+#         toggle-map global normal <F3> hlsearch-on hlsearch-off
+#     }
+# }
+
+plug "lePerdu/kakboard" %{
+  hook global WinCreate .* %{ kakboard-enable }
+}
+
+plug "jdugan6240/powerline.kak" defer powerline %{
+  powerline-theme base16
+} config %{
+  powerline-start
+}
+
+plug "h-youhei/kakoune-surround" %{
+  map global user s ':surround<ret>'               -docstring 'surround'
+
+  declare-user-mode surround
+  map global user S ':enter-user-mode surround<ret>'
+
+  map global surround s     ':surround<ret>'               -docstring 'surround'
+  map global surround c     ':change-surround<ret>'        -docstring 'change-surround'
+  map global surround d     ':delete-surround<ret>'        -docstring 'delete-surround'
+  map global surround <a-s> ':select-surround<ret>'        -docstring 'select-surround'
+  map global surround S     ':surround-with-tag<ret>'      -docstring 'surround-with-tag'
+  map global surround C     ':change-surrounding-tag<ret>' -docstring 'change-surrounding-tag'
+  map global surround D     ':delete-surrounding-tag<ret>' -docstring 'delete-surrounding-tag'
+  map global surround <a-S> ':select-surrounding-tag<ret>' -docstring 'select-surrounding-tag'
+}
+
+# source '%val{config}/filetypes.kak'
+
+# Tools ├─────────────────────────────────────────────────────────
+# import tools/fzf
+# import tools/auto-pairs
+# import tools/extend-line-x
+# import tools/cleanup-on-save
+# import tools/reload-kakrc
+# import tools/selectsave
+# hook global WinCreate .* %{ auto-pairs-enable }
+
+# Plugins ├───────────────────────────────────────────────────────
+#plug mawww/kak-ycmd
+#import plugins/lenormf/kakoune-extra/comnotes
+#import plugins/lenormf/kakoune-extra/syntastic
+
+#syntastic-declare-filetype "ruby" \
+#  'rubocop-wrapper.sh' \
+#  'rubocop -a'
+
+## Hooks ├───────────────────────────────────────────────────────────────────────
+
+## insert spaces instead tabs
+#hook -group TabExpander global InsertChar \t %{ exec -draft h@ }
+
+## auto indent
+#hook -group copyindent global InsertChar \n %{ exec -draft -itersel K<a-&> }
+
+## auto wrap at 80 chars
+##set global autowrap_column 80
+##hook global WinCreate .* %{ autowrap-enable }
+
+## auto-mkdir when saving buffer to file
+#hook global BufWritePre .* %{ nop %sh{ dir=$(dirname $kak_buffile)
+#  [ -d $dir ] || mkdir --parents $dir
+#}}
+
+#hook global BufCreate [*]grep[*] %{
+#  map global normal - ':grep-prev<ret>'
+#  map global normal + ':grep-next<ret>'
+#}
+
+#hook global BufCreate [*]make[*] %{
+#  map global normal - ':make-prev<ret>'
+#  map global normal + ':make-next<ret>'
+#}
+
+## Other ├──────────────────────────────────────────────────────────────────────
+
+## map tmux split and window commands in vim style
+#def -file-completion -params 1 tabe %{ tmux-new-window edit %arg{1} }
+#def -file-completion -params 1 vsplit %{ tmux-new-vertical edit %arg{1} }
+#def find -params 1 -shell-candidates %{ find . -type f } %{ edit %arg{1} }

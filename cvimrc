@@ -1,0 +1,29 @@
+" config for chrome plugin cvim
+" https://chrome.google.com/webstore/detail/cvim/ihlenndgcmojhcghmfjfneahoeklbjjh?hl=en
+
+imap <A-u> backwardWord
+imap <A-o> forwardWord
+imap <A-h> backwardChar
+imap <A-l> forwardChar
+imap <A-j> forwardLine
+imap <A-k> backwardLine
+imap <C-h> deleteChar
+imap <C-d> deleteForwardChar
+imap <A-w> deleteWord
+
+map gj G
+map gk gg
+
+map ^n nextSearchResult
+map ^N previousSearchResult
+map n :execute ^nzz<CR>
+map N :execute ^Nzz<CR>
+map <Leader>du :duplicate<CR>
+
+let mapleader = ","
+map <Leader>t :tabnew https://translate.google.com<CR>
+map <Leader>T :tabnew http://context.reverso.net<CR>
+map <Leader>r :tabnew http://api.rubyonrails.org<CR>
+map <Leader>g :tabnew http://github.com<CR>
+let blacklists = ["*://rubygarage.github.io/*","*://localhost/*","*://docs.google.com/*","*://www.kreitmayer.com/*","*://www.github.com/*", "*://www.yworks.com", "*://slipmaks.github.io/*","*://app.lambdatest.com/*"]
+let searchengine github = "https://github.com/search?utf8=✓&q=%s"
