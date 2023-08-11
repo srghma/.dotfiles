@@ -380,6 +380,7 @@
 
   virtualisation.docker = {
     enable = true;
+    enableNvidia = true; # https://github.com/fauxpilot/fauxpilot
     # liveRestore = false;
     # storageDriver = "overlay"; # TODO: use overlay2, delete before switch /var/lib/docker
     # extraOptions = "--host=0.0.0.0:2375";
