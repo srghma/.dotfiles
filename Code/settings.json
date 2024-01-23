@@ -58,4 +58,9 @@
     ],
     "haskell.manageHLS": "GHCup",
     "editor.formatOnPaste": true,
+    "tabby.api.endpoint": "http://47.103.63.15:50085/",
+    "tabby.keybindings": "tabby-style",
+    "tabby.codeCompletion": true,
+    "bitoAI.codeCompletion.enableAutoCompletion": true,
+    "bitoAI.codeCompletion.enableCommentToCode": true,
 }

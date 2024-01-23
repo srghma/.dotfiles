@@ -62,7 +62,7 @@ let
 
     # nixpkgsUnstable.pkgs.mplayer
 
-    nixpkgsUnstable.pkgs.nodejs
+    nixpkgsUnstable.pkgs.nodejs_latest
 
     # netcat-openbsd # nc -U /var/run/acpid.socket
     lsof
@@ -96,7 +96,7 @@ let
     simplescreenrecorder
     # screencast
     # gtk-recordmydesktop
-    # kdenlive
+    nixpkgsUnstable.pkgs.kdenlive
     # kazam
 
     # vagrant
@@ -235,8 +235,8 @@ let
     nixpkgsUnstable.pkgs.libnotify
     # nixpkgsMaster.pkgs.goldendict
     # nixpkgsUnstable.pkgs.go-ethereum
-    # nixpkgsMaster.pkgs.signal-desktop
-    mypkgs.signal-desktop
+    nixpkgsMaster.pkgs.signal-desktop
+    # mypkgs.signal-desktop
     # nixpkgsUnstable.pkgs.vym
     # nixpkgsUnstable.pkgs.FreeMind
 

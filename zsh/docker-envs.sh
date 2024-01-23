@@ -7,11 +7,11 @@ docker-node () {
     -it \
     --rm \
     --name "$(basename $PWD)-node" \
-    -v `pwd`:`pwd` \
+    -v "$(pwd):$(pwd)" \
     -v /home/srghma/Downloads:/home/srghma/Downloads \
     -v /home/srghma/projects/srghma-chinese:/home/srghma/projects/srghma-chinese \
     -v /home/srghma/projects/anki-cards-from-pdf:/home/srghma/projects/anki-cards-from-pdf \
-    -w `pwd` \
+    -w "$(pwd)" \
     node:latest \
     "$@"
 }
@@ -21,7 +21,7 @@ docker-ruby () {
     -it \
     --rm \
     --name "$(basename $PWD)-ruby" \
-    -v `pwd`:/usr/src/app \
+    -v "$(pwd):/usr/src/app" \
     -w /usr/src/app \
     ruby:latest \
     "$@"
@@ -32,7 +32,7 @@ docker-python () {
     -it \
     --rm \
     --name "$(basename $PWD)-python3" \
-    -v `pwd`:/usr/src/app \
+    -v "$(pwd):/usr/src/app" \
     -w /usr/src/app \
     python:3 \
     "$@"

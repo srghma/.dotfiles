@@ -6,6 +6,7 @@
     # ../modules/disable-main-keyboard.nix
     # ../modules/direnv-from-lorri-repo.nix
     ../modules/cachix.nix
+    # ../modules/vicuna.nix
 
     ./configuration-generated.nix
     ./hardware-configuration.nix
@@ -120,7 +121,8 @@
 
     java.enable = true;
     # chromium.enable = true; # add chrome and chromium config files to /etc
-    # adb.enable = true; # from https://nixos.wiki/wiki/Android
+
+    adb.enable = true; # from https://nixos.wiki/wiki/Android
 
     ssh = {
       # don't forget to `ssh-add` to add key to keychain
@@ -335,7 +337,7 @@
   '';
 
   nix.settings = {
-    # experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = [ "nix-command" "flakes" ];
 
     # sandbox = "relaxed";
 
@@ -389,7 +391,7 @@
 
   virtualisation.anbox.enable = false;
 
-  virtualisation.virtualbox.host.enable = false;
+  virtualisation.virtualbox.host.enable = true;
   virtualisation.virtualbox.host.enableExtensionPack = true; # for forwarding usb
 
   # virtualisation.libvirtd.enable = true;

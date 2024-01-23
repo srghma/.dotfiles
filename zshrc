@@ -3,7 +3,7 @@
 
 # eval "$(direnv hook zsh)"
 
-# source $HOME/projects/zsh-nordicres/index.sh
+source $HOME/projects/zsh-nr/index.sh
 
 for file in $HOME/.dotfiles/zsh/*.sh; do
   source $file
