@@ -12,9 +12,9 @@ done
 export EDITOR="nvim"
 
 function touch-safe {
-    for f in "$@"; do
-      [ -d $f:h ] || mkdir -p $f:h && command touch $f
-    done
+  for f in "$@"; do
+    [ -d $f:h ] || mkdir -p $f:h && command touch $f
+  done
 }
 # alias touch=touch-safe
 

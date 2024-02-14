@@ -13,6 +13,7 @@ result
 *.log
 gitconfig-other
 secrets/
+secrets-ignored/
 kak/plugins/*
 *.xkm
 nohup.out
