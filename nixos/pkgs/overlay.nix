@@ -40,6 +40,7 @@ rec {
     neuromore                     = pkgs.callPackage ./neuromore {};
     signal-desktop                = pkgs.callPackage ./signal-desktop {};
     i3-battery-popup              = pkgs.callPackage ./i3-battery-popup {};
+    purescript-overlay              = pkgs.callPackage ./purescript-overlay {};
   };
 
   inherit (mypkgs.dropbox-nixpkgs) dropbox-cli dropbox;

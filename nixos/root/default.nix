@@ -114,6 +114,8 @@
   };
 
   programs = {
+    direnv.enable = true;
+
     gnupg.agent.enable = true;
     # gnome-documents.enable = false;
     seahorse.enable = false;
@@ -131,7 +133,7 @@
 
     cachix = {
       enable = true;
-      cachixSigningKey = import ../../secrets/cachixSigningKey.nix;
+      cachixSigningKey = import ../../secrets-ignored/cachixSigningKey.nix;
     };
 
     bash = {

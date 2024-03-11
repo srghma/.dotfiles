@@ -216,9 +216,6 @@ let
     # nixpkgsUnstable.pkgs.amazon-ecs-cli
     # nixpkgsUnstable.pkgs.playonlinux
 
-    # mypkgs.easy-purescript-nix-automatic.spago
-    # mypkgs.easy-purescript-nix-automatic.purs
-    # mypkgs.easy-purescript-nix-automatic.purty # find ./packages/client/src -name "*.purs" -exec purty --write {} \;
     nixpkgsUnstable.pkgs.sd
 
     # nixpkgsUnstable.pkgs.elmPackages.elm
@@ -227,7 +224,7 @@ let
     # nixpkgsUnstable.pkgs.android-studio
     nixpkgsUnstable.pkgs.fd
     # nixpkgsUnstable.pkgs.gitAndTools.gh
-    nixpkgsUnstable.pkgs.direnv
+    # nixpkgsUnstable.pkgs.direnv
     # nixpkgsUnstable.pkgs.devenv
     #nixpkgsUnstable.pkgs.tuxguitar
     # nixpkgsUnstable.pkgs.musescore
@@ -244,6 +241,22 @@ let
 
     # mypkgs.openbcigui
     # mypkgs.neuromore
+
+    (
+      pkgs.writeShellScriptBin "spago-migrate" ''
+        ${mypkgs.easy-purescript-nix-automatic.spago}/bin/spago migrate
+      ''
+    )
+    # mypkgs.easy-purescript-nix-automatic.purs
+    # mypkgs.easy-purescript-nix-automatic.purty # find ./packages/client/src -name "*.purs" -exec purty --write {} \;
+
+    nixpkgsMaster.pkgs.watchexec
+
+    mypkgs.purescript-overlay.purs
+    mypkgs.purescript-overlay.spago-unstable
+    # mypkgs.purescript-overlay.purs-tidy-bin.purs-tidy-0_10_0
+    mypkgs.purescript-overlay.purs-tidy
+    mypkgs.purescript-overlay.purs-backend-es
 
     nixpkgsMaster.pkgs.vlc
     # nixpkgsMaster.pkgs.yt-dlp

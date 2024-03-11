@@ -1,0 +1,11 @@
+{
+  "url": "https://github.com/thomashoneyman/purescript-overlay",
+  "rev": "526c92c34a1a0213dc5c4761756375e13d85f8d4",
+  "date": "2024-03-08T08:39:30-05:00",
+  "path": "/nix/store/86hbygh6gmggbp2fsydnkkg9kvc83yb4-purescript-overlay",
+  "sha256": "1qlsmmq3a8vi2lwzy0l2gwdwrz8qbs8b9zdy77iirzi2991bf75d",
+  "fetchLFS": false,
+  "fetchSubmodules": false,
+  "deepClone": false,
+  "leaveDotGit": false
+}
