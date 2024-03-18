@@ -242,22 +242,17 @@ let
     # mypkgs.openbcigui
     # mypkgs.neuromore
 
-    (
-      pkgs.writeShellScriptBin "spago-migrate" ''
-        ${mypkgs.easy-purescript-nix-automatic.spago}/bin/spago migrate
-      ''
-    )
+    (pkgs.writeShellScriptBin "spago-migrate" "${mypkgs.easy-purescript-nix-automatic.spago}/bin/spago migrate")
+    mypkgs.purescript-overlay.spago-unstable
+    mypkgs.purescript-overlay.purs
+
+    # mypkgs.purescript-overlay.purs-tidy-bin.purs-tidy-0_10_0
+    mypkgs.purescript-overlay.purs-tidy
+    mypkgs.purescript-overlay.purs-backend-es
     # mypkgs.easy-purescript-nix-automatic.purs
     # mypkgs.easy-purescript-nix-automatic.purty # find ./packages/client/src -name "*.purs" -exec purty --write {} \;
 
     nixpkgsMaster.pkgs.watchexec
-
-    mypkgs.purescript-overlay.purs
-    mypkgs.purescript-overlay.spago-unstable
-    # mypkgs.purescript-overlay.purs-tidy-bin.purs-tidy-0_10_0
-    mypkgs.purescript-overlay.purs-tidy
-    mypkgs.purescript-overlay.purs-backend-es
-
     nixpkgsMaster.pkgs.vlc
     # nixpkgsMaster.pkgs.yt-dlp
     # nixpkgsMaster.pkgs.kdeconnect

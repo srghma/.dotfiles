@@ -254,6 +254,7 @@ call dein#add('Shougo/echodoc.vim') " {{{
 " }}}
 " " call dein#add('thalesmello/webcomplete.vim')
 
+call dein#add('shivamashtikar/vimmer-ps')
 call dein#add('autozimu/LanguageClient-neovim', {
     \ 'rev': 'next',
     \ 'build': './install.sh',
@@ -261,16 +262,16 @@ call dein#add('autozimu/LanguageClient-neovim', {
 
 " https://github.com/sriharshachilakapati/dotfiles/blob/f1635f73eccd36a493f168b34e67bd1fa5e0e123/.vimrc#L117
 " https://github.com/sduchesneau/nvim-config/blob/0f3ce63e825e27f0a0a631c68743435432e56cf8/bundle/.neobundle/doc/ale-purescript.txt#L18
-let purescriptConfigWrapper =
-    \ { 'purescript':
-    \   { 'autoStartPscIde': v:true
-    \   , 'pscIdePort': v:null
-    \   , 'addSpagoSources': v:true
-    \   , 'autocompleteAddImport': v:true
-    \   , 'pursExe': 'purs'
-    \   , 'addNpmPath': v:true
-    \   }
-    \ }
+" let purescriptConfigWrapper =
+"     \ { 'purescript':
+"     \   { 'autoStartPscIde': v:true
+"     \   , 'pscIdePort': v:null
+"     \   , 'addSpagoSources': v:true
+"     \   , 'autocompleteAddImport': v:true
+"     \   , 'pursExe': 'purs'
+"     \   , 'addNpmPath': v:true
+"     \   }
+"     \ }
 
 " \   , 'buildCommand': 'spago --config spago.dhall build -- --json-errors'
 
@@ -278,15 +279,15 @@ let g:LanguageClient_serverCommands = {
     \ 'haskell':    ['hie', '--lsp'],
     \ 'javascript': ['javascript-typescript-stdio'],
     \ 'typescript': ['javascript-typescript-stdio'],
-    \ 'purescript': ['purescript-language-server', '--stdio', '--config', json_encode(purescriptConfigWrapper)]
     \ }
+    " \ 'purescript': ['purescript-language-server', '--stdio', '--config', json_encode(purescriptConfigWrapper)]
     " \ 'nix': ['nix-lsp'],
 
 let g:LanguageClient_rootMarkers = {
     \ 'javascript': ['project.json'],
     \ 'rust': ['Cargo.toml'],
-    \ 'purescript': ['bower.json', 'psc-package.json', 'spago.dhall'],
     \ }
+    " \ 'purescript': ['bower.json', 'psc-package.json', 'spago.dhall'],
 
 autocmd filetype purescript setlocal omnifunc=LanguageClient#complete
 
