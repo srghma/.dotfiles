@@ -81,7 +81,7 @@ bindsym $mod+e       exec $terminal -e tmuxx
 bindsym $mod+Shift+e exec $terminal -e tmux new
 bindsym $mod+Ctrl+e  exec code
 
-bindsym $mod+w       exec $browser
+bindsym $mod+w       exec "rm -rfd /home/srghma/.config/google-chrome-beta/Default/GPUCache && $browser"
 # bindsym $mod+Shift+w exec qutebrowser
 bindsym $mod+s       exec $terminal -e "zsh -c 'SHELL=rshell ranger'"
 bindsym $mod+Shift+s exec nautilus

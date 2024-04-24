@@ -27,8 +27,8 @@
             "networkmanager"
             "docker"
             "vboxusers"
-            "libvirtd"
-            "user-with-access-to-virtualbox"
+            "libvirtd" # qemu
+            # "user-with-access-to-virtualbox"
             "adbusers"
             "dialout"
           ];

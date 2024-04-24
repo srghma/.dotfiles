@@ -35,3 +35,5 @@ function spago_migrate_recursive() {
     done
   ' sh {} +
 }
+
+fpath=($HOME/.my-completions $fpath)

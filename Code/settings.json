@@ -63,4 +63,5 @@
     "tabby.codeCompletion": true,
     "bitoAI.codeCompletion.enableAutoCompletion": true,
     "bitoAI.codeCompletion.enableCommentToCode": true,
+    "editor.inlineSuggest.showToolbar": "always",
 }

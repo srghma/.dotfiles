@@ -286,6 +286,7 @@ let g:LanguageClient_serverCommands = {
 let g:LanguageClient_rootMarkers = {
     \ 'javascript': ['project.json'],
     \ 'rust': ['Cargo.toml'],
+    \ 'purescript': [ 'bower.json', 'psc-package.json', 'spago.yaml', 'spago.dhall', 'packages.dhall' ],
     \ }
     " \ 'purescript': ['bower.json', 'psc-package.json', 'spago.dhall'],
 

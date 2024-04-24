@@ -6,6 +6,9 @@
     # ../modules/disable-main-keyboard.nix
     # ../modules/direnv-from-lorri-repo.nix
     ../modules/cachix.nix
+    ../modules/cast-from-android.nix
+    ../modules/qemu.nix
+    # ../modules/miracast.nix
     # ../modules/vicuna.nix
 
     ./configuration-generated.nix
@@ -113,7 +116,9 @@
     };
   };
 
+
   programs = {
+    # droidcam.enable = true;
     direnv.enable = true;
 
     gnupg.agent.enable = true;
@@ -393,8 +398,9 @@
 
   virtualisation.anbox.enable = false;
 
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.enableExtensionPack = true; # for forwarding usb
+  ### USE qemu.nix!!
+  # virtualisation.virtualbox.host.enable = true;
+  # virtualisation.virtualbox.host.enableExtensionPack = true; # for forwarding usb
 
   # virtualisation.libvirtd.enable = true;
   # virtualisation.memorySize = 1024;
