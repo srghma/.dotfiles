@@ -7,7 +7,7 @@ let
     brightnessctl
 
     nixpkgsUnstable.pkgs.keepassxc
-    nixpkgsMaster.pkgs.google-chrome-beta
+    nixpkgsMaster.pkgs.google-chrome
     # nixpkgsUnstable.pkgs.chromium
     nixpkgsUnstable.pkgs.libreoffice
     nixpkgsUnstable.pkgs.zip
@@ -216,7 +216,7 @@ let
     # nixpkgsUnstable.pkgs.amazon-ecs-cli
     # nixpkgsUnstable.pkgs.playonlinux
 
-    nixpkgsUnstable.pkgs.sd
+    nixpkgsMaster.pkgs.sd
 
     # nixpkgsUnstable.pkgs.elmPackages.elm
     # nixpkgsUnstable.pkgs.elmPackages.elm-format

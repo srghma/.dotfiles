@@ -34,6 +34,7 @@ docker-python () {
     --name "$(basename $PWD)-python3" \
     -v "$(pwd):/usr/src/app" \
     -w /usr/src/app \
+    -v /home/srghma/projects:/home/srghma/projects \
     python:3 \
     "$@"
 }
