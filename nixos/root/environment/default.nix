@@ -96,7 +96,7 @@ let
     simplescreenrecorder
     # screencast
     # gtk-recordmydesktop
-    nixpkgsUnstable.pkgs.kdenlive
+    # nixpkgsUnstable.pkgs.kdenlive
     # kazam
 
     # vagrant
@@ -254,8 +254,10 @@ let
 
     nixpkgsMaster.pkgs.watchexec
     nixpkgsMaster.pkgs.vlc
-    # nixpkgsMaster.pkgs.yt-dlp
-    # nixpkgsMaster.pkgs.kdeconnect
+    nixpkgsMaster.pkgs.yt-dlp
+    nixpkgsMaster.pkgs.kdeconnect
+
+    nixpkgsMaster.pkgs.blender
 
     (import (fetchTarball https://github.com/cachix/devenv/archive/v0.6.2.tar.gz)).default
   ];

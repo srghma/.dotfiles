@@ -254,7 +254,8 @@
       enable = true;
       # allowPing = true;
 
-      # allowedTCPPortRanges = [{ from = 1714; to = 1764; }]; # for nixpkgsMaster.pkgs.kdeconnect
+      allowedTCPPortRanges = [{ from = 1714; to = 1764; }]; # for nixpkgsMaster.pkgs.kdeconnect
+      allowedUDPPortRanges = [{ from = 1714; to = 1764; }]; # for nixpkgsMaster.pkgs.kdeconnect
 
       allowedTCPPorts = [
         # 5432
