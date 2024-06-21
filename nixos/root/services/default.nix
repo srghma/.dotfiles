@@ -37,7 +37,6 @@ rec {
 
   i2pd.enable = true;
 
-  blueman.enable = false;
   openssh.enable = true;
   xbanish.enable = true; # xbanish hides the mouse cursor when you start typing, and shows it again when the mouse cursor moves or a mouse button is pressed
   compton.enable = true;
@@ -76,13 +75,21 @@ rec {
 
   logind.lidSwitch = "ignore"; # Specifies what to be done when the laptop lid is closed.
   printing.enable = false;
+
+  libinput.enable = true;
+
+  displayManager.defaultSession = "none+i3";
+  displayManager.autoLogin = {
+    enable = true;
+    user = "srghma";
+  };
+
   xserver = {
     enable = true;
 
-    layout = "us,ua";
-    xkbOptions = "caps:swapescape,grp:rctrl_rshift_toggle";
-    xkbVariant = "qwerty";
-    libinput.enable = true;
+    xkb.layout = "us,ua";
+    xkb.options = "caps:swapescape,grp:rctrl_rshift_toggle";
+    xkb.variant = "qwerty";
 
     # dpi = 96;
     dpi = 140;
@@ -100,13 +107,7 @@ rec {
     };
 
     displayManager = {
-      defaultSession = "none+i3";
       lightdm.enable = true; # or gdm if gnome
-
-      autoLogin = {
-        enable = true;
-        user = "srghma";
-      };
 
       # ${xorg.xkbcomp}/bin/xkbcomp ${../../../layouts/en_ru} $DISPLAY &
       # nix-shell -p xorg.xkbcomp --run "xkbcomp /home/srghma/.dotfiles/layouts/en_ru_swapped $DISPLAY"

@@ -8,6 +8,8 @@
     ../modules/cachix.nix
     ../modules/cast-from-android.nix
     ../modules/qemu.nix
+    ../modules/obs.nix
+    ../modules/bluetooth-audio.nix
     # ../modules/miracast.nix
     # ../modules/vicuna.nix
 
@@ -81,7 +83,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   hardware = {
-    bluetooth.enable = false;
+    bluetooth.enable = lib.mkDefault false;
 
     opengl = {
       enable = true;
@@ -359,7 +361,7 @@
 
     # FIXME: https://cache.nixos.org already exists in standard config and should not be added by hand, but rather merged
     substituters = [
-      "https://all-hies.cachix.org"
+      # "https://all-hies.cachix.org"
       "https://cache.nixos.org"
       "https://cachix.cachix.org"
       "https://srghma.cachix.org"

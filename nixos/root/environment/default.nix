@@ -110,7 +110,8 @@ let
     nixpkgsUnstable.pkgs.nox
     nix-prefetch-git
     gimp
-    # imagemagick
+    nixpkgsUnstable.pkgs.imagemagick
+    nixpkgsUnstable.pkgs.ffmpeg-full # pkgs.ffmpeg_7-full
 
     # nixpkgsLocal.pkgs.safeeyes
     # cmus
