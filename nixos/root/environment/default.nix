@@ -8,8 +8,10 @@ let
 
     nixpkgsUnstable.pkgs.keepassxc
     nixpkgsMaster.pkgs.google-chrome
+    # nixpkgsMaster.pkgs.chromium
     # nixpkgsUnstable.pkgs.chromium
-    nixpkgsUnstable.pkgs.libreoffice
+    nixpkgsMaster.pkgs.libreoffice
+    nixpkgsMaster.pkgs.inkscape
     nixpkgsUnstable.pkgs.zip
     nixpkgsUnstable.pkgs.unzip
     nixpkgsUnstable.pkgs.htop

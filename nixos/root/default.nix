@@ -2,13 +2,14 @@
 
 {
   imports = [
-    # ../modules/unifiedGtkQtTheme.nix
+    ../modules/unifiedGtkQtTheme.nix
     # ../modules/disable-main-keyboard.nix
     # ../modules/direnv-from-lorri-repo.nix
     ../modules/cachix.nix
     ../modules/cast-from-android.nix
     ../modules/qemu.nix
-    ../modules/obs.nix
+    # ../modules/obs.nix
+    ../modules/webcamoid.nix
     ../modules/bluetooth-audio.nix
     # ../modules/miracast.nix
     # ../modules/vicuna.nix
@@ -18,8 +19,9 @@
     ./systemd/disable-touchpad.nix
   ];
 
-  # unifiedGtkQtTheme = {
-  #   enable = true;
+  unifiedGtkQtTheme = {
+    enable = true;
+  };
 
   #   theme.name = "Numix-SX-Light";
   #   theme.package = pkgs.numix-sx-gtk-theme;
@@ -64,6 +66,12 @@
   #     gtk-modules=gail:atk-bridge
   #   '';
   # };
+
+  qt = {
+    enable = true;
+    platformTheme = "gnome";
+    style = "adwaita-dark";
+  };
 
   environment = import ./environment args;
   services    = import ./services    args;
@@ -361,7 +369,7 @@
 
     # FIXME: https://cache.nixos.org already exists in standard config and should not be added by hand, but rather merged
     substituters = [
-      # "https://all-hies.cachix.org"
+      "https://all-hies.cachix.org"
       "https://cache.nixos.org"
       "https://cachix.cachix.org"
       "https://srghma.cachix.org"
