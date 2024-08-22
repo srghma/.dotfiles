@@ -7,6 +7,7 @@ let
     brightnessctl
 
     nixpkgsUnstable.pkgs.keepassxc
+    nixpkgsUnstable.pkgs.telegram-desktop
     nixpkgsMaster.pkgs.google-chrome
     # nixpkgsMaster.pkgs.chromium
     # nixpkgsUnstable.pkgs.chromium
@@ -65,6 +66,7 @@ let
     # nixpkgsUnstable.pkgs.mplayer
 
     nixpkgsUnstable.pkgs.nodejs_latest
+    # nixpkgsUnstable.pkgs.pnpm
 
     # netcat-openbsd # nc -U /var/run/acpid.socket
     lsof
@@ -236,6 +238,7 @@ let
     # nixpkgsMaster.pkgs.goldendict
     # nixpkgsUnstable.pkgs.go-ethereum
     nixpkgsMaster.pkgs.signal-desktop
+    nixpkgsMaster.pkgs.niv
     # mypkgs.signal-desktop
     # nixpkgsUnstable.pkgs.vym
     # nixpkgsUnstable.pkgs.FreeMind

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# File to be modified
+FILE="spago.yaml"
+
+# Check if spago.yaml is being committed
+if git diff --cached --name-only | grep -q "$FILE"; then
+    # Process the file
+    sed -i.bak '
+        /# REMOVE-LINE-PRE-COMMIT/d
+        s/# \(.*\) # REMOVE-COMMENTARY-PRE-COMMIT/\1/
+    ' "$FILE"
+
+    # Add the modified file to the commit
+    git add "$FILE"
+
+    # Set up post-commit hook to restore the backup
+    cat > .git/hooks/post-commit <<EOL
+#!/bin/bash
+mv "$FILE.bak" "$FILE"
+rm -f .git/hooks/post-commit
+EOL
+
+    chmod +x .git/hooks/post-commit
+fi

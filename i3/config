@@ -262,3 +262,19 @@ for_window [class="(?i)nautilus"]      floating enable
 for_window [class="(?i)copyq"]         floating enable
 for_window [class="(?i)hubstaff"]      floating enable
 for_window [title="Battery Warning"] sticky enable
+
+# -------------------
+
+# Move window with numpad keys
+bindsym KP_1 move left
+bindsym KP_2 move down
+bindsym KP_3 move right
+bindsym KP_4 move left
+bindsym KP_5 move position center
+bindsym KP_6 move right
+bindsym KP_7 move left
+bindsym KP_8 move up
+bindsym KP_9 move right
+
+# Move window to workspace 0 (KP_0)
+bindsym KP_0 move container to workspace number 0

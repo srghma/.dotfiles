@@ -27,6 +27,17 @@ xkb_keymap {
 
     // vim $(nix-build --no-out-link '<nixpkgs>' -A xorg.xkeyboardconfig)/etc/X11/xkb/keycodes/evdev
     // vim $(nix-build --no-out-link '<nixpkgs>' -A xorg.xkeyboardconfig)/etc/X11/xkb/symbols/us
+
+    // keycode 79 = Left
+    // keycode 80 = Down
+    // keycode 81 = Right
+    // keycode 83 = Left
+    // keycode 84 = Down
+    // keycode 85 = Right
+    // keycode 87 = Up
+    // keycode 88 = Down
+    // keycode 89 = Right
+    // keycode 90 = 0
   };
 };
 

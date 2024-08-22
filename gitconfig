@@ -27,6 +27,7 @@
   autocrlf = false
   safecrlf = true
   editor = nvim
+  hooksPath = ~/projects/dotfiles/global-git-hooks
   excludesfile = ~/.gitignore_global
   pager = diff-so-fancy | less --tabs=4 -RFX
 [alias]

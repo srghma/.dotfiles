@@ -18,6 +18,11 @@ function touch-safe {
 }
 # alias touch=touch-safe
 
+function mkdircd {
+  mkdir -p "$@"
+  cd "$@"
+}
+
 function n {
   touch-safe $@
   nvim $@
@@ -36,4 +41,10 @@ function spago_migrate_recursive() {
   ' sh {} +
 }
 
+export PATH=$HOME/projects/purs-utils/result/bin/:$PATH
 fpath=($HOME/.my-completions $fpath)
+
+## https://pnpm.io/completion
+# pnpm completion zsh > ~/.config/completion-for-pnpm.zsh
+# echo 'source ~/.config/completion-for-pnpm.zsh' >> ~/.zshrc
+source ~/.config/completion-for-pnpm.zsh

@@ -30,7 +30,12 @@
         "**/.hg": true,
         "**/.next": true,
         "**/.svn": true,
+        "**/*.aux": true,
+        "**/*.fdb_latexmk": true,
+        "**/*.fls": true,
+        "**/*.out": true,
         "**/*.pyc": true,
+        "**/*.xdv": true,
         "**/CVS": true
     },
     "editor.formatOnSave": false,
@@ -48,7 +53,6 @@
     "editor.mouseWheelZoom": true,
     "security.workspace.trust.untrustedFiles": "open",
     "npm.keybindingsChangedWarningShown": true,
-    "editor.lineNumbers": "off",
     "codetogether.userName": "srghma",
     "[python]": {
         "editor.formatOnType": true
@@ -56,7 +60,6 @@
     "cSpell.userWords": [
         "tinymce"
     ],
-    "haskell.manageHLS": "GHCup",
     "editor.formatOnPaste": true,
     "tabby.api.endpoint": "http://47.103.63.15:50085/",
     "tabby.keybindings": "tabby-style",
@@ -64,4 +67,10 @@
     "bitoAI.codeCompletion.enableAutoCompletion": true,
     "bitoAI.codeCompletion.enableCommentToCode": true,
     "editor.inlineSuggest.showToolbar": "always",
+    "bitoAI.appearance.fontSize (Match with IDE Font)": false,
+    "files.associations": {
+        "*.bkp": "latex"
+    },
+    "purescript.addNpmPath": true,
+    "haskell.manageHLS": "PATH",
 }

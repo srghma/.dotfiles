@@ -445,7 +445,7 @@ call dein#add('scrooloose/nerdtree', {'on_cmd':['NERDTreeToggle','NERDTreeFind']
   let NERDTreeShowLineNumbers=1
   let NERDTreeChDirMode=0
   let NERDTreeShowBookmarks=1
-  let NERDTreeIgnore=['\.git$','\.hg$','\node_modules$','\.pyc$', '^__generated__$','\.agdai$','\.agda\.vim$']
+  let NERDTreeIgnore=['\.git$','\.hg$','\node_modules$','\.pyc$', '^__generated__$','\.agdai$','\.agda\.vim$','\.xdv$','\.aux$','\.fdb_latexmk$','\.fls$']
   let NERDTreeBookmarksFile=s:get_cache_dir('NERDTreeBookmarks')
 
   " disable f and F in privilege of find commands

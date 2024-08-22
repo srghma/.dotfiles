@@ -9,7 +9,7 @@
 # gco -m "my commit" --author asdf = git commit -m "my commit [only-deploy]" --author asdf
 # gco --author asdf -m "my commit" = git commit --author asdf -m "my commit [only-deploy]"
 
-gco() {
+gcod() {
   local args=()
   local msg=""
   local found_message_flag=0
@@ -34,21 +34,21 @@ gco() {
     return 1
   fi
 
-  git commit "${args[@]}"
+  git commit -v "${args[@]}"
 }
 
 # like
 #
-# gc! -m "my commit" = git commit --edit -m "my commit"
+# gc! -m "my commit" = git commit --amend -m "my commit"
 #
 # but
 # will prepent [only-deploy] to message
 #
-# gco! -m "my commit" = git commit --edit -m "my commit [only-deploy]"
-# gco! -m "my commit" --author asdf = git commit --edit -m "my commit [only-deploy]" --author asdf
-# gco! --author asdf -m "my commit" = git commit --edit --author asdf -m "my commit [only-deploy]"
+# gco! -m "my commit" = git commit --amend -m "my commit [only-deploy]"
+# gco! -m "my commit" --author asdf = git commit --amend -m "my commit [only-deploy]" --author asdf
+# gco! --author asdf -m "my commit" = git commit --amend --author asdf -m "my commit [only-deploy]"
 
-"gco!"() {
+gc!od() {
   local msg=""
   local args=()
 
@@ -70,5 +70,5 @@ gco() {
     return 1
   fi
 
-  git commit --edit "${args[@]}" -m "$msg"
+  git commit -v --amend "${args[@]}" -m "$msg"
 }

@@ -3,12 +3,13 @@
 {
   imports = [
     ../modules/unifiedGtkQtTheme.nix
+    ../modules/hibernate-at-time.nix
     # ../modules/disable-main-keyboard.nix
     # ../modules/direnv-from-lorri-repo.nix
     ../modules/cachix.nix
     ../modules/cast-from-android.nix
     ../modules/qemu.nix
-    # ../modules/obs.nix
+    ../modules/obs.nix
     ../modules/webcamoid.nix
     ../modules/bluetooth-audio.nix
     # ../modules/miracast.nix
@@ -196,6 +197,8 @@
         PROJECT_PATHS=($HOME/projects)
 
         export MAKEFLAGS="-j5"
+
+        VI_MODE_DISABLE_CLIPBOARD=true
       '';
 
       ohMyZsh = {
@@ -281,11 +284,12 @@
     hosts =
       let block =
         [
-          # "twitter.com"  "www.twitter.com"
-          # "youtube.com"  "www.youtube.com"  "m.youtube.com"
-          # "telegram.org" "www.telegram.org" "web.telegram.org" "zws2.web.telegram.org"
-          # "pikabu.ru"    "www.pikabu.ru"
-          # "reddit.com"   "www.reddit.com"
+          "twitter.com"  "www.twitter.com"
+          # "x.com"        "www.x.com"
+          "youtube.com"  "www.youtube.com"  "m.youtube.com"
+          "telegram.org" "www.telegram.org" "web.telegram.org" "zws2.web.telegram.org" "zws2-1.web.telegram.org"
+          "pikabu.ru"    "www.pikabu.ru"
+          "reddit.com"   "www.reddit.com"
         ];
       in {
         "::0" = block;
@@ -369,7 +373,7 @@
 
     # FIXME: https://cache.nixos.org already exists in standard config and should not be added by hand, but rather merged
     substituters = [
-      "https://all-hies.cachix.org"
+      "https://cache.iog.io"
       "https://cache.nixos.org"
       "https://cachix.cachix.org"
       "https://srghma.cachix.org"
@@ -381,7 +385,7 @@
     ];
 
     trusted-public-keys = [
-      "all-hies.cachix.org-1:JjrzAOEUsD9ZMt8fdFbzo3jNAyEWlPAwdVuHw4RD43k="
+      "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
       "srghma.cachix.org-1:EUHKjTh/WKs49hFtw6bwDE9oQLeX5afml0cAKc97MbI="
