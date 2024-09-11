@@ -27,3 +27,6 @@ libunicorn.so
 myDataDir/
 myGenesis.json
 .gcroots/
+
+spago-original-backup.yaml
+spago-myglobal.yaml

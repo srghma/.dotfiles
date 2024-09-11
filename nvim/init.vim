@@ -254,11 +254,11 @@ call dein#add('Shougo/echodoc.vim') " {{{
 " }}}
 " " call dein#add('thalesmello/webcomplete.vim')
 
-call dein#add('shivamashtikar/vimmer-ps')
-call dein#add('autozimu/LanguageClient-neovim', {
-    \ 'rev': 'next',
-    \ 'build': './install.sh',
-    \ })
+" call dein#add('shivamashtikar/vimmer-ps')
+" call dein#add('autozimu/LanguageClient-neovim', {
+"     \ 'rev': 'next',
+"     \ 'build': './install.sh',
+"     \ })
 
 " https://github.com/sriharshachilakapati/dotfiles/blob/f1635f73eccd36a493f168b34e67bd1fa5e0e123/.vimrc#L117
 " https://github.com/sduchesneau/nvim-config/blob/0f3ce63e825e27f0a0a631c68743435432e56cf8/bundle/.neobundle/doc/ale-purescript.txt#L18
@@ -275,22 +275,21 @@ call dein#add('autozimu/LanguageClient-neovim', {
 
 " \   , 'buildCommand': 'spago --config spago.dhall build -- --json-errors'
 
-let g:LanguageClient_serverCommands = {
-    \ 'haskell':    ['hie', '--lsp'],
-    \ 'javascript': ['javascript-typescript-stdio'],
-    \ 'typescript': ['javascript-typescript-stdio'],
-    \ }
-    " \ 'purescript': ['purescript-language-server', '--stdio', '--config', json_encode(purescriptConfigWrapper)]
-    " \ 'nix': ['nix-lsp'],
+" let g:LanguageClient_serverCommands = {
+"     \ 'haskell':    ['hie', '--lsp'],
+"     \ 'javascript': ['javascript-typescript-stdio'],
+"     \ 'typescript': ['javascript-typescript-stdio'],
+"     \ }
+"     " \ 'purescript': ['purescript-language-server', '--stdio', '--config', json_encode(purescriptConfigWrapper)]
+"     " \ 'nix': ['nix-lsp'],
 
-let g:LanguageClient_rootMarkers = {
-    \ 'javascript': ['project.json'],
-    \ 'rust': ['Cargo.toml'],
-    \ 'purescript': [ 'bower.json', 'psc-package.json', 'spago.yaml', 'spago.dhall', 'packages.dhall' ],
-    \ }
-    " \ 'purescript': ['bower.json', 'psc-package.json', 'spago.dhall'],
+" let g:LanguageClient_rootMarkers = {
+"     \ 'javascript': ['project.json'],
+"     \ 'rust': ['Cargo.toml'],
+"     \ }
+"     " \ 'purescript': [ 'bower.json', 'psc-package.json', 'spago.yaml', 'spago.dhall', 'packages.dhall' ],
 
-autocmd filetype purescript setlocal omnifunc=LanguageClient#complete
+" autocmd filetype purescript setlocal omnifunc=LanguageClient#complete
 
 " nnoremap <F4> :call LanguageClient_contextMenu()<CR>
 
@@ -300,8 +299,8 @@ autocmd filetype purescript setlocal omnifunc=LanguageClient#complete
 " let g:LanguageClient_serverStderr = 'language-server.log' " Use highest logging level
 
 " Automatically start language servers.
-let g:LanguageClient_autoStart = 1
-let g:LanguageClient_diagnosticsList = "Disabled" " fix error with easy-grep
+" let g:LanguageClient_autoStart = 1
+" let g:LanguageClient_diagnosticsList = "Disabled" " fix error with easy-grep
 
 " support for haskell-ide-engine errors (e.g. underline errors)
 hi link ALEError Error
@@ -340,7 +339,7 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-call dein#add('editorconfig/editorconfig-vim', {'on_i':1})
+call dein#add('editorconfig/editorconfig-vim')
 call dein#add('tpope/vim-endwise')
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -351,6 +350,7 @@ function s:on_tpope_vim_speeddating_source()
 endfunction
 let g:speeddating_no_mappings=1
 call dein#add('tpope/vim-speeddating', {'hook_post_source': function('s:on_tpope_vim_speeddating_source')})
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -640,12 +640,15 @@ call dein#add('neovimhaskell/haskell-vim', { 'on_ft':['haskell'] })
 " let g:deoplete#omni#functions = {}
 " let g:deoplete#omni#functions.cs = 'OmniSharp#Complete'
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+call dein#add('mrcjkb/rustaceanvim', { 'on_ft':['purescript'] })
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Purescript
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call dein#add('purescript-contrib/purescript-vim', { 'on_ft':['purescript'] })
-call dein#add('FrigoEU/psc-ide-vim', { 'on_ft':['purescript'] })
-call dein#add('srghma/vim-purs-module-name', { 'on_ft':['purescript'] })
+call dein#add('neovim/nvim-lspconfig')
 " let g:psc_ide_log_level=4
 
 " checking in file

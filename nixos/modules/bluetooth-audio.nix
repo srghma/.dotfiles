@@ -4,7 +4,7 @@
   # Enable Bluetooth
   hardware.bluetooth.enable = lib.mkForce true;
   # Enable sound.
-  sound.enable = true;
+  # sound.enable = true;
 
   # environment.etc = {
   #   "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''

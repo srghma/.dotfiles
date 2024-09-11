@@ -49,7 +49,6 @@
     "editor.tabSize": 2,
     "latex-workshop.view.pdf.viewer": "tab",
     "workbench.colorTheme": "Visual Studio Dark",
-    "workbench.editor.enablePreview": false,
     "editor.mouseWheelZoom": true,
     "security.workspace.trust.untrustedFiles": "open",
     "npm.keybindingsChangedWarningShown": true,
@@ -71,6 +70,12 @@
     "files.associations": {
         "*.bkp": "latex"
     },
-    "purescript.addNpmPath": true,
     "haskell.manageHLS": "PATH",
+    "purescript.censorWarnings": [
+        "MissingTypeDeclaration",
+        "UserDefinedWarning",
+        "UnusedDeclaration"
+    ],
+    "workbench.editor.enablePreview": false,
+    "purescript.buildCommand": "/home/srghma/projects/spago/bin/index.dev.js build --purs-args --json-error",
 }

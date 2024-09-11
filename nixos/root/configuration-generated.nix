@@ -6,14 +6,16 @@
 
 {
   # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
+  # sound.enable = true;
+  # hardware.pulseaudio.enable = false;
+  # hardware.alsa.enablePersistence = true;
+  # security.rtkit.enable = true;
+
   services.pipewire = {
     enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
+    # alsa.enable = true;
+    # alsa.support32Bit = true;
+    # pulse.enable = false;
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
 

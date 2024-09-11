@@ -54,6 +54,7 @@ let
     nixpkgsUnstable.pkgs.neovim
     nixpkgsUnstable.pkgs.tmux
     nixpkgsUnstable.pkgs.vscode
+    nixpkgsUnstable.pkgs.audacious
     # nixpkgsUnstable.pkgs.nix
 
     ## development

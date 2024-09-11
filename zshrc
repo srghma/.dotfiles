@@ -41,8 +41,10 @@ function spago_migrate_recursive() {
   ' sh {} +
 }
 
-export PATH=$HOME/projects/purs-utils/result/bin/:$PATH
+export PATH=$HOME/.dotfiles/bin:$HOME/projects/spago-yaml-generate/bin/:$HOME/projects/purs-utils/result/bin/:$PATH
 fpath=($HOME/.my-completions $fpath)
+
+alias spago="$HOME/projects/spago/bin/index.dev.js"
 
 ## https://pnpm.io/completion
 # pnpm completion zsh > ~/.config/completion-for-pnpm.zsh

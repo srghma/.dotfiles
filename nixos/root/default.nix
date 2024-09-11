@@ -94,7 +94,7 @@
   hardware = {
     bluetooth.enable = lib.mkDefault false;
 
-    opengl = {
+    graphics = {
       enable = true;
       driSupport32Bit = true; # for steam
     };
@@ -284,12 +284,12 @@
     hosts =
       let block =
         [
-          "twitter.com"  "www.twitter.com"
+          # "twitter.com"  "www.twitter.com"
           # "x.com"        "www.x.com"
-          "youtube.com"  "www.youtube.com"  "m.youtube.com"
+          # "youtube.com"  "www.youtube.com"  "m.youtube.com"
           "telegram.org" "www.telegram.org" "web.telegram.org" "zws2.web.telegram.org" "zws2-1.web.telegram.org"
           "pikabu.ru"    "www.pikabu.ru"
-          "reddit.com"   "www.reddit.com"
+          # "reddit.com"   "www.reddit.com"
         ];
       in {
         "::0" = block;
@@ -373,15 +373,15 @@
 
     # FIXME: https://cache.nixos.org already exists in standard config and should not be added by hand, but rather merged
     substituters = [
-      "https://cache.iog.io"
+      # "https://cache.iog.io"
       "https://cache.nixos.org"
-      "https://cachix.cachix.org"
-      "https://srghma.cachix.org"
-      "https://nixcache.reflex-frp.org"
-      "https://lorri-test.cachix.org"
-      "https://nix-tools.cachix.org"
-      "https://devenv.cachix.org"
-      "https://digitallyinduced.cachix.org"
+      # "https://cachix.cachix.org"
+      # "https://srghma.cachix.org"
+      # "https://nixcache.reflex-frp.org"
+      # "https://lorri-test.cachix.org"
+      # "https://nix-tools.cachix.org"
+      # "https://devenv.cachix.org"
+      # "https://digitallyinduced.cachix.org"
     ];
 
     trusted-public-keys = [
@@ -404,14 +404,14 @@
 
   virtualisation.docker = {
     enable = true;
-    enableNvidia = true; # https://github.com/fauxpilot/fauxpilot
+    enableNvidia = false; # https://github.com/fauxpilot/fauxpilot
     # liveRestore = false;
     # storageDriver = "overlay"; # TODO: use overlay2, delete before switch /var/lib/docker
     # extraOptions = "--host=0.0.0.0:2375";
     # extraOptions = "-H unix:///var/run/docker.sock";
   };
 
-  virtualisation.anbox.enable = false;
+  # virtualisation.anbox.enable = false;
 
   ### USE qemu.nix!!
   # virtualisation.virtualbox.host.enable = true;
