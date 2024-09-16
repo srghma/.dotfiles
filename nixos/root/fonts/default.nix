@@ -1,17 +1,17 @@
 { pkgs, ... }:
 
 let
-  # mynerdfonts = pkgs.nixpkgsMaster.pkgs.nerdfonts.override {
-  #   fonts = [
-  #     "Inconsolata"
-  #     "FiraCode"
-  #     "FiraMono"
-  #   ];
-  # };
+  mynerdfonts = pkgs.nixpkgsMaster.pkgs.nerdfonts.override {
+    fonts = [
+      "Inconsolata"
+      "FiraCode"
+      "FiraMono"
+    ];
+  };
 
 in
 
-rec {
+{
   fontDir.enable = true;
   enableGhostscriptFonts = true;
 
@@ -59,7 +59,7 @@ rec {
     # nix-prefetch-url --type sha256 --unpack --name source file:///home/$USER/Downloads/nerd-fonts-2.0.0.tar.gz $EXPECTED_HASH
     # (find expected hash https://github.com/NixOS/nixpkgs/blob/92a047a6c4d46a222e9c323ea85882d0a7a13af8/pkgs/data/fonts/nerdfonts/default.nix#L6-L11)
     # nerdfonts
-    # mynerdfonts
+    mynerdfonts
   ];
 
   fontconfig = {

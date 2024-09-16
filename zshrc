@@ -1,5 +1,6 @@
 # from https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/common-aliases/common-aliases.plugin.zsh
 # unalias fd
+# unalias n
 
 # eval "$(direnv hook zsh)"
 
@@ -9,7 +10,7 @@ for file in $HOME/.dotfiles/zsh/*.sh; do
   source $file
 done
 
-export EDITOR="nvim"
+export EDITOR="lvim"
 
 function touch-safe {
   for f in "$@"; do

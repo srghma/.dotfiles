@@ -51,7 +51,9 @@ let
     nixpkgsMaster.pkgs.ranger
     # nixpkgsMaster.pkgs.termite
     nixpkgsUnstable.pkgs.kitty
-    nixpkgsUnstable.pkgs.neovim
+    nixpkgsMaster.pkgs.neovim
+    # nixpkgsMaster.pkgs.lunarvim
+    nixpkgsMaster.pkgs.lazygit
     nixpkgsUnstable.pkgs.tmux
     nixpkgsUnstable.pkgs.vscode
     nixpkgsUnstable.pkgs.audacious
@@ -135,7 +137,7 @@ let
     # My packages
     mypkgs.dunsted-volume
     # mypkgs.randomize_background
-    # mypkgs.kb-light
+    mypkgs.kb-light
     mypkgs.switch_touchpad
     mypkgs.tmuxx
     # mypkgs.umsf

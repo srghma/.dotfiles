@@ -40,8 +40,8 @@ inhome_indotfiles = [
   ['.cabal/config',                                        'cabal_config'],
   # ['.spaceemacs',                                          'spaceemacs'],
   ['.gnupg/gpg-agent.conf',                                'gpg-agent.conf'],
-
-  ['.config/kak',                                        'kak'],
+  ['.config/kak',                                          'kak'],
+  ['.config/lvim/config.lua',                              'lvim/config.lua'],
 
   # ['.emacs', 'emacs'],
 ]
@@ -49,7 +49,7 @@ inhome_indotfiles = [
 inhome_indotfiles.each do |(inhome, indotfiles)|
   inhome_     = File.join $home, inhome
   indotfiles_ = File.join $dotfiles, indotfiles
-  unless File.exists?(indotfiles_)
+  unless File.exist?(indotfiles_)
     puts "File doesnt exist #{indotfiles_}"
     next
   end

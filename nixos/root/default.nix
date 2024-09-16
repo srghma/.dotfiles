@@ -96,7 +96,7 @@
 
     graphics = {
       enable = true;
-      driSupport32Bit = true; # for steam
+      # driSupport32Bit = true; # for steam
     };
   };
 
