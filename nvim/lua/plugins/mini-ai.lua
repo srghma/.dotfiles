@@ -1,0 +1,41 @@
+return {
+  "echasnovski/mini.ai",
+  event = "User AstroFile",
+  dependencies = { { "echasnovski/mini.extra" } },
+  opts = function()
+		local gen_ai_spec = require('mini.extra').gen_ai_spec
+		return {
+			n_lines = 500,
+      mappings = {
+        -- Main textobject prefixes
+        around = 'a',
+        inside = 'i',
+
+        -- Next/last textobjects
+        around_next = 'aN',
+        inside_next = 'iN',
+        around_last = 'aL',
+        inside_last = 'iL',
+
+        -- Move cursor to corresponding edge of `a` textobject
+        goto_left = 'g[',
+        goto_right = 'g]',
+      },
+			custom_textobjects = {
+				e = gen_ai_spec.buffer(),
+				D = gen_ai_spec.diagnostic(),
+				i = gen_ai_spec.indent(),
+				l = gen_ai_spec.line(),
+				n = gen_ai_spec.number(),
+			},
+		}
+  end,
+  specs = {
+    {
+      "catppuccin",
+      optional = true,
+      ---@type CatppuccinOptions
+      opts = { integrations = { mini = true } },
+    },
+  },
+}
