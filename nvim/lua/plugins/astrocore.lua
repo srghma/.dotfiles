@@ -119,9 +119,6 @@ return {
         [",D"] = '"+D',
         [",w"] = ':w!<CR>',
 
-        ["K"] = "<Plug>(IndentWiseBlockScopeBoundaryBegin)",
-        ["J"] = "<Plug>(IndentWiseBlockScopeBoundaryEnd)", -- Mapping J to navigate to the end of the block scope boundary
-
         ["#"] = { "gc", remap = true, desc = "Toggle comment" },
       },
       n = {
@@ -193,21 +190,20 @@ return {
           desc = "Close buffer from tabline",
         },
 
-        ["K"] = "<Plug>(IndentWiseBlockScopeBoundaryBegin)",
-        ["J"] = "<Plug>(IndentWiseBlockScopeBoundaryEnd)", 
         ["<M-i>"] = "J", -- Mapping Alt-i to J (already mapped above)
 
         ["#"] = { "gcc", remap = true, desc = "Toggle comment line" },
 
         ["Q"] = { "<Cmd>confirm q<CR>", desc = "Quit Window" },
-        ["M-q"] = { function() require("astrocore.buffer").close() end, desc = "Close buffer" },
+        ["<M-q>"] = { function() require("astrocore.buffer").close() end, desc = "Close buffer" },
         [",z"] = { "<Cmd>confirm qall<CR>", desc = "Exit AstroNvim" },
 
         [',q'] = { ':xa<CR>', desc = "Quit Window without save" },
         [",S"] = { function() require("resession").save() end, desc = "Save this session" },
 
         -- setting a mapping to false will disable it
-        -- ["<C-S>"] = false,
+        ["<C-s>"] = false,
+        ["<C-S>"] = false,
       },
     },
   },

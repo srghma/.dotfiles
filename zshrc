@@ -10,7 +10,7 @@ for file in $HOME/.dotfiles/zsh/*.sh; do
   source $file
 done
 
-export EDITOR="lvim"
+# export EDITOR="lvim"
 
 function touch-safe {
   for f in "$@"; do

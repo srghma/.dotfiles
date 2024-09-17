@@ -29,14 +29,14 @@ return {
   end,
   opts = {
     mappings = {
-      add = "gs", -- Add surrounding in Normal and Vsual modes
+      add = "ss", -- Add surrounding in Normal and Vsual modes
       delete = "ds", -- Delete surroundng
       -- add = prefix .. "a", -- Add surrounding in Normal and Visual modes
       -- delete = prefix .. "d", -- Delete surrounding
       find = prefix .. "f", -- Find surrounding (to the right)
       find_left = prefix .. "F", -- Find surrounding (to the left)
       highlight = prefix .. "h", -- Highlight surrounding
-      replace = "sr", -- Replace surrounding
+      replace = "cs", -- Replace surrounding
       update_n_lines = prefix .. "n", -- Update `n_lines`
     },
   },

@@ -53,7 +53,10 @@ let
     nixpkgsUnstable.pkgs.kitty
     nixpkgsMaster.pkgs.neovim
     # nixpkgsMaster.pkgs.lunarvim
-    nixpkgsMaster.pkgs.lazygit
+    # nixpkgsMaster.pkgs.lazygit
+    nixpkgsMaster.pkgs.ripgrep
+    nixpkgsMaster.pkgs.lua-language-server
+    nixpkgsMaster.pkgs.code-minimap
     nixpkgsUnstable.pkgs.tmux
     nixpkgsUnstable.pkgs.vscode
     nixpkgsUnstable.pkgs.audacious

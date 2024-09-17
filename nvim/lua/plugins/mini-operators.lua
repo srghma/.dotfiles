@@ -8,7 +8,7 @@ return {
       evaluate = "go=",
       exchange = "gx",
       multiply = "gom",
-      -- replace = "",
+      replace = "gor",
       sort = "gos",
     } do
       local prefix = vim.tbl_get(opts, operator, "prefix") or default
