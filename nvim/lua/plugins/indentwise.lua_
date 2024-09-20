@@ -1,6 +1,6 @@
 vim.g.indentwise_suppress_keymaps = 1
 
-return { 
+return {
 	'jeetsukumaran/vim-indentwise',
 	-- config = function(lazy, opts)
 	-- 	vim.g.indentwise_skip_blanks = 1

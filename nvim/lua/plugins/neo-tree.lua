@@ -65,6 +65,7 @@ return {
     opts.filesystem.filtered_items.hide_by_name = { "node_modules", ".git" }
     opts.filesystem.filtered_items.never_show = { ".DS_Store", "thumbs.db", "desktop.ini" }
 
+    opts.filesystem.follow_current_file.enabled = false -- This will find and focus the file in the active buffer every time
     opts.filesystem.follow_current_file.leave_dirs_open = true
 
     opts.commands["focus_first_file_in_directory"] = focus_some_file(function(x) return x[1] end)
@@ -84,7 +85,7 @@ return {
     opts.window.mappings["f/"] = "fuzzy_finder"
 
     -- don't steal from 'zz'
-    opts.window.mappings["z"] = nil
+    opts.window.mappings["z"] = false
     opts.window.mappings["Z"] = "close_all_nodes"
     opts.window.mappings["zz"] = function(state) vim.cmd("normal! zz") end
 
@@ -114,8 +115,8 @@ return {
     -- }
 
 
-    opts.source_selector.sources = {
-      { source = "filesystem", display_name = "󰉓 Files" },
-    }
+    -- opts.source_selector.sources = {
+    --   { source = "filesystem", display_name = "󰉓 Files" },
+    -- }
   end,
 }

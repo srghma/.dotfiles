@@ -22,7 +22,7 @@ local ignore_buftypes = {
 local char = "▏"
 
 local make_goto_inner = function(side)
-  local scope = MiniIndentscope.get_scope(nil, nil, { try_as_border = false })
+  local scope = MiniIndentscope.get_scope(nil, nil, { try_as_border = false, indent_at_cursor = false })
   MiniIndentscope.move_cursor(side, false, scope)
 end
 
@@ -41,7 +41,9 @@ return {
         goto_bottom = ',J',
       },
       options = {
-        try_as_border = false,
+        -- try_as_border = false,
+        border = 'none',
+        -- indent_at_cursor = false,
       },
       symbol = require("astrocore").plugin_opts("indent-blankline.nvim").context_char or char,
     }
@@ -53,16 +55,10 @@ return {
       opts = {
         mappings = {
           v = {
-            -- ["K"] = "<Plug>(IndentWiseBlockScopeBoundaryBegin)",
-            -- ["J"] = "<Plug>(IndentWiseBlockScopeBoundaryEnd)", -- Mapping J to navigate to the end of the block scope boundary
             ["J"] = { function() make_goto_inner('bottom') end, desc = "Indent bottom" },
             ["K"] = { function() make_goto_inner('top') end, desc = "Indent top" },
           },
           n = {
-            -- ["K"] = "<Plug>(IndentWiseBlockScopeBoundaryBegin)",
-            -- ["J"] = "<Plug>(IndentWiseBlockScopeBoundaryEnd)", 
-            -- ["J"] = '<Cmd>lua MiniIndentscope.move_cursor("bottom", false)<CR>',
-            -- ["K"] = '<Cmd>lua MiniIndentscope.move_cursor("top", false)<CR>', 
             ["J"] = { function() make_goto_inner('bottom') end, desc = "Indent bottom" },
             ["K"] = { function() make_goto_inner('top') end, desc = "Indent top" },
           },

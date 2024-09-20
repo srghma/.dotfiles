@@ -6,7 +6,7 @@ return {
     comment    = { suffix = 'bc', options = {} },
     conflict   = { suffix = 'bx', options = {} },
     diagnostic = { suffix = 'bd', options = {} },
-    file       = { suffix = 'bf', options = {} },
+    file       = { suffix = '<C-f>', options = {} },
     indent     = { suffix = 'bi', options = {} },
     jump       = { suffix = 'bj', options = {} },
     location   = { suffix = 'bl', options = {} },

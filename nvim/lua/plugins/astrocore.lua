@@ -120,6 +120,8 @@ return {
         [",w"] = ':w!<CR>',
 
         ["#"] = { "gc", remap = true, desc = "Toggle comment" },
+
+        ["."] = { ":normal .<CR>", desc = "Repeat last normal command" },
       },
       n = {
         -- Kakoune-like movements
@@ -129,15 +131,15 @@ return {
         ["gj"] = "G",
         ["gk"] = "gg",
 
-        ["<C-M-d>"] = { 
-          function() 
+        ["<C-M-d>"] = {
+          function()
             local line = vim.fn.line('.')
             local content = vim.fn.getline(line)
             vim.fn.setreg('a', content)
             vim.cmd('put a')
             vim.cmd('normal! k')
           end,
-          desc = "Duplicate current line" 
+          desc = "Duplicate current line"
         },
 
         -- navigate buffer tabs
@@ -145,7 +147,7 @@ return {
         ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
 
         ["<F2>"] = { "<Cmd>Neotree toggle<CR>" },
-        ["<F3>"] = { "<Cmd>Neotree selector<CR>" },
+        ["<F3>"] = { "<Cmd>Neotree selector reveal<CR>" },
 
         [",ga"] = ":silent !git add --all<CR>",
 
@@ -193,6 +195,8 @@ return {
         ["<M-i>"] = "J", -- Mapping Alt-i to J (already mapped above)
 
         ["#"] = { "gcc", remap = true, desc = "Toggle comment line" },
+
+        -- ["*"] = { "*#", remap = true, desc = "Search" },
 
         ["Q"] = { "<Cmd>confirm q<CR>", desc = "Quit Window" },
         ["<M-q>"] = { function() require("astrocore.buffer").close() end, desc = "Close buffer" },
