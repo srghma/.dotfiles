@@ -57,6 +57,10 @@ let
     nixpkgsMaster.pkgs.ripgrep
     nixpkgsMaster.pkgs.lua-language-server
     nixpkgsMaster.pkgs.code-minimap
+    nixpkgsMaster.pkgs.alejandra
+    nixpkgsMaster.pkgs.statix
+    nixpkgsMaster.pkgs.deadnix
+
     nixpkgsUnstable.pkgs.tmux
     nixpkgsUnstable.pkgs.vscode
     nixpkgsUnstable.pkgs.audacious

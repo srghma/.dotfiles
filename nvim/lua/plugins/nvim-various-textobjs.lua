@@ -10,6 +10,7 @@ local innerOuterMaps = {
 	-- greedyOuterIndentation = "g",
 	anyQuote = "q",
 	anyBracket = "o",
+	cssColor = "#"
 }
 
 local oneMaps = {
@@ -22,7 +23,7 @@ local oneMaps = {
 	-- restOfWindow = "gW",
 	-- diagnostic = "!",
 	column = "|",
-	entireBuffer = "gG", -- G + gg
+	entireBuffer = "ae", -- G + gg
 	url = "L", -- gu, gU, and U would conflict with gugu, gUgU, and gUU. u would conflict with gcu (undo comment)
 	-- lastChange = "g;", -- consistent with g; movement
 }
@@ -41,8 +42,8 @@ local ftMaps = {
 }
 
 return {
-  -- "chrisgrieser/nvim-various-textobjs",
-  dir = "~/projects/nvim-various-textobjs",
+  "chrisgrieser/nvim-various-textobjs",
+  -- dir = "~/projects/nvim-various-textobjs",
   event = "User AstroFile",
   -- event = "BufRead",
   config = function()
@@ -100,29 +101,29 @@ return {
 	    '<cmd>lua require("various-textobjs").indentation("inner", "inner")<CR>'
     )
 
-    vim.keymap.set(
-	    { "n", "x" },
-	    "K",
-	    '<cmd>lua require("various-textobjs.movements").go_to_indentation("top", "inner", "inner", "withBlanks")<CR>',
-      { desc = "go to top of indentation" }
-    )
-    vim.keymap.set(
-	    { "n", "x" },
-	    "J",
-	    '<cmd>lua require("various-textobjs.movements").go_to_indentation("bottom", "inner", "inner", "withBlanks")<CR>',
-      { desc = "go to bottom of indentation" }
-    )
-    vim.keymap.set(
-	    { "n", "x" },
-	    "<C-M-k>",
-	    '<cmd>lua require("various-textobjs.movements").go_to_indentation("top", "inner", "inner", "noBlanks")<CR>',
-      { desc = "go to top of indentation (stop on blank line)" }
-    )
-    vim.keymap.set(
-	    { "n", "x" },
-	    "<C-M-j>",
-	    '<cmd>lua require("various-textobjs.movements").go_to_indentation("bottom", "inner", "inner", "noBlanks")<CR>',
-      { desc = "go to bottom of indentation (stop on blank line)" }
-    )
+    -- vim.keymap.set(
+	  --   { "n", "x" },
+	  --   "K",
+	  --   '<cmd>lua require("various-textobjs.movements").go_to_indentation("top", "inner", "inner", "withBlanks")<CR>',
+    --   { desc = "go to top of indentation" }
+    -- )
+    -- vim.keymap.set(
+	  --   { "n", "x" },
+	  --   "J",
+	  --   '<cmd>lua require("various-textobjs.movements").go_to_indentation("bottom", "inner", "inner", "withBlanks")<CR>',
+    --   { desc = "go to bottom of indentation" }
+    -- )
+    -- vim.keymap.set(
+	  --   { "n", "x" },
+	  --   "<C-M-k>",
+	  --   '<cmd>lua require("various-textobjs.movements").go_to_indentation("top", "inner", "inner", "noBlanks")<CR>',
+    --   { desc = "go to top of indentation (stop on blank line)" }
+    -- )
+    -- vim.keymap.set(
+	  --   { "n", "x" },
+	  --   "<C-M-j>",
+	  --   '<cmd>lua require("various-textobjs.movements").go_to_indentation("bottom", "inner", "inner", "noBlanks")<CR>',
+    --   { desc = "go to bottom of indentation (stop on blank line)" }
+    -- )
   end,
 }

@@ -7,18 +7,20 @@
 ---@type LazySpec
 return {
   "AstroNvim/astrocommunity",
+  -- dir = "/home/srghma/projects/astrocommunity",
   -- { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.typescript" },
   { import = "astrocommunity.pack.nix" },
   { import = "astrocommunity.bars-and-lines.vim-illuminate" },
   -- { import = "astrocommunity.pack.haskell" },
   { import = "astrocommunity.pack.rust" },
+  -- { import = "astrocommunity.pack.purescript" },
   { import = "astrocommunity.motion.nvim-spider" },
   { import = "astrocommunity.editing-support.rainbow-delimiters-nvim" },
   { import = "astrocommunity.editing-support.auto-save-nvim" },
+  { import = "astrocommunity.search.nvim-spectre" },
   -- { import = "astrocommunity.motion.nvim-spider" },
   -- { import = "astrocommunity.indent.mini-indentscope" },
-  -- import/override with your plugins folder
 }
 
 -- highlight IlluminatedWordWrite gui=underline

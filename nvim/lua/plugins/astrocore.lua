@@ -79,6 +79,14 @@ return {
     -- Mappings can be configured through AstroCore as well.
     -- NOTE: keycodes follow the casing in the vimdocs. For example, `<Leader>` must be capitalized
     mappings = {
+      o = {
+        -- Kakoune-like movements
+        ["gh"] = "0",
+        ["gi"] = "^",
+        ["gl"] = "g_",
+        ["gj"] = "G",
+        ["gk"] = "gg",
+      },
       i = {
         -- Insert mode remaps for register insertions
         ["<C-r>"] = "<C-r><C-p>",
@@ -86,6 +94,12 @@ return {
       },
       c = {
         ["<M-p>"] = "<C-r>+",
+
+        -- change cursor position in command mode
+        ["<M-h>"] = "<left>",
+        ["<M-l>"] = "<right>",
+        ["<M-j>"] = "<down>",
+        ["<M-k>"] = "<up>",
       },
       v = {
         -- Kakoune-like movements
@@ -122,6 +136,12 @@ return {
         ["#"] = { "gc", remap = true, desc = "Toggle comment" },
 
         ["."] = { ":normal .<CR>", desc = "Repeat last normal command" },
+
+        ['dm'] = {
+          [[:s///g<right><right>]],
+          desc = "Replace inside of visual selection"
+        },
+        -- ['dm'] = { [[:lua vim.api.nvim_input(":s//<Right><Right><Right>")<CR>]], desc = "Replace inside of visual selection" },
       },
       n = {
         -- Kakoune-like movements
@@ -154,6 +174,8 @@ return {
         -- Move current line
         -- ["]e"] = { ":m .+1<CR>==" },
         -- ["[e"] = { ":m .-2<CR>==" },
+
+        ['dm'] = { ':lua vim.api.nvim_input(\':%s//<Right><Right><Right><Right>\')<CR>', desc = "Replace within all buffer" },
 
         -- Paste from system clipboard
         ["p"] = '"+p',

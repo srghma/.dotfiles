@@ -1,6 +1,10 @@
-{ options, config, pkgs, lib, ... }@args:
-
 {
+  options,
+  config,
+  pkgs,
+  lib,
+  ...
+} @ args: {
   imports = [
     ../modules/unifiedGtkQtTheme.nix
     ../modules/hibernate-at-time.nix
@@ -75,9 +79,9 @@
   };
 
   environment = import ./environment args;
-  services    = import ./services    args;
-  fonts       = import ./fonts       args;
-  users       = import ./users       args;
+  services = import ./services args;
+  fonts = import ./fonts args;
+  users = import ./users args;
 
   # tilde.workstation.disable_main_keyboard.enable = true;
   # tilde.username = "srghma";
@@ -126,7 +130,6 @@
       wheelNeedsPassword = false;
     };
   };
-
 
   programs = {
     # droidcam.enable = true;
@@ -267,8 +270,18 @@
       enable = true;
       # allowPing = true;
 
-      allowedTCPPortRanges = [{ from = 1714; to = 1764; }]; # for nixpkgsMaster.pkgs.kdeconnect
-      allowedUDPPortRanges = [{ from = 1714; to = 1764; }]; # for nixpkgsMaster.pkgs.kdeconnect
+      allowedTCPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        }
+      ]; # for nixpkgsMaster.pkgs.kdeconnect
+      allowedUDPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        }
+      ]; # for nixpkgsMaster.pkgs.kdeconnect
 
       allowedTCPPorts = [
         # 5432
@@ -281,21 +294,24 @@
       ];
     };
 
-    hosts =
-      let block =
-        [
-          # "twitter.com"  "www.twitter.com"
-          # "x.com"        "www.x.com"
-          # "youtube.com"  "www.youtube.com"  "m.youtube.com"
-          "telegram.org" "www.telegram.org" "web.telegram.org" "zws2.web.telegram.org" "zws2-1.web.telegram.org"
-          "pikabu.ru"    "www.pikabu.ru"
-          # "reddit.com"   "www.reddit.com"
-        ];
-      in {
-        "::0" = block;
-        "0.0.0.0" = block;
-        # "192.168.250.1" = [ "srghma-chinese.github.io" "srghma-chinese2.github.io" ];
-      };
+    hosts = let
+      block = [
+        # "twitter.com"  "www.twitter.com"
+        # "x.com"        "www.x.com"
+        # "youtube.com"  "www.youtube.com"  "m.youtube.com"
+        # "telegram.org"
+        # "www.telegram.org"
+        # "web.telegram.org"
+        # "zws2.web.telegram.org"
+        # "zws2-1.web.telegram.org"
+        # "pikabu.ru"    "www.pikabu.ru"
+        # "reddit.com"   "www.reddit.com"
+      ];
+    in {
+      "::0" = block;
+      "0.0.0.0" = block;
+      # "192.168.250.1" = [ "srghma-chinese.github.io" "srghma-chinese2.github.io" ];
+    };
   };
 
   console = {
@@ -359,7 +375,7 @@
   '';
 
   nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = ["nix-command" "flakes"];
 
     # sandbox = "relaxed";
 
@@ -396,7 +412,7 @@
       "digitallyinduced.cachix.org-1:y+wQvrnxQ+PdEsCt91rmvv39qRCYzEgGQaldK26hCKE="
     ];
 
-    trusted-users = [ "root" "srghma" ];
+    trusted-users = ["root" "srghma"];
   };
 
   # use unstable
@@ -431,5 +447,4 @@
   # system.activationScripts.preventCurrentSystemPackagesIfdsFromCollecting = ''
   #   ln -sfn ${pkgs.collectIfdDepsToTextFile environment.systemPackages} /nix/var/nix/gcroots/ifd-deps
   # '';
-
 }

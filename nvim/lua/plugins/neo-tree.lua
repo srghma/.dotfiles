@@ -18,7 +18,7 @@ function focus_some_file(mylambda)
     local success, node = pcall(tree.get_node, tree)
     -- log_to_file(vim.inspect(success))
     -- log_to_file(vim.inspect(node))
-    
+
     if not (success and node) or node.type == "message" then
       log.debug("Could not get node.")
       return
@@ -82,6 +82,8 @@ return {
     opts.window.mappings["s"] = false
     opts.window.mappings["S"] = false
     opts.window.mappings["/"] = false
+    opts.window.mappings["f"] = false
+    opts.window.mappings["ff"] = "filter_on_submit"
     opts.window.mappings["f/"] = "fuzzy_finder"
 
     -- don't steal from 'zz'
