@@ -1,8 +1,5 @@
-{ pkgs, ... }:
-
-with pkgs;
-
-let
+{pkgs, ...}:
+with pkgs; let
   systemPackages = [
     brightnessctl
 
@@ -37,7 +34,7 @@ let
     # nixpkgsLocal.pkgs.ngrok
 
     ## misc
-    nixpkgsUnstable.pkgs.transmission-gtk
+    nixpkgsUnstable.pkgs.transmission_4-gtk
     nixpkgsUnstable.pkgs.feh
     nixpkgsUnstable.pkgs.mpv
     nixpkgsUnstable.pkgs.xclip
@@ -55,10 +52,11 @@ let
     # nixpkgsMaster.pkgs.lunarvim
     # nixpkgsMaster.pkgs.lazygit
     nixpkgsMaster.pkgs.ripgrep
-    nixpkgsMaster.pkgs.lua-language-server
+    nixpkgsUnstable.pkgs.lua-language-server
     nixpkgsMaster.pkgs.code-minimap
     nixpkgsMaster.pkgs.alejandra
     nixpkgsMaster.pkgs.statix
+    nixpkgsMaster.pkgs.selene
     nixpkgsMaster.pkgs.deadnix
 
     nixpkgsUnstable.pkgs.tmux
@@ -174,7 +172,7 @@ let
     # python36Packages.syncthing-gtk
     # mypkgs.arion
 
-    (nixpkgsUnstable.python3.withPackages (ps: with ps; [ pynvim ])) # for denite https://github.com/Shougo/denite.nvim/issues/456
+    (nixpkgsUnstable.python3.withPackages (ps: with ps; [pynvim])) # for denite https://github.com/Shougo/denite.nvim/issues/456
 
     # for vim
     # nixpkgsUnstable.haskellPackages.hindent
@@ -273,12 +271,11 @@ let
     nixpkgsMaster.pkgs.yt-dlp
     nixpkgsMaster.pkgs.kdeconnect
 
-    nixpkgsMaster.pkgs.blender
+    # nixpkgsUnstable.pkgs.blender
 
-    (import (fetchTarball https://github.com/cachix/devenv/archive/v0.6.2.tar.gz)).default
+    (import (fetchTarball "https://github.com/cachix/devenv/archive/v0.6.2.tar.gz")).default
   ];
-in
-{
+in {
   systemPackages = systemPackages;
   # systemPackages = [ neovim ];
 

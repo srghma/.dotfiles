@@ -1,7 +1,15 @@
-{ config, lib, pkgs, modulesPath, inputs, settings, localpkgs, ... }:
-
-let
-  mypkgs = pkgs.nixpkgsMaster.pkgs;
+{
+  config,
+  pkgs,
+  # lib,
+  # modulesPath,
+  # inputs,
+  # settings,
+  # localpkgs,
+  ...
+}: let
+  # mypkgs = pkgs.nixpkgsUnstable.pkgs;
+  mypkgs = pkgs.nixpkgsStable.pkgs;
 
   obs = mypkgs.wrapOBS {
     plugins = with mypkgs.obs-studio-plugins; [
@@ -31,8 +39,7 @@ let
       # obs-nvfbc
     ];
   };
-in
-{
+in {
   boot.extraModulePackages = with config.boot.kernelPackages; [
     v4l2loopback
   ];
