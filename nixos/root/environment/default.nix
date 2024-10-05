@@ -257,6 +257,8 @@ with pkgs; let
     # mypkgs.neuromore
 
     (pkgs.writeShellScriptBin "spago-migrate" "${mypkgs.easy-purescript-nix-automatic.spago}/bin/spago migrate")
+    (pkgs.writeShellScriptBin "ru" "${pkgs.xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ru_swapped $DISPLAY")
+    (pkgs.writeShellScriptBin "ua" "${pkgs.xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ua_swapped $DISPLAY")
     mypkgs.purescript-overlay.spago-unstable
     mypkgs.purescript-overlay.purs
 

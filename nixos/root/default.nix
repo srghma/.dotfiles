@@ -267,7 +267,7 @@
       # for libvirtd (https://nixos.org/nixops/manual/#idm140737318329504)
       # checkReversePath = false;
 
-      enable = true;
+      enable = false;
       # allowPing = true;
 
       allowedTCPPortRanges = [

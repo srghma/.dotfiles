@@ -1,17 +1,16 @@
 # stolen from https://github.com/rychly/nur-packages/blob/79fa016d59006fb02fbd3590cbc756f46977cc4b/modules/unified-gtk-qt-theme.nix#L67
-
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cfg = config.unifiedGtkQtTheme;
 
   ## modules
 
   mainModuleOptions = {
-
     enable = mkOption {
       type = types.bool;
       default = false;
@@ -19,7 +18,6 @@ let
     };
 
     iconTheme = {
-
       name = mkOption {
         type = types.str;
         default = "breeze";
@@ -31,7 +29,6 @@ let
         default = pkgs.breeze-icons;
         description = "Package/derivation of the icon theme to use with the unified GTK/Qt4/Qt5 theme.";
       };
-
     };
 
     font = mkOption {
@@ -39,7 +36,6 @@ let
       default = "DejaVu Sans 11";
       description = "Font to use with the unified GTK/Qt4/Qt5 theme.";
     };
-
   };
 
   ## shortcuts
@@ -51,15 +47,12 @@ let
     gtk-font-name="${cfg.font}"
     gtk-application-prefer-dark-theme=1
   '';
-
 in {
-
   options.unifiedGtkQtTheme = mainModuleOptions;
 
   # see also https://wiki.archlinux.org/index.php/GTK%2B and https://wiki.archlinux.org/index.php/Qt
 
   config = mkIf (cfg.enable) {
-
     # QT4/5 global theme
     environment.etc."xdg/Trolltech.conf".text = ''
       [Qt]
@@ -81,8 +74,8 @@ in {
       # No Qt theme (from Qt 4.5, QGtkStyle style is included in Qt)
       # No Gtk2/Gtk3 theme (the default theme is already included in pkgs.gnome-themes-standard)
       # Icons for both GNOME/KDE applications including a fallback
-      cfg.iconTheme.package	# KDE/GNOME
-      gnome3.adwaita-icon-theme	# GNOME fallback
+      cfg.iconTheme.package # KDE/GNOME
+      adwaita-icon-theme # GNOME fallback
       # hicolor_icon_theme	# general fallback
       # SVG loader for pixbuf (needed for GTK svg icon themes)
       librsvg
@@ -106,8 +99,6 @@ in {
     '';
 
     # Enable access to /share where the themes are.
-    environment.pathsToLink = [ "/share" ];
-
+    environment.pathsToLink = ["/share"];
   };
-
 }

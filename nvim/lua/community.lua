@@ -16,9 +16,12 @@ return {
   { import = "astrocommunity.pack.rust" },
   -- { import = "astrocommunity.pack.purescript" },
   { import = "astrocommunity.motion.nvim-spider" },
+  -- { import = "astrocommunity.motion.leap-nvim" },
+  { import = "astrocommunity.motion.flash-nvim" },
   { import = "astrocommunity.editing-support.rainbow-delimiters-nvim" },
   { import = "astrocommunity.editing-support.auto-save-nvim" },
   { import = "astrocommunity.search.nvim-spectre" },
+  { import = "astrocommunity.completion.codeium-vim" },
   -- { import = "astrocommunity.motion.nvim-spider" },
   -- { import = "astrocommunity.indent.mini-indentscope" },
 }

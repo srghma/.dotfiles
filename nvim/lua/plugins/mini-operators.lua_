@@ -5,11 +5,11 @@ return {
     local plugin = require("lazy.core.config").spec.plugins["mini.operators"]
     local opts = require("lazy.core.plugin").values(plugin, "opts", false)
     for operator, default in pairs {
-      evaluate = "go=",
+      -- evaluate = "go=",
       exchange = "gx",
-      multiply = "gom",
-      replace = "gr", -- "R" doesnt work
-      sort = "gos",
+      -- multiply = "gom",
+      -- replace = "gr", -- "R" doesnt work
+      -- sort = "gos",
     } do
       local prefix = vim.tbl_get(opts, operator, "prefix") or default
       local line_lhs = prefix .. vim.fn.strcharpart(prefix, vim.fn.strchars(prefix) - 1, 1)
@@ -21,5 +21,8 @@ return {
       })
     end
   end,
-  opts = {},
+  config = function ()
+    require('mini.operators').setup({})
+  end
+  -- opts = {},
 }

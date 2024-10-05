@@ -11,6 +11,7 @@ return {
         normal_cur = "yss",
         normal_line = "yS",
         normal_cur_line = "ySS",
+        -- visual = "<C-s>",
         visual = "S",
         visual_line = "gS",
         delete = "ds",

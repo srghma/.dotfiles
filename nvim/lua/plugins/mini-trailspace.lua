@@ -30,11 +30,21 @@ return {
 
     require('mini.trailspace').setup()
 
-    -- trim any leftover whitespace if conform has not been able to do so
-    vim.api.nvim_create_autocmd({ 'BufWrite' }, {
-      callback = function()
-        require('mini.trailspace').trim()
-      end,
-    })
+    -- -- trim any leftover whitespace if conform has not been able to do so
+    -- vim.api.nvim_create_autocmd({ 'BufWrite' }, {
+    --   callback = function()
+    --     require('mini.trailspace').trim()
+    --   end,
+    -- })
+
+		-- local trailspace = require("mini.trailspace")
+		-- trailspace.setup()
+		-- vim.api.nvim_create_autocmd("BufWritePre", {
+		-- 	group = vim.api.nvim_create_augroup("trim-whitespace", { clear = true }),
+		-- 	callback = function()
+		-- 		trailspace.trim()
+		-- 		trailspace.trim_last_lines()
+		-- 	end,
+		-- })
   end,
 }
