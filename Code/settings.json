@@ -78,4 +78,9 @@
     ],
     "workbench.editor.enablePreview": false,
     "purescript.buildCommand": "/home/srghma/projects/spago/bin/index.dev.js build --purs-args --json-error",
+    "codeium.detectProxy": false,
+    "codeium.enableConfig": {
+
+        "*": true
+    },
 }

@@ -19,9 +19,22 @@ return {
   -- { import = "astrocommunity.motion.leap-nvim" },
   { import = "astrocommunity.motion.flash-nvim" },
   { import = "astrocommunity.editing-support.rainbow-delimiters-nvim" },
-  { import = "astrocommunity.editing-support.auto-save-nvim" },
+  -- { import = "astrocommunity.editing-support.auto-save-nvim" },
+  {
+    "okuuva/auto-save.nvim",
+    event = { "User AstroFile", "InsertEnter" },
+    opts = {
+      trigger_events = { -- See :h events
+        immediate_save = { 'BufLeave', 'TabLeave', 'FocusLost', 'VimLeavePre' }, -- vim events that trigger an immediate save
+        -- defer_save = { "InsertLeave", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
+        defer_save = { }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
+        cancel_defered_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
+      },
+    },
+  },
   { import = "astrocommunity.search.nvim-spectre" },
-  { import = "astrocommunity.completion.codeium-vim" },
+  -- { import = "astrocommunity.completion.codeium-vim" },
+  -- { import = "astrocommunity.editing-support.text-case-nvim" },
   -- { import = "astrocommunity.motion.nvim-spider" },
   -- { import = "astrocommunity.indent.mini-indentscope" },
 }

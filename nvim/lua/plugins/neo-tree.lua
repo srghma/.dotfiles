@@ -9,7 +9,7 @@ local function log_to_file(content)
   end
 end
 
-function focus_some_file(mylambda)
+local function focus_some_file(mylambda)
   return function(state)
     local log = require("neo-tree.log")
 
@@ -89,7 +89,7 @@ return {
     -- don't steal from 'zz'
     opts.window.mappings["z"] = false
     opts.window.mappings["Z"] = "close_all_nodes"
-    opts.window.mappings["zz"] = function(state) vim.cmd("normal! zz") end
+    opts.window.mappings["zz"] = function(_state) vim.cmd("normal! zz") end
 
     opts.window.mappings["a"] = {
       "add",

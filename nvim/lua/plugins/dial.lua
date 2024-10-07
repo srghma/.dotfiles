@@ -109,9 +109,9 @@ return {
           word = true,
           cyclic = true,
         },
-        augend.case.new {
-          types = { "camelCase", "PascalCase", "snake_case", "SCREAMING_SNAKE_CASE" },
-        },
+        -- augend.case.new {
+        --   types = { "camelCase", "PascalCase", "snake_case", "SCREAMING_SNAKE_CASE" },
+        -- },
       },
     }
   end,

@@ -15,7 +15,7 @@ return {
         number = true, -- sets vim.opt.number
         spell = false, -- sets vim.opt.spell
         signcolumn = "yes", -- sets vim.opt.signcolumn to yes
-        wrap = false, -- sets vim.opt.wrap
+        wrap = true, -- sets vim.opt.wrap
         clipboard = "unnamed",
       },
       g = { -- vim.g.<key>
@@ -141,6 +141,10 @@ return {
           [[:s///g<right><right>]],
           desc = "Replace inside of visual selection"
         },
+        ['DM'] = {
+          [[:Subs///g<Right><Right>]],
+          desc = "Replace inside of visual selection"
+        },
         -- ['dm'] = { [[:lua vim.api.nvim_input(":s//<Right><Right><Right>")<CR>]], desc = "Replace inside of visual selection" },
       },
       n = {
@@ -176,6 +180,7 @@ return {
         -- ["[e"] = { ":m .-2<CR>==" },
 
         ['dm'] = { ':lua vim.api.nvim_input(\':%s//<Right><Right><Right><Right>\')<CR>', desc = "Replace within all buffer" },
+        ['DM'] = { ':lua vim.api.nvim_input(\':%Subs//<Right><Right><Right><Right>\')<CR>', desc = "Replace within all buffer" },
 
         -- Paste from system clipboard
         ["p"] = '"+p',
