@@ -132,6 +132,8 @@
   };
 
   programs = {
+    nix-ld.enable = true; # for nvim codeium
+
     # droidcam.enable = true;
     direnv.enable = true;
 

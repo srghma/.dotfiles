@@ -83,4 +83,5 @@
 
         "*": true
     },
+    "update.showReleaseNotes": false,
 }

@@ -19,6 +19,7 @@ return {
         clipboard = "unnamed",
       },
       g = { -- vim.g.<key>
+        -- codeium_bin = "/nix/store/k8db186m3xyvgz143rw5pzjphinkwakz-codeium-1.20.9/bin/codeium_language_server",
         -- configure global vim variables (vim.g)
         -- NOTE: `mapleader` and `maplocalleader` must be set in the AstroNvim opts or before `lazy.setup`
         -- This can be found in the `lua/lazy_setup.lua` file
@@ -52,10 +53,7 @@ return {
             -- Only load the session if nvim was started with no args
             if vim.fn.argc(-1) == 0 then
               -- try to load a directory session using the current working directory
-              require("resession").load(
-                vim.fn.getcwd(),
-                { dir = "dirsession", silence_errors = true }
-              )
+              require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
             end
           end,
         },
@@ -131,19 +129,19 @@ return {
         -- Delete and yank mappings
         [",d"] = '"+d',
         [",D"] = '"+D',
-        [",w"] = ':w!<CR>',
+        [",w"] = ":w!<CR>",
 
         ["#"] = { "gc", remap = true, desc = "Toggle comment" },
 
         ["."] = { ":normal .<CR>", desc = "Repeat last normal command" },
 
-        ['dm'] = {
+        ["dm"] = {
           [[:s///g<right><right>]],
-          desc = "Replace inside of visual selection"
+          desc = "Replace inside of visual selection",
         },
-        ['DM'] = {
+        ["DM"] = {
           [[:Subs///g<Right><Right>]],
-          desc = "Replace inside of visual selection"
+          desc = "Replace inside of visual selection",
         },
         -- ['dm'] = { [[:lua vim.api.nvim_input(":s//<Right><Right><Right>")<CR>]], desc = "Replace inside of visual selection" },
       },
@@ -157,13 +155,13 @@ return {
 
         ["<C-M-d>"] = {
           function()
-            local line = vim.fn.line('.')
+            local line = vim.fn.line "."
             local content = vim.fn.getline(line)
-            vim.fn.setreg('a', content)
-            vim.cmd('put a')
-            vim.cmd('normal! k')
+            vim.fn.setreg("a", content)
+            vim.cmd "put a"
+            vim.cmd "normal! k"
           end,
-          desc = "Duplicate current line"
+          desc = "Duplicate current line",
         },
 
         -- navigate buffer tabs
@@ -179,8 +177,14 @@ return {
         -- ["]e"] = { ":m .+1<CR>==" },
         -- ["[e"] = { ":m .-2<CR>==" },
 
-        ['dm'] = { ':lua vim.api.nvim_input(\':%s//<Right><Right><Right><Right>\')<CR>', desc = "Replace within all buffer" },
-        ['DM'] = { ':lua vim.api.nvim_input(\':%Subs//<Right><Right><Right><Right>\')<CR>', desc = "Replace within all buffer" },
+        ["dm"] = {
+          ":lua vim.api.nvim_input(':%s//<Right><Right><Right><Right>')<CR>",
+          desc = "Replace within all buffer",
+        },
+        ["DM"] = {
+          ":lua vim.api.nvim_input(':%Subs//<Right><Right><Right><Right>')<CR>",
+          desc = "Replace within all buffer",
+        },
 
         -- Paste from system clipboard
         ["p"] = '"+p',
@@ -191,7 +195,7 @@ return {
         -- Delete and yank mappings
         [",d"] = '"+d',
         [",D"] = '"+D',
-        [",w"] = ':w!<CR>',
+        [",w"] = ":w!<CR>",
 
         -- -- Window management
         [",v"] = { "<Cmd>vsplit<CR>", desc = "Vertical Split" },
@@ -229,7 +233,7 @@ return {
         ["<M-q>"] = { function() require("astrocore.buffer").close() end, desc = "Close buffer" },
         [",z"] = { "<Cmd>confirm qall<CR>", desc = "Exit AstroNvim" },
 
-        [',q'] = { ':xa<CR>', desc = "Quit Window without save" },
+        [",q"] = { ":xa<CR>", desc = "Quit Window without save" },
         [",S"] = { function() require("resession").save() end, desc = "Save this session" },
 
         -- setting a mapping to false will disable it
