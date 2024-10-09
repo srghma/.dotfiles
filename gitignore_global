@@ -8,9 +8,11 @@ nohup.*
 .envrc
 # spago.dhall
 # packages.dhall
-.spago/
-output/
-.psc-ide-port
+
+# .spago/
+# output/
+# .psc-ide-port
+
 # https://github.com/scalameta/metals-vscode
 .metals/
 .bloop/
