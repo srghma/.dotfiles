@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+# Input bower.json file
+input_file="bower.json"
+
+# Output spago.yaml file
+output_file="spago.yaml"
+
+# Read fields from bower.json
+name=$(jq -r '.name' "$input_file" | sed 's/^purescript-//')
+license=$(jq -r '.license' "$input_file")
+repo_url=$(jq -r '.repository.url' "$input_file")
+repo_name=$(basename "$repo_url" .git) # Extract repo name without .git
+github_owner=$(echo "$repo_url" | awk -F '/' '{print $(NF-1)}') # Extract the owner from the URL
+
+# Extract dependencies, remove "purescript-" prefix, and convert them to a YAML list
+dependencies=$(jq -r '.dependencies | keys[]' "$input_file" | sed 's/^purescript-//; s/^/    - /')
+
+# if I access https://pursuit.purescript.org/packages/purescript-js-promise
+# it will redirect to https://pursuit.purescript.org/packages/purescript-js-promise/1.0.0
+
+# URL to check
+url="https://pursuit.purescript.org/packages/purescript-$name"
+
+url_effective=$(curl -Ls -o /dev/null -w "%{url_effective}" "$url")
+
+echo "url_effective: $url_effective"
+
+Fetch the final URL after redirection and extract the version
+version=$(echo "$url_effective" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+# version='9.0.0'
+
+echo "Version: $version"
+
+# git checkout -- spago.yaml
+
+# Check if spago.yaml exists
+if [ -f "$output_file" ]; then
+  # Merge publish section into existing spago.yaml
+  node -e "
+    const fs = require('fs');
+    // const yaml = require('js-yaml');
+    const yaml = require('/home/srghma/.node_modules/lib/node_modules/js-yaml/dist/js-yaml.js');
+    const filePath = '$output_file';
+    const data = yaml.load(fs.readFileSync(filePath, 'utf8'));
+
+    // Create a new object with the desired order
+    const reorderedData = {
+      name: data.package.name,
+      publish: {
+        license: '$license',
+        version: '$version',
+        location: {
+          githubOwner: '$github_owner',
+          githubRepo: '$repo_name'
+        }
+      },
+      dependencies: data.package.dependencies,
+      test: data.package.test || { main: \"Test.Main\", dependencies: [\"console\", \"effect\"] },
+    };
+
+    // Add any additional fields from the original data
+    Object.keys(data.package).forEach(key => {
+      if (!['name', 'publish', 'dependencies', 'test'].includes(key)) {
+        reorderedData[key] = data.package[key];
+      }
+    });
+
+    // Write the reordered data back to the YAML file
+    const outputData = { package: reorderedData, workspace: data.workspace };
+    fs.writeFileSync(filePath, yaml.dump(outputData), 'utf8');
+  "
+else
+  # Generate the new package.publish section
+  publish_section=$(cat <<EOF
+  publish:
+    license: $license
+    version: $version
+    location:
+      githubOwner: $github_owner
+      githubRepo: $repo_name
+EOF
+)
+
+  # If spago.yaml does not exist, create a new one
+  cat <<EOF > "$output_file"
+package:
+  name: $name
+$publish_section
+  dependencies:
+    $dependencies
+  test:
+    main: Test.Main
+    dependencies: []
+
+workspace:
+  packageSet:
+    registry: 60.4.0
+  extraPackages: {}
+EOF
+fi
+
+echo "Transformation complete. Updated output written to $output_file."

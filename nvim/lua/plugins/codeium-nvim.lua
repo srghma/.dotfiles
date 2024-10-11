@@ -12,7 +12,8 @@ return {
     cmd = "Codeium",
     opts = {
       enable_chat = true,
-      wrapper = "wrap-codeium-nix-alien",
+      -- wrapper = "wrap-codeium-nix-alien",
+      wrapper = "/home/srghma/.dotfiles/bin/wrap-codeium-nix-alien",
     },
     dependencies = {
       {
