@@ -28,31 +28,8 @@ EOF
 done
 
 outputdir="$HOME/projects/contrib"
-for dir in "$outputdir"/*/; do
-  if [ -f "$dir/spago.yaml" ]; then
-    echo "spago.yaml found in $dir"
-    cd $dir
-    output=$(spago build --censor-stats --strict --pedantic-packages --monochrome 2>&1 >/dev/null)
-    echo "$output"
-    echo "$output" | grep -E '^spago uninstall|^spago install' | while read -r cmd; do
-      echo "Executing: $cmd"
-      eval "$cmd"
-    done
-  fi
-done
-
-outputdir="$HOME/projects/contrib"
-for dir in "$outputdir"/*/; do
+for dir in "$outputdir"/.* "$outputdir"/*/; do
   cd $dir
-  sd 'rimraf .pulp-cache' 'rimraf .spago' ./package.json
-  sd 'pulp build -- --censor-lib --strict' 'spago build --censor-stats --strict --pedantic-packages' ./package.json
-  sd 'spago -x test.dhall' 'spago' ./package.json
-  sd 'spago build --purs-args=\\"--strict --censor-lib\\"' 'spago build --censor-stats --strict --pedantic-packages' ./package.json
-  sd "spago build --purs-args '--censor-lib --strict'" 'spago build --censor-stats --strict --pedantic-packages' ./package.json
-  sd " --no-install" ' --offline' ./package.json
-  sd " -x ./test.dhall" '' ./package.json
-  git add --all
-  bower-json-to-spago-yaml
 done
 
 outputdir="$HOME/projects/contrib"
@@ -64,14 +41,109 @@ for dir in "$outputdir"/*/; do
   fi
 done
 
+#########################################################################
+
+outputdir="$HOME/projects/contrib"
+list_of_failed_dirs=()  # Initialize an array to store failed directories
+set +e  # Allow the script to continue even if commands fail
+for dir in "$outputdir"/*/; do
+  cd "$dir" || {
+    echo "Failed to cd into directory: $dir"
+    list_of_failed_dirs+=("$dir")
+    continue
+  }
+  if ! git pull; then
+    echo "Pulling failed for directory: $dir"
+    if git status | grep -q "unmerged paths"; then
+      echo "Pulling is not possible because you have unmerged files in: $dir"
+    fi
+    list_of_failed_dirs+=("$dir")  # Append failed directory to the list
+    continue
+  fi
+  if ! git push --set-upstream origin; then
+    echo "Push failed for directory: $dir"
+    list_of_failed_dirs+=("$dir")  # Append failed directory to the list
+  else
+    echo "Push succeeded for directory: $dir"
+  fi
+done
+if [ ${#list_of_failed_dirs[@]} -gt 0 ]; then
+  echo "Failed operations in the following directories:"
+  for failed_dir in "${list_of_failed_dirs[@]}"; do
+    echo "$failed_dir"
+  done
+else
+  echo "All operations succeeded."
+fi
+
+#########################################################################
+
+# Display all failed directories
+if [ ${#list_of_failed_dirs[@]} -gt 0 ]; then
+  echo "Failed to push in the following directories:"
+  for failed_dir in "${list_of_failed_dirs[@]}"; do
+    echo "$failed_dir"
+  done
+else
+  echo "All pushes succeeded."
+fi
+
 outputdir="$HOME/projects/contrib"
 for dir in "$outputdir"/*/; do
-  cd "$dir" || continue
+  cd "$dir"
   if [ -f "bower.json" ]; then
-    jq 'del(.dependencies, .devDependencies)' bower.json > bower.tmp && mv -f bower.tmp bower.json
-    bower-json-to-spago-yaml
-    echo "Updated bower.json in $dir"
+    jq 'del(.dependencies, .devDependencies, .ignore)' bower.json > bower.tmp && mv -f bower.tmp bower.json
+    rm -f bower.tmp
   fi
+  sd 'purescript-.purescript-' '' $(fd --type file)
+  sd ' --pedantic-packages -- --censor-codes=UserDefinedWarning' ' --pedantic-packages' .github/workflows/ci.yml $(fd --type file)
+  sd -F 'url: https://raw.githubusercontent.com/.*' 'registry: 60.4.0' spago.yaml
+  sd -F 'registry: .*' 'registry: 60.4.0' spago.yaml
+  sd -F 'registry: .*' 'registry: 60.4.0' spago.yaml
+  sd -F 'github.com/paluh' 'github.com/srghma' spago.yaml
+  sd -F 'github.com/paluh' 'github.com/srghma' spago.yaml
+  sd -F 'ref: .*' 'ref: master' spago.yaml
+  sd -F 'rimraf .pulp-cache' 'rimraf .spago' ./package.json
+  sd -F 'pulp build -- --censor-lib --strict' 'spago build --censor-stats --strict --pedantic-packages' ./package.json
+  sd -F 'spago -x test.dhall' 'spago' ./package.json
+  sd -F 'spago build --purs-args=\\"--strict --censor-lib\\"' 'spago build --censor-stats --strict --pedantic-packages' ./package.json
+  sd -F "spago build --purs-args '--censor-lib --strict'" 'spago build --censor-stats --strict --pedantic-packages' ./package.json
+  sd -F " --no-install" ' --offline' ./package.json
+  sd -F " -x ./test.dhall" '' ./package.json
+
+  sd -F '"purescript": "^0.15.15",' '' ./package.json
+  sd -F '"spago": "^0.21.0"' '' ./package.json
+  sd -F ' --censor-stats --strict --pedantic-packages' ' --censor-stats --strict --ensure-ranges --pedantic-packages' .github/workflows/ci.yml $(fd --type file)
+  sd -F ' --ensure-ranges --ensure-ranges' ' --ensure-ranges' .github/workflows/ci.yml $(fd --type file)
+  sd -F 'spago test --offline --censor-stats --strict --ensure-ranges' 'spago test --offline --censor-stats --strict' .github/workflows/ci.yml $(fd --type file)
+  # npm install
+  # rm -rfd node_modules/spago node_modules/purescript
+  # purs-tidy-module-name format-in-place --src src --src test
+  # spago upgrade --migrate
+  # spago install
+  # rm -fdr .spago output
+  # spago build --censor-stats --strict --pedantic-packages --ensure-ranges
+  # spago test --offline --censor-stats --strict --pedantic-packages -- --censor-codes=UserDefinedWarning
+  # rm -f packages.dhall spago.dhall
+  # bower-json-to-spago-yaml
+  # output=$(spago build --censor-stats --strict --pedantic-packages --monochrome 2>&1 >/dev/null)
+  # echo "$output"
+  # echo "$output" | grep -E '^spago uninstall|^spago install' | while read -r cmd; do
+  #   echo "Executing: $cmd"
+  #   eval "$cmd"
+  # done
+  # # git push
+  # gaa && gc -m 'feat: migrate to spago@next'
+  # purs-tidy format-in-place src/**/*.purs test/**/*.purs lib/src/**/*.purs lib/test/**/*.purs bin/src/**/*.purs bin/test/**/*.purs
+  # purs-tidy format-in-place src test lib/src lib/test bin/src bin/test
+  # # ### gaa && gc!
+  # gaa && gc -m 'purs-tidy format-in-place src/**/*.purs test/**/*.purs'
+  # # gp
+  # git pull
+  # git push
+  # # git push --force # what if someone added changes?
+  # # git push --set-upstream origin update-spago-next
+  # echo "Updated bower.json in $dir"
 done
 
 outputdir="$HOME/projects/contrib"
@@ -214,10 +286,11 @@ for repo in "${repos[@]}"; do
 
   # if [ -d "./.github/workflows" ]; then
   #   echo "Directory ./.github/workflows exists. Copying ci.yml..."
-  #   cp -rf /home/srghma/projects/purescript-bytestrings/.github/workflows/ci.yml ./.github/workflows/ci.yml
+  #   cp -rf /home/srghma/projects/contrib/purescript-react/.github/workflows/ci.yml ./.github/workflows/ci.yml
   # else
   #   echo "Directory ./.github/workflows does not exist. Copying entire .github directory..."
   #   cp -rf /home/srghma/projects/purescript-bytestrings/.github ./.github
+  #   cp -rf /home/srghma/projects/contrib/purescript-react/.github/workflows/ci.yml ./.github/workflows/ci.yml
   # fi
 
   rm -f ./packages.dhall
@@ -232,13 +305,8 @@ for repo in "${repos[@]}"; do
     echo "Directory $outputdir/$repo_name/test/Test already exists."
   fi
 
-  sd 'name:.*' "name: ${repo_name#purescript-}" spago.yaml
-  sd 'url: https://raw.githubusercontent.com/.*' 'registry: 60.4.0' spago.yaml
-  sd 'registry: .*' 'registry: 60.4.0' spago.yaml
-  sd 'registry: .*' 'registry: 60.4.0' spago.yaml
-  sd 'github.com/paluh' 'github.com/srghma' spago.yaml
-  sd 'github.com/paluh' 'github.com/srghma' spago.yaml
-  sd 'ref: .*' 'ref: master' spago.yaml
+  sd -F 'name:.*' "name: ${repo_name#purescript-}" spago.yaml
+
   ([ -f "package.json" ] && npm-check-updates -u || true)
 
   # # rm -frd .spago
@@ -248,11 +316,12 @@ for repo in "${repos[@]}"; do
   lebab --replace test --transform commonjs
 
   npm install
+  rm -rfd node_modules/spago node_modules/purescript
   purs-tidy-module-name format-in-place --src src --src test
   spago upgrade --migrate
   spago install
   rm -fdr .spago output
-  spago build --censor-stats --strict --pedantic-packages
+  spago build --censor-stats --strict --pedantic-packages --ensure-ranges
   spago test --offline --censor-stats --strict --pedantic-packages -- --censor-codes=UserDefinedWarning
   rm -f packages.dhall spago.dhall
   bower-json-to-spago-yaml
