@@ -148,10 +148,9 @@ done
 
 outputdir="$HOME/projects/contrib"
 for dir in "$outputdir"/*/; do
-  cd "$dir" || continue
-  if [ -f "test.dhall" ]; then
-    echo "$dir"
-  fi
+  cd "$dir"
+  gaa && gc -m 'feat: remove bower.json and empty package-lock.json'
+  gp
 done
 
 outputdir="$HOME/projects/contrib"
@@ -293,9 +292,9 @@ for repo in "${repos[@]}"; do
   #   cp -rf /home/srghma/projects/contrib/purescript-react/.github/workflows/ci.yml ./.github/workflows/ci.yml
   # fi
 
-  rm -f ./packages.dhall
+  # rm -f ./packages.dhall
   # cp -f /home/srghma/projects/contrib/purescript-js-bigints/packages.dhall ./packages.dhall
-  echo "https://github.com/purescript/package-sets/releases/download/psc-0.15.4-20221015/packages.dhall sha256:4949f9f5c3626ad6a83ea6b8615999043361f50905f736bc4b7795cba6251927" > ./packages.dhall
+  # echo "https://github.com/purescript/package-sets/releases/download/psc-0.15.4-20221015/packages.dhall sha256:4949f9f5c3626ad6a83ea6b8615999043361f50905f736bc4b7795cba6251927" > ./packages.dhall
   (spago-migrate || true)
 
   if [ ! -d "./test/Test" ]; then
@@ -317,12 +316,13 @@ for repo in "${repos[@]}"; do
 
   npm install
   rm -rfd node_modules/spago node_modules/purescript
-  purs-tidy-module-name format-in-place --src src --src test
+  # purs-tidy-module-name format-in-place --src src --src test
   spago upgrade --migrate
   spago install
   rm -fdr .spago output
   spago build --censor-stats --strict --pedantic-packages --ensure-ranges
-  spago test --offline --censor-stats --strict --pedantic-packages -- --censor-codes=UserDefinedWarning
+  # spago test --offline --censor-stats --strict --pedantic-packages -- --censor-codes=UserDefinedWarning
+  spago test --offline --censor-stats --strict --pedantic-packages
   rm -f packages.dhall spago.dhall
   bower-json-to-spago-yaml
 
