@@ -171,7 +171,7 @@ return {
         ["<F2>"] = { "<Cmd>Neotree toggle<CR>" },
         ["<F3>"] = { "<Cmd>Neotree selector reveal<CR>" },
 
-        [",ga"] = ":silent !git add --all<CR>",
+        [",ga"] = ":silent !git add --all<CR>:e!<CR>",
 
         -- Move current line
         -- ["]e"] = { ":m .+1<CR>==" },

@@ -9,10 +9,6 @@ nohup.*
 # spago.dhall
 # packages.dhall
 
-# .spago/
-# output/
-# .psc-ide-port
-
 # https://github.com/scalameta/metals-vscode
 .metals/
 .bloop/
@@ -33,3 +29,7 @@ myGenesis.json
 spago-original-backup.yaml
 spago-myglobal.yaml
 .spec-results
+.spago/
+output/
+.psc-ide-port
+nohup.out
