@@ -4,10 +4,7 @@ return {
   -- { import = "astrocommunity.completion.codeium-nvim" },
 
   {
-    "dimfeld/codeium.nvim",
-    -- branch = "fix-chat",
-    commit = "a6e2df0bb14ed9089d79cc59619b5723ac1e5e47",
-    -- "Exafunction/codeium.nvim",
+    "Exafunction/codeium.nvim",
     event = "User AstroFile",
     cmd = "Codeium",
     opts = {

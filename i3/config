@@ -56,6 +56,12 @@ bindsym $mod+Shift+8 move workspace $WS7
 bindsym $mod+Shift+9 move workspace $WS8
 bindsym $mod+Shift+0 move workspace $WS9
 
+# Rewind Audacious (Win + +)
+bindsym $mod+Shift+equal exec audacious --rew
+
+# Forward Audacious (Win + =)
+bindsym $mod+equal exec audacious --fwd
+
 # -------------------------------------
 # Autostart
 # -------------------------------------

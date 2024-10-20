@@ -42,7 +42,7 @@ function spago_migrate_recursive() {
   ' sh {} +
 }
 
-export PATH=$HOME/.dotfiles/bin:$HOME/projects/spago-yaml-generate/bin/:$HOME/projects/purs-utils/result/bin/:$PATH
+export PATH=$HOME/.dotfiles/bin:$HOME/projects/spago-yaml-generate/bin/:$HOME/projects/Idris2/result/bin/:$PATH
 fpath=($HOME/.my-completions $fpath)
 
 # alias spago="$HOME/projects/spago/bin/index.dev.js"

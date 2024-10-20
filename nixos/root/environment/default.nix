@@ -2,6 +2,22 @@
   nix-alien-pkgs = import (
     builtins.fetchTarball "https://github.com/thiagokokada/nix-alien/tarball/master"
   ) {};
+
+  nixpkgsMyNeovimNightly = let
+    # nixpkgs-unstable-src = fetchTarball https://nixos.org/channels/nixpkgs-unstable/nixexprs.tar.xz;
+    nixpkgs = pkgs.fetchFromGitHub {
+      owner = "srghma";
+      repo = "nixpkgs";
+      rev = "neovim2";
+      sha256 = "sha256-Vxh6kN2r9AO8TZbqqSL/AhagxDtGLiJ1fbPM34meNVU=";
+    };
+  in
+    import nixpkgs {config = {allowUnfree = true;};};
+
+  nixpkgs2405 = let
+    nixpkgs = <nixos-24.05>;
+  in
+    import nixpkgs {config = {allowUnfree = true;};};
 in
   with pkgs; let
     systemPackages = [
@@ -53,13 +69,15 @@ in
       nixpkgsMaster.pkgs.ranger
       # nixpkgsMaster.pkgs.termite
       nixpkgsUnstable.pkgs.kitty
-      nixpkgsMaster.pkgs.neovim
+      # nixpkgsMyNeovimNightly.pkgs.neovim
+      nixpkgs2405.pkgs.neovim
       # nixpkgsMaster.pkgs.lunarvim
       # nixpkgsMaster.pkgs.lazygit
       nixpkgsMaster.pkgs.ripgrep
       nixpkgsUnstable.pkgs.lua-language-server
       nixpkgsMaster.pkgs.code-minimap
-      nixpkgsMaster.pkgs.alejandra
+      # nixpkgsMaster.pkgs.alejandra
+      nixpkgsMaster.pkgs.nixfmt
       nixpkgsMaster.pkgs.statix
       nixpkgsMaster.pkgs.selene
       nixpkgsMaster.pkgs.deadnix
@@ -267,9 +285,11 @@ in
       # mypkgs.purescript-overlay.spago-unstable
       mypkgs.purescript-overlay.purs
 
+      # npm install -g purs-tidy purs-backend-es spago@next
+      #
       # mypkgs.purescript-overlay.purs-tidy-bin.purs-tidy-0_10_0
-      mypkgs.purescript-overlay.purs-tidy
-      mypkgs.purescript-overlay.purs-backend-es
+      # mypkgs.purescript-overlay.purs-tidy
+      # mypkgs.purescript-overlay.purs-backend-es
       # mypkgs.easy-purescript-nix-automatic.purs
       # mypkgs.easy-purescript-nix-automatic.purty # find ./packages/client/src -name "*.purs" -exec purty --write {} \;
 

@@ -28,11 +28,29 @@ return {
         immediate_save = { "BufLeave", "TabLeave", "FocusLost", "VimLeavePre" }, -- vim events that trigger an immediate save
         -- defer_save = { "InsertLeave", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
         defer_save = {}, -- vim events that trigger a deferred save (saves after `debounce_delay`)
-        cancel_defered_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
+        cancel_deferred_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
       },
     },
   },
   { import = "astrocommunity.search.nvim-spectre" },
+  dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/purescript/init.lua",
+  dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/idris2/init.lua",
+
+  -- { import = "astrocommunity.pack.purescript" },
+  {
+    "AstroNvim/astrolsp",
+    opts = {
+      config = {
+        purescriptls = {
+          settings = {
+            purescript = {
+              formatter = "purs-tidy", -- add this to enable purs-tidy formatting on every save
+            },
+          },
+        },
+      },
+    },
+  },
 
   -- { import = "astrocommunity.editing-support.text-case-nvim" },
   -- { import = "astrocommunity.motion.nvim-spider" },

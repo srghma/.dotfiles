@@ -38,7 +38,7 @@
         "**/*.xdv": true,
         "**/CVS": true
     },
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     "workbench.startupEditor": "welcomePage",
     "languageServerHaskell.useCustomHieWrapper": true,
     "languageServerHaskell.useCustomHieWrapperPath": "hie",
@@ -77,11 +77,19 @@
         "UnusedDeclaration"
     ],
     "workbench.editor.enablePreview": false,
-    "purescript.buildCommand": "/home/srghma/projects/spago/bin/index.dev.js build --purs-args --json-error",
+    "purescript.buildCommand": "spago build --purs-args --json-error",
     "codeium.detectProxy": false,
     "codeium.enableConfig": {
-
-        "*": true
+        "*": true,
+        "purescript": true
     },
     "update.showReleaseNotes": false,
+    "purescript.trace.server": "verbose",
+    "Lua.codeLens.enable": true,
+    "Lua.typeFormat.config": {
+        "format_line": "true"
+    },
+    "idris2-lsp.loglevel": "info",
+    "idris2-lsp.path": "/nix/store/gny2kc7s487134y62252fywjb927zinc-idris2-lsp-2024-01-21/bin/idris2-lsp",
+    "idris2-lsp.trace.server": "messages",
 }
