@@ -1,15 +1,10 @@
 {
   config,
   pkgs,
-  # lib,
-  # modulesPath,
-  # inputs,
-  # settings,
-  # localpkgs,
   ...
 }: let
   # mypkgs = pkgs.nixpkgsUnstable.pkgs;
-  mypkgs = pkgs.nixpkgsStable.pkgs;
+  mypkgs = pkgs;
 
   obs = mypkgs.wrapOBS {
     plugins = with mypkgs.obs-studio-plugins; [
@@ -40,24 +35,23 @@
     ];
   };
 in {
-  boot.extraModulePackages = with config.boot.kernelPackages; [
-    v4l2loopback
-  ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=1 card_label="My OBS Virt Cam" exclusive_caps=1
   '';
   security.polkit.enable = true;
 
   # subject.isInGroup("users")
-  security.polkit.extraConfig = ''
-    polkit.addRule(function(action, subject) {
-        if (action.id == "org.freedesktop.policykit.exec" &&
-            action.lookup("program") == "/run/current-system/sw/bin/modprobe" &&
-            subject.user == "srghma") {
-            return polkit.Result.YES;
-        }
-    });
-  '';
+  #
+  # security.polkit.extraConfig = ''
+  #   polkit.addRule(function(action, subject) {
+  #       if (action.id == "org.freedesktop.policykit.exec" &&
+  #           action.lookup("program") == "/run/current-system/sw/bin/modprobe" &&
+  #           subject.user == "srghma") {
+  #           return polkit.Result.YES;
+  #       }
+  #   });
+  # '';
 
   # boot.extraModulePackages = [
   #   config.boot.kernelPackages.v4l2loopback # Webcam loopback
@@ -71,8 +65,6 @@ in {
 
   environment.systemPackages = [
     obs
-
-    # Webcam packages
     mypkgs.v4l-utils
     mypkgs.android-tools
     mypkgs.adb-sync

@@ -1,7 +1,8 @@
 { config, lib, pkgs, modulesPath, inputs, settings, localpkgs, ... }:
 
 let
-  mypkgs = pkgs.nixpkgsMaster.pkgs;
+  # mypkgs = pkgs.nixpkgsMaster.pkgs;
+  mypkgs = pkgs;
 
   configFile = pkgs.writeText "akvcam-configFile" ''
     [Cameras]

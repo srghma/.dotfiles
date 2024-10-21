@@ -1,6 +1,4 @@
 {
-  options,
-  config,
   pkgs,
   lib,
   ...
@@ -24,9 +22,13 @@
     ./systemd/disable-touchpad.nix
   ];
 
-  unifiedGtkQtTheme = {
-    enable = true;
-  };
+  unifiedGtkQtTheme = {enable = true;};
+
+  environment.variables = {EDITOR = "nvim";};
+
+  environment.etc."resolvconf.conf".text = ''
+    name_servers='8.8.8.8'
+  '';
 
   #   theme.name = "Numix-SX-Light";
   #   theme.package = pkgs.numix-sx-gtk-theme;
@@ -78,7 +80,6 @@
     style = "adwaita-dark";
   };
 
-  environment = import ./environment args;
   services = import ./services args;
   fonts = import ./fonts args;
   users = import ./users args;
@@ -118,10 +119,7 @@
       ];
     };
 
-    overlays = [
-      (import ../pkgs/overlay.nix)
-      (import ../utils/overlay.nix)
-    ];
+    overlays = [(import ../utils/overlay.nix)];
   };
 
   security = {
@@ -152,10 +150,10 @@
       startAgent = true;
     };
 
-    cachix = {
-      enable = true;
-      cachixSigningKey = import ../../secrets-ignored/cachixSigningKey.nix;
-    };
+    # cachix = {
+    #   enable = true;
+    #   cachixSigningKey = import ../../secrets-ignored/cachixSigningKey.nix;
+    # };
 
     bash = {
       interactiveShellInit = ''
