@@ -30,18 +30,18 @@ function n {
   nvim $@
 }
 
-# Function to recursively migrate Spago projects
-function spago_migrate_recursive() {
-  # Find directories with a file named spago.dhall
-  find . -type f -name 'spago.dhall' -exec sh -c '
-    for file do
-      # Change directory to the directory containing spago.dhall
-      cd "$(dirname "$file")" || exit
-      # Execute spago-migrate
-      spago-migrate
-    done
-  ' sh {} +
-}
+# # Function to recursively migrate Spago projects
+# function spago_migrate_recursive() {
+#   # Find directories with a file named spago.dhall
+#   find . -type f -name 'spago.dhall' -exec sh -c '
+#     for file do
+#       # Change directory to the directory containing spago.dhall
+#       cd "$(dirname "$file")" || exit
+#       # Execute spago-migrate
+#       spago-migrate
+#     done
+#   ' sh {} +
+# }
 
 export PATH=$HOME/.dotfiles/bin:$HOME/projects/spago-yaml-generate/bin/:$HOME/projects/Idris2/result/bin/:$PATH
 fpath=($HOME/.my-completions $fpath)

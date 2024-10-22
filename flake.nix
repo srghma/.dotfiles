@@ -1,5 +1,12 @@
 # sudo nixos-rebuild switch --flake .
 # sudo nixos-rebuild dry-build --flake .
+#
+# nix repl
+# :lf .
+# pkgs = inputs.nixpkgs.outputs.legacyPackages."x86_64-linux"
+#
+## for neovim
+# npm i -g vscode-langservers-extracted purs-tidy
 {
   description = "A simple NixOS flake";
 
@@ -35,8 +42,6 @@
     nixpkgsMaster = import inputs.nixpkgsMaster nixosConfig;
     nixpkgsLocal = import inputs.nixpkgsLocal nixosConfig;
     nixpkgsMyNeovimNightly = import inputs.nixpkgsMyNeovimNightly nixosConfig;
-    nix-alien-pkgs = import inputs.nix-alien-pkgs nixosConfig;
-    # purescript-overlay = import inputs.purescript-overlay nixosConfig;
   in {
     nixosConfigurations.machine = inputs.nixpkgs.lib.nixosSystem {
       inherit system;
@@ -54,9 +59,10 @@
             pkgs.callPackage ./nixos/pkgs/switch_touchpad {};
 
           purescript-overlay = inputs.purescript-overlay.packages.${system};
+          nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
         in {
           environment.systemPackages = with pkgs; [
-            # nix-alien-pkgs.nix-alien
+            nix-alien-pkgs.nix-alien
             brightnessctl
 
             keepassxc
@@ -104,7 +110,8 @@
             nixpkgsMaster.pkgs.ranger
             # nixpkgsMaster.pkgs.termite
             kitty
-            nixpkgsMyNeovimNightly.pkgs.neovim
+            # nixpkgsMyNeovimNightly.pkgs.neovim
+            nixpkgsLocal.pkgs.neovim
             # nixpkgsStable.pkgs.neovim
             # nixpkgsMaster.pkgs.lunarvim
             # nixpkgsMaster.pkgs.lazygit
@@ -112,8 +119,8 @@
             lua-language-server
             nixpkgsMaster.pkgs.code-minimap
             # nixpkgsMaster.pkgs.alejandra
-            # nixpkgsMaster.pkgs.nixfmt-classic
-            nixpkgsMaster.pkgs.nixfmt-rfc-style
+            nixpkgsMaster.pkgs.nixfmt-classic
+            # nixpkgsMaster.pkgs.nixfmt-rfc-style
             nixpkgsMaster.pkgs.statix
             nixpkgsMaster.pkgs.selene
             nixpkgsMaster.pkgs.deadnix
@@ -258,8 +265,6 @@
             # pgmodeler
             # obelisk.command
 
-            # Research
-            # zotero
             google-drive-ocamlfuse
 
             dropbox-cli
@@ -347,6 +352,10 @@
             nixpkgsMaster.pkgs.vlc
             nixpkgsMaster.pkgs.yt-dlp
             nixpkgsMaster.pkgs.plasma5Packages.kdeconnect-kde
+
+            # nixpkgsMaster.pkgs.jsonls
+            # nixpkgsMaster.pkgs.js-debug-adapter
+            # nixpkgsMaster.pkgs.codelldb
 
             # blender
 

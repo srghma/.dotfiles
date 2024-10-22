@@ -3,12 +3,12 @@
   pkgs,
   ...
 }: let
-  # mypkgs = pkgs.nixpkgsUnstable.pkgs;
+  # mypkgs = pkgs.nixpkgsMaster.pkgs;
   mypkgs = pkgs;
 
   obs = mypkgs.wrapOBS {
     plugins = with mypkgs.obs-studio-plugins; [
-      advanced-scene-switcher
+      # advanced-scene-switcher
       # obs-pipewire-audio-capture
       droidcam-obs
       # obs-shaderfilter
