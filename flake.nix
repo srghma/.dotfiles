@@ -14,7 +14,7 @@
     nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgsMaster.url = "github:NixOS/nixpkgs/master";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgsLocal.url = "path:/home/srghma/projects/nixpkgs";
+    nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
     nixpkgsMyNeovimNightly.url = "github:srghma/nixpkgs/neovim2";
     nix-alien-pkgs.url = "github:thiagokokada/nix-alien";
     kb-light.url = "github:srghma/kb-light";
@@ -29,6 +29,10 @@
     easy-purescript-nix-automatic.flake = false;
     purescript-overlay.url = "github:thomashoneyman/purescript-overlay";
     purescript-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    Idris2.url = "git+file:/home/srghma/projects/Idris2";
+    Idris2.inputs.nixpkgs.follows = "nixpkgs";
+    idris2-pack.url = "git+file:/home/srghma/projects/idris2-pack";
+    idris2-pack.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {self, ...} @ inputs: let
@@ -62,6 +66,9 @@
           nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
         in {
           environment.systemPackages = with pkgs; [
+            inputs.Idris2.packages.${system}.default
+            inputs.idris2-pack.packages.${system}.default
+
             nix-alien-pkgs.nix-alien
             brightnessctl
 
@@ -119,8 +126,8 @@
             lua-language-server
             nixpkgsMaster.pkgs.code-minimap
             # nixpkgsMaster.pkgs.alejandra
-            nixpkgsMaster.pkgs.nixfmt-classic
-            # nixpkgsMaster.pkgs.nixfmt-rfc-style
+            # nixpkgsMaster.pkgs.nixfmt-classic
+            nixpkgsMaster.pkgs.nixfmt-rfc-style
             nixpkgsMaster.pkgs.statix
             nixpkgsMaster.pkgs.selene
             nixpkgsMaster.pkgs.deadnix

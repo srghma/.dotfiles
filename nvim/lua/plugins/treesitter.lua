@@ -9,6 +9,7 @@ return {
     ensure_installed = {
       "lua",
       "vim",
+      "idris",
       -- add more arguments for adding more treesitter parsers
     },
   },

@@ -34,7 +34,7 @@ return {
   },
   { import = "astrocommunity.search.nvim-spectre" },
   dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/purescript/init.lua",
-  dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/idris2/init.lua",
+  -- dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/idris2/init.lua",
 
   -- { import = "astrocommunity.pack.purescript" },
   {
@@ -55,6 +55,11 @@ return {
   -- { import = "astrocommunity.editing-support.text-case-nvim" },
   -- { import = "astrocommunity.motion.nvim-spider" },
   -- { import = "astrocommunity.indent.mini-indentscope" },
+
+  {
+    "nvim-treesitter/nvim-treesitter",
+    dir = "/home/srghma/projects/nvim-treesitter",
+  },
 }
 
 -- highlight IlluminatedWordWrite gui=underline

@@ -11,6 +11,7 @@
 --   end
 -- }
 
+---@type LazySpec
 return {
   'rapan931/lasterisk.nvim',                              -- improved * search
   lazy = true,
