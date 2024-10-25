@@ -33,3 +33,4 @@ spago-myglobal.yaml
 output/
 .psc-ide-port
 nohup.out
+.direnv/

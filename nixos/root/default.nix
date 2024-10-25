@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-} @ args: {
+}@args:
+{
   imports = [
     ../modules/unifiedGtkQtTheme.nix
     ../modules/hibernate-at-time.nix
@@ -22,9 +23,13 @@
     ./systemd/disable-touchpad.nix
   ];
 
-  unifiedGtkQtTheme = {enable = true;};
+  unifiedGtkQtTheme = {
+    enable = true;
+  };
 
-  environment.variables = {EDITOR = "nvim";};
+  environment.variables = {
+    EDITOR = "nvim";
+  };
 
   environment.etc."resolvconf.conf".text = ''
     name_servers='8.8.8.8'
@@ -119,7 +124,7 @@
       ];
     };
 
-    overlays = [(import ../utils/overlay.nix)];
+    overlays = [ (import ../utils/overlay.nix) ];
   };
 
   security = {
@@ -134,6 +139,11 @@
 
     # droidcam.enable = true;
     direnv.enable = true;
+    direnv.silent = false;
+    direnv.loadInNixShell = true;
+    direnv.package = pkgs.nixpkgsMaster.pkgs.direnv;
+    direnv.nix-direnv.enable = true;
+    direnv.nix-direnv.package = pkgs.nixpkgsMaster.pkgs.nix-direnv;
 
     gnupg.agent.enable = true;
     # gnome-documents.enable = false;
@@ -249,6 +259,7 @@
 
           ## js
           # yarn
+          "direnv"
         ];
       };
     };
@@ -294,24 +305,26 @@
       ];
     };
 
-    hosts = let
-      block = [
-        # "twitter.com"  "www.twitter.com"
-        # "x.com"        "www.x.com"
-        # "youtube.com"  "www.youtube.com"  "m.youtube.com"
-        # "telegram.org"
-        # "www.telegram.org"
-        # "web.telegram.org"
-        # "zws2.web.telegram.org"
-        # "zws2-1.web.telegram.org"
-        # "pikabu.ru"    "www.pikabu.ru"
-        # "reddit.com"   "www.reddit.com"
-      ];
-    in {
-      "::0" = block;
-      "0.0.0.0" = block;
-      # "192.168.250.1" = [ "srghma-chinese.github.io" "srghma-chinese2.github.io" ];
-    };
+    hosts =
+      let
+        block = [
+          # "twitter.com"  "www.twitter.com"
+          # "x.com"        "www.x.com"
+          # "youtube.com"  "www.youtube.com"  "m.youtube.com"
+          # "telegram.org"
+          # "www.telegram.org"
+          # "web.telegram.org"
+          # "zws2.web.telegram.org"
+          # "zws2-1.web.telegram.org"
+          # "pikabu.ru"    "www.pikabu.ru"
+          # "reddit.com"   "www.reddit.com"
+        ];
+      in
+      {
+        "::0" = block;
+        "0.0.0.0" = block;
+        # "192.168.250.1" = [ "srghma-chinese.github.io" "srghma-chinese2.github.io" ];
+      };
   };
 
   console = {
@@ -375,7 +388,10 @@
   '';
 
   nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
 
     # sandbox = "relaxed";
 
@@ -414,7 +430,10 @@
       "gh-nix-idris2-packages.cachix.org-1:iOqSB5DrESFT+3A1iNzErgB68IDG8BrHLbLkhztOXfo="
     ];
 
-    trusted-users = ["root" "srghma"];
+    trusted-users = [
+      "root"
+      "srghma"
+    ];
   };
 
   # use unstable

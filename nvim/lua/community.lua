@@ -1,5 +1,3 @@
--- if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroCommunity: import any community modules here
 -- We import this file in `lazy_setup.lua` before the `plugins/` folder.
 -- This guarantees that the specs are processed before any user plugins.
@@ -34,7 +32,7 @@ return {
   },
   { import = "astrocommunity.search.nvim-spectre" },
   dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/purescript/init.lua",
-  -- dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/idris2/init.lua",
+  dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/idris2/init.lua",
 
   -- { import = "astrocommunity.pack.purescript" },
   {
@@ -56,12 +54,11 @@ return {
   -- { import = "astrocommunity.motion.nvim-spider" },
   -- { import = "astrocommunity.indent.mini-indentscope" },
 
-  {
-    "nvim-treesitter/nvim-treesitter",
-    dir = "/home/srghma/projects/nvim-treesitter",
-  },
-}
+  { "nvim-treesitter/nvim-treesitter", dir = "/home/srghma/projects/nvim-treesitter" },
+  -- { "nvim-treesitter/nvim-treesitter", dev { path = "/home/srghma/projects/nvim-treesitter" }, },
 
--- highlight IlluminatedWordWrite gui=underline
--- highlight IlluminatedWordRead gui=underline
--- highlight IlluminatedWordText gui=underline
+  -- { "kevinhwang91/nvim-ufo", url = "https://github.com/srghma/nvim-ufo.git", rev = "512096fc1644466a99a08cdb9647b729866e88fc" },
+  -- cd ~/.local/share/nvim/lazy/nvim-ufo/ && git pull origin main
+  { "kevinhwang91/nvim-ufo", rev = "c96bb3bb853ff6253fe74f057df03e61fafd2403" },
+  -- { "kevinhwang91/nvim-ufo", branch = "main" },
+}

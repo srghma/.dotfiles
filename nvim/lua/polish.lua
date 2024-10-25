@@ -6,6 +6,7 @@
 vim.filetype.add {
   extension = {
     idr = "idris",
+    ipkg = "ipkg",
   },
   -- filename = {
   --   ["Foofile"] = "fooscript",
