@@ -44,11 +44,14 @@
       };
     };
 
+    nixpkgs = import inputs.nixpkgs nixosConfig;
     nixpkgsStable = import inputs.nixpkgsStable nixosConfig;
     nixpkgsMaster = import inputs.nixpkgsMaster nixosConfig;
     nixpkgsLocal = import inputs.nixpkgsLocal nixosConfig;
     nixpkgsMyNeovimNightly = import inputs.nixpkgsMyNeovimNightly nixosConfig;
   in {
+    devShells.${system}.default = nixpkgs.mkShell {};
+
     nixosConfigurations.machine = inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       modules = [
@@ -136,7 +139,8 @@
               nixpkgsMaster.pkgs.deadnix
 
               tmux
-              nixpkgsMaster.vscode.fhs
+              nixpkgsMaster.vscode
+              # nixpkgsMaster.vscode.fhs
               audacious
               # nix
 
