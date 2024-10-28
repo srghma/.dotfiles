@@ -33,6 +33,9 @@
     Idris2.inputs.nixpkgs.follows = "nixpkgs";
     idris2-pack.url = "git+file:/home/srghma/projects/idris2-pack";
     idris2-pack.inputs.nixpkgs.follows = "nixpkgs";
+
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {self, ...} @ inputs: let
@@ -55,6 +58,7 @@
     nixosConfigurations.machine = inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       modules = [
+        inputs.sops-nix.nixosModules.sops
         {
           nixpkgs.overlays = [(_final: _prev: {inherit nixpkgsStable nixpkgsMaster;})];
         }
@@ -103,6 +107,7 @@
               pasystray
               scrot
               flameshot
+              age
               # anki
               # nixpkgsLocal.pkgs.anki-bin
               xarchiver

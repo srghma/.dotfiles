@@ -8,7 +8,7 @@ return {
   -- dir = "/home/srghma/projects/astrocommunity",
   -- { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.typescript" },
-  { import = "astrocommunity.pack.nix" },
+  -- { import = "astrocommunity.pack.nix" },
   { import = "astrocommunity.bars-and-lines.vim-illuminate" },
   -- { import = "astrocommunity.pack.haskell" },
   { import = "astrocommunity.pack.rust" },
@@ -59,6 +59,6 @@ return {
 
   -- { "kevinhwang91/nvim-ufo", url = "https://github.com/srghma/nvim-ufo.git", rev = "512096fc1644466a99a08cdb9647b729866e88fc" },
   -- cd ~/.local/share/nvim/lazy/nvim-ufo/ && git pull origin main
-  { "kevinhwang91/nvim-ufo", rev = "c96bb3bb853ff6253fe74f057df03e61fafd2403" },
+  { "kevinhwang91/nvim-ufo", branch = "main", version = false, rev = "c96bb3bb853ff6253fe74f057df03e61fafd2403" },
   -- { "kevinhwang91/nvim-ufo", branch = "main" },
 }
