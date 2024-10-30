@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-} @ args: {
+}@args:
+{
   imports = [
     ../modules/unifiedGtkQtTheme.nix
     ../modules/access-tokens.nix
@@ -27,6 +28,7 @@
     enable = true;
   };
 
+  environment.enableAllTerminfo = true;
   environment.variables = {
     EDITOR = "nvim";
   };
@@ -124,7 +126,7 @@
       ];
     };
 
-    overlays = [(import ../utils/overlay.nix)];
+    overlays = [ (import ../utils/overlay.nix) ];
   };
 
   security = {
@@ -236,7 +238,7 @@
           "zsh-navigation-tools"
 
           ## programs
-          # tmux
+          # "tmux"
           # "git"
 
           ## nixos
@@ -305,24 +307,26 @@
       ];
     };
 
-    hosts = let
-      block = [
-        # "twitter.com"  "www.twitter.com"
-        # "x.com"        "www.x.com"
-        # "youtube.com"  "www.youtube.com"  "m.youtube.com"
-        # "telegram.org"
-        # "www.telegram.org"
-        # "web.telegram.org"
-        # "zws2.web.telegram.org"
-        # "zws2-1.web.telegram.org"
-        # "pikabu.ru"    "www.pikabu.ru"
-        # "reddit.com"   "www.reddit.com"
-      ];
-    in {
-      "::0" = block;
-      "0.0.0.0" = block;
-      # "192.168.250.1" = [ "srghma-chinese.github.io" "srghma-chinese2.github.io" ];
-    };
+    hosts =
+      let
+        block = [
+          # "twitter.com"  "www.twitter.com"
+          # "x.com"        "www.x.com"
+          # "youtube.com"  "www.youtube.com"  "m.youtube.com"
+          # "telegram.org"
+          # "www.telegram.org"
+          # "web.telegram.org"
+          # "zws2.web.telegram.org"
+          # "zws2-1.web.telegram.org"
+          # "pikabu.ru"    "www.pikabu.ru"
+          # "reddit.com"   "www.reddit.com"
+        ];
+      in
+      {
+        "::0" = block;
+        "0.0.0.0" = block;
+        # "192.168.250.1" = [ "srghma-chinese.github.io" "srghma-chinese2.github.io" ];
+      };
   };
 
   console = {

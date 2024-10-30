@@ -31,7 +31,7 @@ return {
     },
   },
   { import = "astrocommunity.search.nvim-spectre" },
-  dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/purescript/init.lua",
+  -- dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/purescript/init.lua",
   dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/idris2/init.lua",
 
   -- { import = "astrocommunity.pack.purescript" },
@@ -61,4 +61,5 @@ return {
   -- cd ~/.local/share/nvim/lazy/nvim-ufo/ && git pull origin main
   { "kevinhwang91/nvim-ufo", branch = "main", version = false, rev = "c96bb3bb853ff6253fe74f057df03e61fafd2403" },
   -- { "kevinhwang91/nvim-ufo", branch = "main" },
+  { 'danilamihailov/beacon.nvim' },
 }

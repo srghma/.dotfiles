@@ -11,6 +11,8 @@ for file in $HOME/.dotfiles/zsh/*.sh; do
   source $file
 done
 
+# export TERM=xterm-kitty
+
 # export EDITOR="lvim"
 
 function touch-safe {
