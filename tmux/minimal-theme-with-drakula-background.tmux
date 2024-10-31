@@ -38,7 +38,8 @@ get_tmux_option() {
 # - @minimal-tmux-right-arrow: right arrow symbol
 # - @minimal-tmux-left-arrow: right left symbol
 
-default_color="#[bg=#282a36,fg=#ffffff,bold]"
+# default_color="#[bg=#282a36,fg=#ffffff,bold]"
+default_color="#[bg=#1e222a,fg=#ffffff,bold]"
 
 # variables
 bg=$(get_tmux_option "@minimal-tmux-bg" '#698DDA')
@@ -77,6 +78,6 @@ tmux set-option -g status-left "$status_left_extra"
 tmux set-option -g status-right "$status_right_extra"
 
 tmux set-option -g window-status-format "$window_status_format"
-"$show_expanded_icon_for_all_tabs" && tmux set-option -g window-status-format "#[bg=#282a36,fg=#ffffff] ${window_status_format}#{?window_zoomed_flag,${expanded_icon},}"
+"$show_expanded_icon_for_all_tabs" && tmux set-option -g window-status-format "#[bg=#1e222a,fg=#ffffff] ${window_status_format}#{?window_zoomed_flag,${expanded_icon},}"
 
 tmux set-option -g window-status-current-format "#[fg=${bg}]$larrow#[bg=${bg},fg=${fg}]${window_status_format}#{?window_zoomed_flag,${expanded_icon},}#[fg=${bg},bg=default]$rarrow"
