@@ -11,6 +11,12 @@ for file in $HOME/.dotfiles/zsh/*.sh; do
   source $file
 done
 
+tmux-window-name() {
+  (/nix/store/3zg0dvhh2cfk59wh3d1ryhdzx7b5xlqg-tmuxplugin-tmux-window-name-2024-03-08/share/tmux-plugins/tmux-window-name/scripts/rename_session_windows.py &)
+	# ($TMUX_PLUGIN_MANAGER_PATH/tmux-window-name/scripts/rename_session_windows.py &)
+}
+add-zsh-hook chpwd tmux-window-name
+
 # export TERM=xterm-kitty
 
 # export EDITOR="lvim"

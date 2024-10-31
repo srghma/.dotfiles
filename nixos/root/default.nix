@@ -16,6 +16,7 @@
     ../modules/obs.nix
     ../modules/webcamoid.nix
     ../modules/bluetooth-audio.nix
+    ../modules/tmux.nix
     # ../modules/miracast.nix
     # ../modules/vicuna.nix
 
@@ -28,7 +29,7 @@
     enable = true;
   };
 
-  environment.enableAllTerminfo = true;
+  # environment.enableAllTerminfo = true;
   environment.variables = {
     EDITOR = "nvim";
   };
