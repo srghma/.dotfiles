@@ -1,37 +1,17 @@
 {
   "nodes": {
-    "Idris2": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "idris-emacs-src": "idris-emacs-src",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
+    "crane": {
       "locked": {
-        "lastModified": 0,
-        "narHash": "sha256-stMwg7Rn4z6P++ygNP4BoXHmbJn3oIX9jHma+cdIlHA=",
-        "path": "/home/srghma/projects/Idris2",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/srghma/projects/Idris2",
-        "type": "path"
-      }
-    },
-    "algebra": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1712293962,
-        "narHash": "sha256-etsWqF07j/XBgfnlaA8pyF06BeoXqg7iViG0o09s4Zc=",
-        "owner": "stefan-hoeck",
-        "repo": "idris2-algebra",
-        "rev": "829f44b7fd961e3f0a7ad9174b395f97ebc33336",
+        "lastModified": 1727060013,
+        "narHash": "sha256-/fC5YlJy4IoAW9GhkJiwyzk0K/gQd9Qi4rRcoweyG9E=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "6b40cc876c929bfe1e3a24bf538ce3b5622646ba",
         "type": "github"
       },
       "original": {
-        "owner": "stefan-hoeck",
-        "repo": "idris2-algebra",
+        "owner": "ipetkov",
+        "repo": "crane",
         "type": "github"
       }
     },
@@ -67,35 +47,25 @@
         "type": "github"
       }
     },
-    "elab-util": {
-      "flake": false,
+    "fenix": {
+      "inputs": {
+        "nixpkgs": [
+          "zed",
+          "nixpkgs"
+        ],
+        "rust-analyzer-src": "rust-analyzer-src"
+      },
       "locked": {
-        "lastModified": 1712832655,
-        "narHash": "sha256-yHKTtUx91kvdGEwimpbMg+c4rEasfuk+W97yiwTNgcQ=",
-        "owner": "stefan-hoeck",
-        "repo": "idris2-elab-util",
-        "rev": "4ee05e54b80986f05ee5a79e16cb51d4ef6cfb65",
+        "lastModified": 1727073227,
+        "narHash": "sha256-1kmkEQmFfGVuPBasqSZrNThqyMDV1SzTalQdRZxtDRs=",
+        "owner": "nix-community",
+        "repo": "fenix",
+        "rev": "88cc292eb3c689073c784d6aecc0edbd47e12881",
         "type": "github"
       },
       "original": {
-        "owner": "stefan-hoeck",
-        "repo": "idris2-elab-util",
-        "type": "github"
-      }
-    },
-    "filepath": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1728272259,
-        "narHash": "sha256-HiaT1Ggbzm7aAEMnCobhhavdheKbYyMA5D9BO0cdG7Y=",
-        "owner": "stefan-hoeck",
-        "repo": "idris2-filepath",
-        "rev": "0441eaee9ff1d921fc3f4619c2a8d542588c0e99",
-        "type": "github"
-      },
-      "original": {
-        "owner": "stefan-hoeck",
-        "repo": "idris2-filepath",
+        "owner": "nix-community",
+        "repo": "fenix",
         "type": "github"
       }
     },
@@ -146,29 +116,26 @@
         "type": "github"
       }
     },
+    "flake-compat_3": {
+      "locked": {
+        "lastModified": 1696426674,
+        "narHash": "sha256-kvjfFW7WAETZlt09AgDn1MrtKzP7t90Vf7vypd3OL1U=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "0f9255e01c2351cc7d116c072cb317785dd33b33",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1710146030,
-        "narHash": "sha256-SZ5L6eA7HJ/nmkzGG7/ISclqe6oZdOZTNoesiInkXPQ=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "b1d9ab70662946ef0850d488da1c9019f3a9752a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "flake-utils_2": {
-      "inputs": {
-        "systems": "systems_2"
-      },
-      "locked": {
         "lastModified": 1726560853,
         "narHash": "sha256-X6rJYSESBVr3hBoH0WbKE5KvhPU5bloyZ2L4K60/fPQ=",
         "owner": "numtide",
@@ -179,96 +146,6 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "flake-utils_3": {
-      "inputs": {
-        "systems": "systems_3"
-      },
-      "locked": {
-        "lastModified": 1726560853,
-        "narHash": "sha256-X6rJYSESBVr3hBoH0WbKE5KvhPU5bloyZ2L4K60/fPQ=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "c1dfcf08411b08f6b8615f7d8971a2bfa81d5e8a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "getopts": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1698479903,
-        "narHash": "sha256-CthWByg4uFic0ktri1AuFqkHtyRzIUrreCTegQgdpVo=",
-        "owner": "idris-community",
-        "repo": "idris2-getopts",
-        "rev": "0d41b98f83f3707deb0ffbc595ef36b7d9cb9eab",
-        "type": "github"
-      },
-      "original": {
-        "owner": "idris-community",
-        "repo": "idris2-getopts",
-        "type": "github"
-      }
-    },
-    "idris-emacs-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1666078909,
-        "narHash": "sha256-oYNHFIpcrFfPb4sXJwEBFKeH+PB4AGCrAFrfBrSTCeo=",
-        "owner": "redfish64",
-        "repo": "idris2-mode",
-        "rev": "3bcb52a65c488f31c99d20f235f6050418a84c9d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "redfish64",
-        "repo": "idris2-mode",
-        "type": "github"
-      }
-    },
-    "idris2-pack": {
-      "inputs": {
-        "algebra": "algebra",
-        "elab-util": "elab-util",
-        "filepath": "filepath",
-        "flake-utils": "flake-utils_2",
-        "getopts": "getopts",
-        "idris2-parser": "idris2-parser",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "refined": "refined"
-      },
-      "locked": {
-        "lastModified": 1729561151,
-        "narHash": "sha256-UFsCZJeW55+JH/ner9IAyMbky+XS8ctAKQnmkD4Ujco=",
-        "path": "/home/srghma/projects/idris2-pack",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/srghma/projects/idris2-pack",
-        "type": "path"
-      }
-    },
-    "idris2-parser": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1712294182,
-        "narHash": "sha256-VSKaFNA6xPhX6PF1XoTBl42adu0WWuUwJrFZ1ghUtUA=",
-        "owner": "stefan-hoeck",
-        "repo": "idris2-parser",
-        "rev": "dd950e671f06bd936e48c95d33117ee042d35134",
-        "type": "github"
-      },
-      "original": {
-        "owner": "stefan-hoeck",
-        "repo": "idris2-parser",
         "type": "github"
       }
     },
@@ -307,7 +184,7 @@
     "nix-alien-pkgs": {
       "inputs": {
         "flake-compat": "flake-compat",
-        "flake-utils": "flake-utils_3",
+        "flake-utils": "flake-utils",
         "nix-filter": "nix-filter",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs"
@@ -378,18 +255,6 @@
         "type": "github"
       }
     },
-    "nixpkgsLocal": {
-      "locked": {
-        "lastModified": 1729494406,
-        "narHash": "sha256-TSTbZ8iiYPRAapXvdiYOdYOr6+3eN87x1ojxH9kWm08=",
-        "path": "/home/srghma/projects/nixpkgs",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/srghma/projects/nixpkgs",
-        "type": "path"
-      }
-    },
     "nixpkgsMaster": {
       "locked": {
         "lastModified": 1729506965,
@@ -402,22 +267,6 @@
       "original": {
         "owner": "NixOS",
         "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgsMyNeovimNightly": {
-      "locked": {
-        "lastModified": 1729418457,
-        "narHash": "sha256-Vxh6kN2r9AO8TZbqqSL/AhagxDtGLiJ1fbPM34meNVU=",
-        "owner": "srghma",
-        "repo": "nixpkgs",
-        "rev": "0648c266b3d8057a692f96b1950fe90367c31e65",
-        "type": "github"
-      },
-      "original": {
-        "owner": "srghma",
-        "ref": "neovim2",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -454,6 +303,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1726937504,
+        "narHash": "sha256-bvGoiQBvponpZh8ClUcmJ6QnsNKw0EMrCQJARK3bI1c=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9357f4f23713673f310988025d9dc261c20e70c6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "purescript-overlay": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -476,38 +341,36 @@
         "type": "github"
       }
     },
-    "refined": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1712293322,
-        "narHash": "sha256-9YQjVpJ5McpgjJx6hXCaXMKyEAFCnynw4ahHdY3Kz8Y=",
-        "owner": "stefan-hoeck",
-        "repo": "idris2-refined",
-        "rev": "c585013c33ad5398c91beed71fec61a5b721a8da",
-        "type": "github"
-      },
-      "original": {
-        "owner": "stefan-hoeck",
-        "repo": "idris2-refined",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
-        "Idris2": "Idris2",
         "dunsted-volume": "dunsted-volume",
         "easy-purescript-nix-automatic": "easy-purescript-nix-automatic",
         "fix-github-https-repo": "fix-github-https-repo",
-        "idris2-pack": "idris2-pack",
         "image_optim": "image_optim",
         "kb-light": "kb-light",
         "nix-alien-pkgs": "nix-alien-pkgs",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgsLocal": "nixpkgsLocal",
         "nixpkgsMaster": "nixpkgsMaster",
-        "nixpkgsMyNeovimNightly": "nixpkgsMyNeovimNightly",
         "nixpkgsStable": "nixpkgsStable",
-        "purescript-overlay": "purescript-overlay"
+        "purescript-overlay": "purescript-overlay",
+        "zed": "zed"
+      }
+    },
+    "rust-analyzer-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1726443025,
+        "narHash": "sha256-nCmG4NJpwI0IoIlYlwtDwVA49yuspA2E6OhfCOmiArQ=",
+        "owner": "rust-lang",
+        "repo": "rust-analyzer",
+        "rev": "94b526fc86eaa0e90fb4d54a5ba6313aa1e9b269",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rust-lang",
+        "ref": "nightly",
+        "repo": "rust-analyzer",
+        "type": "github"
       }
     },
     "slimlock": {
@@ -546,33 +409,24 @@
         "type": "github"
       }
     },
-    "systems_2": {
+    "zed": {
+      "inputs": {
+        "crane": "crane",
+        "fenix": "fenix",
+        "flake-compat": "flake-compat_3",
+        "nixpkgs": "nixpkgs_3"
+      },
       "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "lastModified": 1730764970,
+        "narHash": "sha256-u6FyBYGEIO4PTTrAVbJwariqzogG6UmRBw+O+8NH36U=",
+        "owner": "zed-industries",
+        "repo": "zed",
+        "rev": "81dd4ca1c90c525ab81400405ea6d61d5400b07f",
         "type": "github"
       },
       "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_3": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
+        "owner": "zed-industries",
+        "repo": "zed",
         "type": "github"
       }
     }

@@ -8,6 +8,8 @@ inhome_indotfiles = [
   ['.tmux.conf',                              'tmux.conf'],
   ['.i3/config',                              'i3/config'],
 
+  ['.config/joshuto',              'joshuto'],
+
   ['.config/ranger/commands.py',              'ranger/commands.py'],
   ['.config/ranger/rc.conf',                  'ranger/rc.conf'],
   ['.config/ranger/scope.sh',                 'ranger/scope.sh'],

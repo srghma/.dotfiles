@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# Set paths for replacement
+# Define search and replace patterns
+declare -A REPLACE_MAP=(
+  ["github:/?nixos/nixpkgs"]="github:NixOs/nixpkgs/54fd37d0ca129cac257d796eeb2e4215dda984f8"
+  ["github:/?idris-lang/Idris2"]="/home/srghma/projects/Idris2"
+  # ["github:/?idris-community/idris2-lsp"]="/home/srghma/projects/idris2-lsp"
+  ["github:/?idris-community/LSP-lib"]="/home/srghma/projects/LSP-lib"
+)
+
+files="flake.nix"
+
+# Run sd replacements
+replace() {
+  for PATTERN in "${!REPLACE_MAP[@]}"; do
+    REPLACEMENT="${REPLACE_MAP[$PATTERN]}"
+    sd -f i "$PATTERN" "$REPLACEMENT" "$files"
+  done
+}
+
+# Run sd replacements in reverse
+undo() {
+  for PATTERN in "${!REPLACE_MAP[@]}"; do
+    REPLACEMENT="${REPLACE_MAP[$PATTERN]}"
+    sd "$REPLACEMENT" "$PATTERN" "$files"
+  done
+}
+
+# Parse the command
+if [[ "$1" == "replace" ]]; then
+  shift
+  replace "$@"
+elif [[ "$1" == "undo" ]]; then
+  shift
+  undo "$@"
+else
+  echo "Usage: $0 {replace|undo} [file ...]"
+  exit 1
+fi

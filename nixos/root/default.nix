@@ -173,8 +173,6 @@
         source ${./shells/docker-compose.sh}
         source ${./shells/docker.sh}
         source ${./shells/git.sh}
-        source ${./shells/nix.sh}
-        source ${./shells/system.sh}
       '';
     };
 
@@ -188,8 +186,6 @@
         source ${./shells/docker-compose.sh}
         source ${./shells/docker.sh}
         source ${./shells/git.sh}
-        source ${./shells/nix.sh}
-        source ${./shells/system.sh}
 
         DEFAULT_USER="srghma"
 

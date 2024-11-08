@@ -122,6 +122,7 @@ let
       plugin = pkgs.tmuxPlugins.tmux-thumbs;
       extraConfig = ''
         set -g @thumbs-command 'echo -n {} | copyq copy -'
+        set -g @thumbs-key F
       '';
     }
   ];

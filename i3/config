@@ -78,7 +78,7 @@ exec --no-startup-id keepassxc
 # exec --no-startup-id dropbox start
 exec --no-startup-id i3-battery-popup
 exec --no-startup-id flameshot
-exec --no-startup-id audacious
+exec --no-startup-id "sh -c 'sleep 10; exec audacious'"
 
 # -------------------------------------
 # Shortcuts
@@ -91,8 +91,8 @@ bindsym $mod+Ctrl+e  exec code
 
 bindsym $mod+w       exec "rm -rfd /home/srghma/.config/google-chrome-beta/Default/GPUCache && $browser"
 # bindsym $mod+Shift+w exec qutebrowser
-bindsym $mod+s       exec $terminal -e "zsh -c 'SHELL=rshell ranger'"
-bindsym $mod+Shift+s exec nautilus
+bindsym $mod+Shift+s       exec $terminal -e joshuto
+bindsym $mod+s exec nautilus
 bindsym $mod+p       exec --no-startup-id "copyq show"
 bindsym $mod+n       exec anki
 bindsym $mod+m       exec $terminal -e "zsh -c 'screen -q -r -D cmus || screen -S cmus cmus'"

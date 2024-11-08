@@ -34,3 +34,6 @@ output/
 .psc-ide-port
 nohup.out
 .direnv/
+result
+result-*
+.null-ls_*

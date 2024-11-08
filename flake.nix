@@ -29,13 +29,18 @@
     easy-purescript-nix-automatic.flake = false;
     purescript-overlay.url = "github:thomashoneyman/purescript-overlay";
     purescript-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    Idris2.url = "git+file:/home/srghma/projects/Idris2";
-    Idris2.inputs.nixpkgs.follows = "nixpkgs";
-    idris2-pack.url = "git+file:/home/srghma/projects/idris2-pack";
-    idris2-pack.inputs.nixpkgs.follows = "nixpkgs";
+    # Idris2.url = "git+file:/home/srghma/projects/Idris2";
+    # Idris2.inputs.nixpkgs.follows = "nixpkgs";
+    # idris2-pack.url = "git+file:/home/srghma/projects/idris2-pack";
+    # idris2-pack.inputs.nixpkgs.follows = "nixpkgs";
 
     # sops-nix.url = "github:Mic92/sops-nix";
     # sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    zed = {
+      url = "github:zed-industries/zed";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -90,10 +95,12 @@
                 keepassxc
                 telegram-desktop
                 nixpkgsMaster.pkgs.google-chrome
+                nixpkgsMaster.pkgs.code-cursor
                 # nixpkgsMaster.pkgs.chromium
                 # chromium
                 nixpkgsMaster.pkgs.libreoffice
                 nixpkgsMaster.pkgs.inkscape
+                inputs.zed.packages.${system}.default
                 zip
                 unzip
                 htop
@@ -131,7 +138,8 @@
                 # psmisc
                 # lxappearance
 
-                nixpkgsMaster.pkgs.ranger
+                # nixpkgsMaster.pkgs.ranger
+                nixpkgsMaster.pkgs.joshuto
                 # nixpkgsMaster.pkgs.termite
                 kitty
                 # nixpkgsMyNeovimNightly.pkgs.neovim
@@ -148,6 +156,7 @@
                 nixpkgsMaster.pkgs.statix
                 nixpkgsMaster.pkgs.selene
                 nixpkgsMaster.pkgs.deadnix
+                nixpkgsMaster.pkgs.nixd
 
                 nixpkgsMaster.vscode
                 # nixpkgsMaster.vscode.fhs
@@ -156,7 +165,9 @@
 
                 ## development
                 git
-                gitAndTools.diff-so-fancy
+                # gitAndTools.diff-so-fancy
+                gitAndTools.gh
+                gitAndTools.delta
                 gitAndTools.git-lfs
                 gitAndTools.git-crypt
                 meld
@@ -191,7 +202,7 @@
                 # filezilla
                 firefox
                 asciinema
-                # tree
+                tree
                 # nixpkgsMaster.pkgs.youtube-dl
                 tigervnc
 
@@ -332,7 +343,7 @@
 
                 # android-studio
                 fd
-                # gitAndTools.gh
+                gitAndTools.gh
                 # tuxguitar
                 # musescore
                 # zoom
@@ -379,6 +390,7 @@
                 # blender
 
                 cachix
+                killall
               ];
             }
           )
