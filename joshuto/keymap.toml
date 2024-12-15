@@ -91,7 +91,7 @@ keymap = [
   { keys = ["f", "t"], commands = [":touch "] },
 
   { keys = [" "], commands = ["select --toggle=true"] },
-  { keys = ["t"], commands = ["select --all=true --toggle=true"] },
+  { keys = ["v"], commands = ["select --all=true --toggle=true"] },
   { keys = ["V"], commands = ["toggle_visual"] },
 
   { keys = ["w"], commands = ["show_tasks --exit-key=w"] },

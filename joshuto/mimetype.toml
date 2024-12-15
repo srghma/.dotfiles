@@ -244,6 +244,10 @@ inherit = "video_default"
 [mimetype.text]
 inherit = "text_default"
 
+# application/*
+[mimetype.application]
+inherit = "text_default"
+
 # text/*
 [mimetype.video]
 inherit = "video_default"
