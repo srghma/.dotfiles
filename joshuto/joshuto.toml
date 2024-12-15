@@ -39,8 +39,9 @@ directories_first = true
 reverse = false
 
 [preview]
-max_preview_size = "2MB"                             # 2MB
-preview_script = "~/.config/joshuto/preview_file.sh" # make sure it's marked as executable
+max_preview_size = "2MB"                               # 2MB
+preview_script = "~/.dotfiles/joshuto/preview_file.sh" # make sure it's marked as executable
+preview_protocol = "halfblocks"
 
 [search]
 # insensitive, sensitive, smart
@@ -54,4 +55,4 @@ fzf_case_sensitivity = "insensitive"
 
 [tab]
 # inherit, home, root
-home_page = "home"
+home_page = "inherit"

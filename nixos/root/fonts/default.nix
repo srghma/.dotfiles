@@ -1,8 +1,14 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   mynerdfonts = pkgs.nerdfonts.override {
-    fonts = ["Inconsolata" "FiraCode" "FiraMono"];
+    fonts = [
+      "Inconsolata"
+      "FiraCode"
+      "FiraMono"
+    ];
   };
-in {
+in
+{
   fontDir.enable = true;
   enableGhostscriptFonts = true;
 
@@ -13,7 +19,7 @@ in {
     font-awesome
     source-code-pro
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
     emojione
     kanji-stroke-order-font
@@ -24,7 +30,7 @@ in {
     dina-font
     proggyfonts
 
-    # (pkgs.iosevka.override {
+    # (iosevka.override {
     #   set = "custom";
     #   privateBuildPlan = {
     #     family = "Iosevka";
@@ -36,11 +42,11 @@ in {
     #   };
     # })
 
-    # pkgs.monoid
-    # pkgs.hasklig
-    # pkgs.fira-code
-    # pkgs.fira-code-symbols
-    pkgs.jetbrains-mono
+    # monoid
+    # hasklig
+    # fira-code
+    # fira-code-symbols
+    jetbrains-mono
 
     # the font package loads very slow (https://github.com/NixOS/nixpkgs/issues/47921)
     # to prevent error - download for github manually from
@@ -63,9 +69,24 @@ in {
     # antialias = true;
 
     defaultFonts = {
-      monospace = ["Fira Code" "FiraCode Nerd Font" "DejaVu Sans Mono" "Noto Mono"];
-      sansSerif = ["Fira Sans" "Ubuntu" "DejaVu Sans" "Noto Sans"];
-      serif = ["Roboto Slab" "PT Serif" "Liberation Serif" "Noto Serif"];
+      monospace = [
+        "Fira Code"
+        "FiraCode Nerd Font"
+        "DejaVu Sans Mono"
+        "Noto Mono"
+      ];
+      sansSerif = [
+        "Fira Sans"
+        "Ubuntu"
+        "DejaVu Sans"
+        "Noto Sans"
+      ];
+      serif = [
+        "Roboto Slab"
+        "PT Serif"
+        "Liberation Serif"
+        "Noto Serif"
+      ];
     };
   };
 }

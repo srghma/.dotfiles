@@ -1,5 +1,5 @@
-# sudo nixos-rebuild switch --flake ~/.dotfiles
-# sudo nixos-rebuild dry-build --flake ~/.dotfiles
+# sudo nixos-rebuild switch --flake ~/.dotfiles --verbose
+# sudo nixos-rebuild dry-build --flake ~/.dotfiles --verbose
 #
 # nix repl
 # :lf .
@@ -14,13 +14,13 @@
     nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgsMaster.url = "github:NixOS/nixpkgs/master";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
+    nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
     # nixpkgsMyNeovimNightly.url = "github:srghma/nixpkgs/neovim2";
     nix-alien-pkgs.url = "github:thiagokokada/nix-alien";
     kb-light.url = "github:srghma/kb-light";
     kb-light.flake = false;
-    dunsted-volume.url = "github:srghma/dunsted-volume";
-    dunsted-volume.flake = false;
+    # dunsted-volume.url = "github:srghma/dunsted-volume";
+    # dunsted-volume.flake = false;
     fix-github-https-repo.url = "github:srghma/fix-github-https-repo";
     fix-github-https-repo.flake = false;
     image_optim.url = "github:toy/image_optim";
@@ -56,9 +56,9 @@
 
       nixpkgs = import inputs.nixpkgs nixosConfig;
       nixpkgsStable = import inputs.nixpkgsStable nixosConfig;
+      nixpkgsLocal = import inputs.nixpkgsLocal nixosConfig;
       nixpkgsMaster = import inputs.nixpkgsMaster nixosConfig;
     in
-    # nixpkgsLocal = import inputs.nixpkgsLocal nixosConfig;
     # nixpkgsMyNeovimNightly = import inputs.nixpkgsMyNeovimNightly nixosConfig;
     {
       devShells.${system}.default = nixpkgs.mkShell { };
@@ -68,22 +68,21 @@
         modules = [
           # inputs.sops-nix.nixosModules.sops
           {
-            nixpkgs.overlays = [ (_final: _prev: { inherit nixpkgsStable nixpkgsMaster; }) ];
+            nixpkgs.overlays = [ (_final: _prev: { inherit nixpkgsStable; }) ];
           }
           ./nixos/root/default.nix
           (
             { pkgs, ... }:
             let
-              dunsted-volume = pkgs.callPackage inputs.dunsted-volume { };
+              # dunsted-volume = pkgs.callPackage inputs.dunsted-volume { };
               kb-light = pkgs.callPackage inputs.kb-light { };
               i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
               switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
-
               purescript-overlay = inputs.purescript-overlay.packages.${system};
               nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
             in
             {
-              environment.systemPackages = with pkgs; [
+              environment.systemPackages = with nixpkgsMaster.pkgs; [
                 # cd /home/srghma/projects/idris2-pack && nix-env --install $(nix build)
                 # cd /home/srghma/projects/Idris2 && nix-env --install $(nix build)
                 # inputs.Idris2.packages.${system}.default
@@ -94,19 +93,20 @@
 
                 keepassxc
                 telegram-desktop
-                nixpkgsMaster.pkgs.google-chrome
-                nixpkgsMaster.pkgs.code-cursor
-                # nixpkgsMaster.pkgs.chromium
+                google-chrome
+                code-cursor
                 # chromium
-                nixpkgsMaster.pkgs.libreoffice
-                nixpkgsMaster.pkgs.inkscape
-                inputs.zed.packages.${system}.default
+                # chromium
+                libreoffice
+                inkscape
+                # inputs.zed.packages.${system}.default
+                zed
                 zip
                 unzip
                 htop
                 silver-searcher
                 ntfs3g
-                alsaUtils
+                alsa-utils
 
                 okular
 
@@ -138,28 +138,28 @@
                 # psmisc
                 # lxappearance
 
-                # nixpkgsMaster.pkgs.ranger
-                nixpkgsMaster.pkgs.joshuto
-                # nixpkgsMaster.pkgs.termite
+                # ranger
+                joshuto
+                # termite
                 kitty
                 # nixpkgsMyNeovimNightly.pkgs.neovim
                 # nixpkgsLocal.pkgs.neovim
                 neovim
-                # nixpkgsMaster.pkgs.lunarvim
-                # nixpkgsMaster.pkgs.lazygit
-                nixpkgsMaster.pkgs.ripgrep
+                # lunarvim
+                # lazygit
+                ripgrep
                 lua-language-server
-                nixpkgsMaster.pkgs.code-minimap
-                # nixpkgsMaster.pkgs.alejandra
-                # nixpkgsMaster.pkgs.nixfmt-classic
-                nixpkgsMaster.pkgs.nixfmt-rfc-style
-                nixpkgsMaster.pkgs.statix
-                nixpkgsMaster.pkgs.selene
-                nixpkgsMaster.pkgs.deadnix
-                nixpkgsMaster.pkgs.nixd
+                code-minimap
+                # alejandra
+                # nixfmt-classic
+                nixfmt-rfc-style
+                statix
+                selene
+                deadnix
+                nixd
 
-                nixpkgsMaster.vscode
-                # nixpkgsMaster.vscode.fhs
+                vscode
+                # vscode.fhs
                 audacious
                 # nix
 
@@ -203,7 +203,7 @@
                 firefox
                 asciinema
                 tree
-                # nixpkgsMaster.pkgs.youtube-dl
+                # youtube-dl
                 tigervnc
 
                 simplescreenrecorder
@@ -213,10 +213,9 @@
                 # kazam
 
                 # vagrant
-                # nixpkgsMaster.pkgs.ib-tws
-                # nixpkgsMaster.pkgs.ib-controller
+                # ib-tws
+                # ib-controller
 
-                # fzf
                 # bfg-repo-cleaner # removes passwords from git repo
 
                 i3-battery-popup
@@ -230,7 +229,7 @@
                 # cmus
 
                 # hubstaff
-                # nixpkgsMaster.pkgs.hubstaff
+                # hubstaff
 
                 # screen
                 # abiword
@@ -241,7 +240,7 @@
                 # nixfromnpm
 
                 # My packages
-                dunsted-volume
+                # dunsted-volume
                 # randomize_background
                 kb-light
                 switch_touchpad
@@ -336,7 +335,7 @@
                 # amazon-ecs-cli
                 # playonlinux
 
-                nixpkgsMaster.pkgs.sd
+                sd
 
                 # elmPackages.elm
                 # elmPackages.elm-format
@@ -348,10 +347,10 @@
                 # musescore
                 # zoom
                 libnotify
-                # nixpkgsMaster.pkgs.goldendict
+                # goldendict
                 # go-ethereum
-                nixpkgsMaster.pkgs.signal-desktop
-                nixpkgsMaster.pkgs.niv
+                signal-desktop
+                niv
                 # signal-desktop
                 # vym
                 # FreeMind
@@ -378,19 +377,22 @@
                 # easy-purescript-nix-automatic.purs
                 # easy-purescript-nix-automatic.purty # find ./packages/client/src -name "*.purs" -exec purty --write {} \;
 
-                nixpkgsMaster.pkgs.watchexec
-                nixpkgsMaster.pkgs.vlc
-                nixpkgsMaster.pkgs.yt-dlp
-                nixpkgsMaster.pkgs.plasma5Packages.kdeconnect-kde
+                watchexec
+                vlc
+                yt-dlp
+                plasma5Packages.kdeconnect-kde
 
-                # nixpkgsMaster.pkgs.jsonls
-                # nixpkgsMaster.pkgs.js-debug-adapter
-                # nixpkgsMaster.pkgs.codelldb
+                # jsonls
+                # js-debug-adapter
+                # codelldb
 
                 # blender
 
+                fzf
+                zoxide
                 cachix
                 killall
+                nixpkgsLocal.pkgs.i3-volume
               ];
             }
           )

@@ -16,7 +16,7 @@ inhome_indotfiles = [
 
   ['.stack/config.yaml',                      'stack-global.yaml'],
   ['.gitconfig',                              'gitconfig'],
-  ['.gitignore_global',                       'gitignore_global'],
+  ['.config/git/ignore',                      'gitignore_global'],
   ['.ctags',                                  'ctags'],
   ['.ncmpcpp/bindings',                       'ncmpcpp_bindings'],
   ['.config/kitty',                           'kitty'],

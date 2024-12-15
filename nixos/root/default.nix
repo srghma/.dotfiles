@@ -11,11 +11,11 @@
     # ../modules/disable-main-keyboard.nix
     # ../modules/direnv-from-lorri-repo.nix
     ../modules/cachix.nix
-    ../modules/cast-from-android.nix
+    # ../modules/cast-from-android.nix
     ../modules/qemu.nix
     ../modules/obs.nix
-    ../modules/webcamoid.nix
-    ../modules/bluetooth-audio.nix
+    # ../modules/webcamoid.nix
+    # ../modules/bluetooth-audio.nix
     ../modules/tmux.nix
     # ../modules/miracast.nix
     # ../modules/vicuna.nix
@@ -105,7 +105,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   hardware = {
-    bluetooth.enable = lib.mkDefault false;
+    # bluetooth.enable = lib.mkDefault false;
+    bluetooth.enable = false;
 
     graphics = {
       enable = true;
@@ -144,9 +145,7 @@
     direnv.enable = true;
     direnv.silent = false;
     direnv.loadInNixShell = true;
-    direnv.package = pkgs.nixpkgsMaster.pkgs.direnv;
     direnv.nix-direnv.enable = true;
-    direnv.nix-direnv.package = pkgs.nixpkgsMaster.pkgs.nix-direnv;
 
     gnupg.agent.enable = true;
     # gnome-documents.enable = false;
@@ -216,6 +215,9 @@
       ohMyZsh = {
         enable = true;
         theme = "agnoster";
+        preLoaded = ''
+          export FZF_ALT_C_COMMAND=""
+        '';
         plugins = [
           ## appearence
           "colorize"
@@ -259,6 +261,8 @@
           ## js
           # yarn
           "direnv"
+          "fzf"
+          "zoxide"
         ];
       };
     };

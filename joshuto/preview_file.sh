@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# nix profile install nixpkgs#{file,exiftool,odt2txt,xlsx2csv,w3m,pandoc,mediainfo,catdoc}
+
 ## This script is a template script for creating textual file previews in Joshuto.
 ##
 ## Copy this script to your Joshuto configuration directory and refer to this
@@ -48,6 +50,18 @@ alias exiftool='exiftool -api largefilesupport=1'
 FILE_PATH=""
 PREVIEW_WIDTH=10
 PREVIEW_HEIGHT=10
+
+## Settings
+HIGHLIGHT_SIZE_MAX=262143  # 256KiB
+HIGHLIGHT_TABWIDTH="${HIGHLIGHT_TABWIDTH:-8}"
+HIGHLIGHT_STYLE="${HIGHLIGHT_STYLE:-pablo}"
+HIGHLIGHT_OPTIONS="--replace-tabs=${HIGHLIGHT_TABWIDTH} --style=${HIGHLIGHT_STYLE} ${HIGHLIGHT_OPTIONS:-}"
+PYGMENTIZE_STYLE="${PYGMENTIZE_STYLE:-autumn}"
+BAT_STYLE="${BAT_STYLE:-plain}"
+OPENSCAD_IMGSIZE="${RNGR_OPENSCAD_IMGSIZE:-1000,1000}"
+OPENSCAD_COLORSCHEME="${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}"
+SQLITE_TABLE_LIMIT=20  # Display only the top <limit> tables in database, set to 0 for no exhaustive preview (only the sqlite_master table is displayed).
+SQLITE_ROW_LIMIT=5     # Display only the first and the last (<limit> - 1) records in each table, set to 0 for no limits.
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -145,6 +159,8 @@ handle_extension() {
 handle_mime() {
     local mimetype="${1}"
 
+    # echo "'${mimetype}'"
+
     case "${mimetype}" in
             ## RTF and DOC
         text/rtf|*msword)
@@ -179,14 +195,49 @@ handle_mime() {
             xls2csv -- "${FILE_PATH}" && exit 0
             exit 1 ;;
 
-            ## Text
-        text/* | */xml)
-            bat --color=always --paging=never \
-                --style=plain \
-                --terminal-width="${PREVIEW_WIDTH}" \
-                "${FILE_PATH}" && exit 0
-            cat "${FILE_PATH}" && exit 0
-            exit 1 ;;
+        #     ## Text
+        # text/* | */xml)
+        #     bat --color=always --paging=never \
+        #         --style=plain \
+        #         --terminal-width="${PREVIEW_WIDTH}" \
+        #         "${FILE_PATH}" && exit 0
+        #     cat "${FILE_PATH}" && exit 0
+        #     exit 1 ;;
+
+        application/json | application/ipynb)
+            jq --color-output . "${FILE_PATH}" && exit 0
+            python -m json.tool -- "${FILE_PATH}" && exit 0
+            ;;
+
+            ## Direct Stream Digital/Transfer (DSDIFF) and wavpack aren't detected
+            ## by file(1).
+
+        text/* | */xml | application/*)
+            ## Syntax highlight
+            if [[ "$( stat --printf='%s' -- "${FILE_PATH}" )" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
+                # echo stat --printf='%s' -- "${FILE_PATH}"
+                exit 0
+            fi
+            if [[ "$( tput colors )" -ge 256 ]]; then
+                local pygmentize_format='terminal256'
+                local highlight_format='xterm256'
+            else
+                local pygmentize_format='terminal'
+                local highlight_format='ansi'
+            fi
+            # echo env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
+            #     --out-format="${highlight_format}" \
+            #     --force -- "${FILE_PATH}"
+
+            # env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
+            #     --out-format="${highlight_format}" \
+            #     --force -- "${FILE_PATH}" && exit 0
+
+            env COLORTERM=8bit bat --color=always --style="${BAT_STYLE}" \
+                -- "${FILE_PATH}" && exit 0
+            pygmentize -f "${pygmentize_format}" -O "style=${PYGMENTIZE_STYLE}"\
+                -- "${FILE_PATH}" && exit 0
+            exit 1;;
 
             ## DjVu
         image/vnd.djvu)
@@ -213,6 +264,11 @@ FILE_EXTENSION="${FILE_PATH##*.}"
 FILE_EXTENSION_LOWER="$(printf "%s" "${FILE_EXTENSION}" | tr '[:upper:]' '[:lower:]')"
 handle_extension
 MIMETYPE="$( file --dereference --brief --mime-type -- "${FILE_PATH}" )"
+# echo "FILE_PATH=$FILE_PATH"
+# echo "FILE_EXTENSION=$FILE_EXTENSION"
+# echo "FILE_EXTENSION_LOWER=$FILE_EXTENSION_LOWER"
+# echo "MIMETYPE=$MIMETYPE"
+# ~/.dotfiles/joshuto/preview_file.sh --path "${FILE_PATH}"
 handle_mime "${MIMETYPE}"
 
 exit 1

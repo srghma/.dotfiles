@@ -96,4 +96,6 @@
     "diffEditor.codeLens": true,
     "continue.enableQuickActions": true,
     "continue.enableTabAutocomplete": false,
+    "search.useGlobalIgnoreFiles": true,
+    "cloudcode.updateChannel": "Insiders",
 }

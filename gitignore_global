@@ -33,7 +33,13 @@ spago-myglobal.yaml
 output/
 .psc-ide-port
 nohup.out
-.direnv/
+.direnv
 result
 result-*
 .null-ls_*
+
+bootstrap/idris2_app/*.rkt
+bootstrap/idris2_app/*.ss
+# bootstrap/
+benchmark/benchmarks/*
+.zed/

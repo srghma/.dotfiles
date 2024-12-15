@@ -7,6 +7,7 @@ audio_default = [
 ]
 
 image_default = [
+  { command = "feh", fork = true, silent = true },
   { command = "qimgv", args = [
     "--",
   ], fork = true, silent = true },
@@ -32,11 +33,12 @@ video_default = [
 ]
 
 text_default = [
-  { command = "micro" },
-  { command = "gedit", fork = true, silent = true },
-  { command = "bat", args = [
-    "--paging=always",
-  ] },
+  { command = "nvim" },
+  # { command = "micro" },
+  # { command = "gedit", fork = true, silent = true },
+  # { command = "bat", args = [
+  #   "--paging=always",
+  # ] },
 ]
 
 reader_default = [{ command = "evince", fork = true, silent = true }]
@@ -91,7 +93,7 @@ mkv.inherit = "video_default"
 m4v.inherit = "video_default"
 mov.inherit = "video_default"
 mp4.inherit = "video_default"
-ts.inherit = "video_default"
+# ts.inherit = "video_default"
 webm.inherit = "video_default"
 wmv.inherit = "video_default"
 
@@ -134,6 +136,7 @@ sh.inherit = "text_default"
 srt.inherit = "text_default"
 svelte.inherit = "text_default"
 toml.inherit = "text_default"
+ts.inherit = "text_default"
 tsx.inherit = "text_default"
 txt.inherit = "text_default"
 vim.inherit = "text_default"

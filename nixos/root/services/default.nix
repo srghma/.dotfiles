@@ -35,7 +35,7 @@ rec {
   #   '';
   # };
 
-  i2pd.enable = true;
+  # i2pd.enable = true;
 
   openssh.enable = true;
   xbanish.enable = true; # xbanish hides the mouse cursor when you start typing, and shows it again when the mouse cursor moves or a mouse button is pressed
@@ -133,10 +133,10 @@ rec {
 
   # open-webui.enable = true;
 
-  ollama = {
-    enable = true;
-    # package = pkgs.ollama.override {  };
-  };
+  # ollama = {
+  #   enable = true;
+  #   # package = pkgs.ollama.override {  };
+  # };
 
   # nginx = {
   #   user = "srghma"; # or sudo chmod o+x /home/srghma

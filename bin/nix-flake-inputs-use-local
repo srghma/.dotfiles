@@ -5,7 +5,7 @@
 declare -A REPLACE_MAP=(
   ["github:/?nixos/nixpkgs"]="github:NixOs/nixpkgs/54fd37d0ca129cac257d796eeb2e4215dda984f8"
   ["github:/?idris-lang/Idris2"]="/home/srghma/projects/Idris2"
-  # ["github:/?idris-community/idris2-lsp"]="/home/srghma/projects/idris2-lsp"
+  ["github:/?idris-community/idris2-lsp"]="/home/srghma/projects/idris2-lsp"
   ["github:/?idris-community/LSP-lib"]="/home/srghma/projects/LSP-lib"
 )
 
