@@ -1,25 +1,10 @@
 ; vim: filetype=gitconfig
 
-; [user]
-;   name = Angelina Tarapko
-;   email = tarapko.angelina@gmail.com
-; [github]
-;   user = angelinatarapko
-
-; [user]
-;   name = Sergio
-;   email = srhhma@gmail.com
-; [github]
-;   user = srhhma
-
 [user]
   name = Serhii Khoma
   email = srghma@gmail.com
 [github]
   user = srghma
-
-; [url "git@github.com-srhhma"]
-;   insteadOf = git@github.com
 
 [credential]
   helper = cache --timeout=3600
