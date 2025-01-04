@@ -8,6 +8,10 @@
       {
         "language": "javascript",
         "path": "./javascript.json"
+      },
+      {
+        "language": "ruby",
+        "path": "./ruby.json"
       }
     ]
   }

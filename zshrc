@@ -80,3 +80,11 @@ source ~/.config/completion-for-just.zsh
 
 # unalias z
 # eval "$(zoxide init zsh)"
+
+# pnpm
+export PNPM_HOME="/home/srghma/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

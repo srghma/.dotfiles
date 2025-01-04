@@ -98,4 +98,8 @@
     "continue.enableTabAutocomplete": false,
     "search.useGlobalIgnoreFiles": true,
     "cloudcode.updateChannel": "Insiders",
+    "cmake.pinnedCommands": [
+        "workbench.action.tasks.configureTaskRunner",
+        "workbench.action.tasks.runTask"
+    ],
 }

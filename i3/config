@@ -21,6 +21,34 @@ client.unfocused          $gray2   $gray2   #FFFFFF   #000000
 # Workspaces names
 # -------------------------------------
 
+# my laptop's internal screen
+set $monitor eDP-1
+# external screen, they are set here to make it easier to move to new setups
+set $monitor2 HDMI-1
+
+workspace 1:1 output $monitor
+workspace 2:2 output $monitor
+workspace 3:3 output $monitor
+workspace 4:4 output $monitor
+workspace 5:5 output $monitor
+workspace 6:6 output $monitor
+workspace 7:7 output $monitor
+workspace 8:8 output $monitor
+workspace 9:9 output $monitor
+workspace 10:10 output $monitor
+
+workspace 11:11 output $monitor2
+workspace 12:12 output $monitor2
+workspace 13:13 output $monitor2
+workspace 14:14 output $monitor2
+workspace 15:15 output $monitor2
+workspace 16:16 output $monitor2
+workspace 17:17 output $monitor2
+workspace 18:18 output $monitor2
+workspace 19:19 output $monitor2
+workspace 20:20 output $monitor2
+
+# Existing Workspaces for eDP-1 (Laptop Screen)
 set $WS0 "1:1"
 set $WS1 "2:2"
 set $WS2 "3:3"
@@ -55,6 +83,46 @@ bindsym $mod+Shift+7 move workspace $WS6
 bindsym $mod+Shift+8 move workspace $WS7
 bindsym $mod+Shift+9 move workspace $WS8
 bindsym $mod+Shift+0 move workspace $WS9
+
+#-----------------
+
+# New Workspaces for HDMI-1 (Secondary Screen)
+set $WS10 "11:11"
+set $WS11 "12:12"
+set $WS12 "13:13"
+set $WS13 "14:14"
+set $WS14 "15:15"
+set $WS15 "16:16"
+set $WS16 "17:17"
+set $WS17 "18:18"
+set $WS18 "19:19"
+set $WS19 "20:20"
+
+# switch to workspace
+bindsym $mod+Ctrl+1 workspace $WS10
+bindsym $mod+Ctrl+2 workspace $WS11
+bindsym $mod+Ctrl+3 workspace $WS12
+bindsym $mod+Ctrl+4 workspace $WS13
+bindsym $mod+Ctrl+5 workspace $WS14
+bindsym $mod+Ctrl+6 workspace $WS15
+bindsym $mod+Ctrl+7 workspace $WS16
+bindsym $mod+Ctrl+8 workspace $WS17
+bindsym $mod+Ctrl+9 workspace $WS18
+bindsym $mod+Ctrl+0 workspace $WS19
+
+# move focused container to workspace
+bindsym $mod+Ctrl+Shift+1 move workspace $WS10
+bindsym $mod+Ctrl+Shift+2 move workspace $WS11
+bindsym $mod+Ctrl+Shift+3 move workspace $WS12
+bindsym $mod+Ctrl+Shift+4 move workspace $WS13
+bindsym $mod+Ctrl+Shift+5 move workspace $WS14
+bindsym $mod+Ctrl+Shift+6 move workspace $WS15
+bindsym $mod+Ctrl+Shift+7 move workspace $WS16
+bindsym $mod+Ctrl+Shift+8 move workspace $WS17
+bindsym $mod+Ctrl+Shift+9 move workspace $WS18
+bindsym $mod+Ctrl+Shift+0 move workspace $WS19
+
+#-----------------
 
 # Rewind Audacious (Win + +)
 bindsym $mod+Shift+equal exec audacious --rew
@@ -242,7 +310,8 @@ mode "$mode_system" {
 bindsym $mod+Caps_Lock mode "$mode_system"
 
 bar {
-  strip_workspace_numbers yes
+  output HDMI-1
+  strip_workspace_numbers no
   position top
   status_command /home/srghma/.dotfiles/i3/conky-wrapper
   colors {
@@ -253,6 +322,18 @@ bar {
   }
 }
 
+bar {
+  output eDP-1
+  strip_workspace_numbers yes
+  position top
+  status_command /home/srghma/.dotfiles/i3/conky-wrapper
+  colors {
+    statusline #AAAAAA
+    background #333333
+    focused_workspace  $gray2 $gray2 #FFFFFF
+    inactive_workspace $gray1 $gray1 #AAAAAA
+  }
+}
 
 # -------------------------------------
 # - Behavior
@@ -269,19 +350,3 @@ for_window [class="(?i)nautilus"]      floating enable
 for_window [class="(?i)copyq"]         floating enable
 for_window [class="(?i)hubstaff"]      floating enable
 for_window [title="Battery Warning"] sticky enable
-
-# -------------------
-
-# Move window with numpad keys
-bindsym KP_1 move left
-bindsym KP_2 move down
-bindsym KP_3 move right
-bindsym KP_4 move left
-bindsym KP_5 move position center
-bindsym KP_6 move right
-bindsym KP_7 move left
-bindsym KP_8 move up
-bindsym KP_9 move right
-
-# Move window to workspace 0 (KP_0)
-bindsym KP_0 move container to workspace number 0
