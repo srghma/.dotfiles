@@ -229,6 +229,10 @@ bindsym $mod+$down        focus down
 bindsym $mod+$up          focus up
 bindsym $mod+$right       focus right
 
+# change monitor
+bindsym $mod+Ctrl+$left        focus output left
+bindsym $mod+Ctrl+$right       focus output right
+
 bindsym $mod+Left         focus left
 bindsym $mod+Down         focus down
 bindsym $mod+Up           focus up
@@ -239,6 +243,10 @@ bindsym $mod+Shift+$left  move left
 bindsym $mod+Shift+$down  move down
 bindsym $mod+Shift+$up    move up
 bindsym $mod+Shift+$right move right
+
+# change monitor
+# bindsym $mod+Ctrl+Shift+$left move output left
+# bindsym $mod+Ctrl+Shift+$right move output right
 
 bindsym $mod+Shift+Left   move left
 bindsym $mod+Shift+Down   move down
