@@ -5,7 +5,8 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.unifiedGtkQtTheme;
 
   ## modules
@@ -47,7 +48,8 @@ with lib; let
     gtk-font-name="${cfg.font}"
     gtk-application-prefer-dark-theme=1
   '';
-in {
+in
+{
   options.unifiedGtkQtTheme = mainModuleOptions;
 
   # see also https://wiki.archlinux.org/index.php/GTK%2B and https://wiki.archlinux.org/index.php/Qt
@@ -90,15 +92,15 @@ in {
     # # SVG loader for pixbuf (needed for GTK svg icon themes); cannot be in environment.variables as there is a shell pattern expansion
     # export GDK_PIXBUF_MODULE_FILE=$(echo ${pkgs.librsvg}/lib/gdk-pixbuf-2.0/*/loaders.cache)
 
-    environment.extraInit = lib.mkAfter ''
-      export GTK_THEME="Adwaita:dark"
+    # Qt4/Qt5: convince it to use our preferred style
+    # export QT_QPA_PLATFORMTHEME="gtk2"
+    # export QT_STYLE_OVERRIDE="GTK+"
 
-      # Qt4/Qt5: convince it to use our preferred style
-      export QT_QPA_PLATFORMTHEME="gtk2"
-      export QT_STYLE_OVERRIDE="GTK+"
-    '';
+    environment.variables = {
+      GTK_THEME = "Adwaita:dark";
+    };
 
     # Enable access to /share where the themes are.
-    environment.pathsToLink = ["/share"];
+    environment.pathsToLink = [ "/share" ];
   };
 }

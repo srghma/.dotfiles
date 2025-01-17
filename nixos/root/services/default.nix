@@ -133,11 +133,20 @@ rec {
 
   # open-webui.enable = true;
 
+  # open-webui = {
+  #   enable = true;
+  #   # package = pkgs.ollama.override {  };
+  # };
   # ollama = {
   #   enable = true;
   #   # package = pkgs.ollama.override {  };
   # };
 
+  # local-ai = {
+  #   enable = true;
+  #   # package = pkgs.ollama.override {  };
+  # };
+  #
   # nginx = {
   #   user = "srghma"; # or sudo chmod o+x /home/srghma
   #   group = "users";

@@ -13,6 +13,7 @@
   inputs = {
     nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgsMaster.url = "github:NixOS/nixpkgs/master";
+    nixpkgsVlc4.url = "github:PerchunPak/nixpkgs/vlc4";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
     # nixpkgsMyNeovimNightly.url = "github:srghma/nixpkgs/neovim2";
@@ -58,6 +59,7 @@
       nixpkgsStable = import inputs.nixpkgsStable nixosConfig;
       nixpkgsLocal = import inputs.nixpkgsLocal nixosConfig;
       nixpkgsMaster = import inputs.nixpkgsMaster nixosConfig;
+      nixpkgsVlc4 = import inputs.nixpkgsVlc4 nixosConfig;
     in
     # nixpkgsMyNeovimNightly = import inputs.nixpkgsMyNeovimNightly nixosConfig;
     {
@@ -379,6 +381,8 @@
 
                 watchexec
                 vlc
+                handbrake
+                # nixpkgsVlc4.pkgs.vlc4
                 yt-dlp
                 plasma5Packages.kdeconnect-kde
 

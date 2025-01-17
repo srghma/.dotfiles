@@ -25,9 +25,9 @@
     ./systemd/disable-touchpad.nix
   ];
 
-  unifiedGtkQtTheme = {
-    enable = true;
-  };
+  # unifiedGtkQtTheme = {
+  #   enable = true;
+  # };
 
   # environment.enableAllTerminfo = true;
   environment.variables = {
@@ -84,7 +84,8 @@
 
   qt = {
     enable = true;
-    platformTheme = "gnome";
+    # platformTheme = "gnome";
+    platformTheme = "qt5ct";
     style = "adwaita-dark";
   };
 
@@ -299,7 +300,8 @@
 
       allowedTCPPorts = [
         3131 # deskreen
-        5900 # bVNC default port
+        5900 # bVNC default port, also qemu `sudo lsof -i :5900`
+        5901 # bVNC port2
         # 5432
         # 34567 # MY PORT FOR WIFI USE
         # 33927 # Error: connection refused: localtunnel.me:33927 (check your firewall settings) at Socket.<anonymous> (/home/srghma/.node_modules/lib/node_modules/localtunnel/lib/TunnelCluster.js:52:11)
