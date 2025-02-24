@@ -20,6 +20,7 @@ nix-purge () {
 
   nix-store --gc
   nix-channel --update
+  sudo nix-channel --update
   # nix-env -u --always
 
   nix-collect-garbage -d

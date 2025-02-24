@@ -134,9 +134,9 @@ bindsym $mod+equal exec audacious --fwd
 # Autostart
 # -------------------------------------
 set $terminal kitty
-# set $browser  google-chrome-beta --remote-debugging-port=4444
+set $browser  google-chrome-stable --remote-debugging-port=4444
 # set $browser  google-chrome-beta
-set $browser  google-chrome-stable
+# set $browser  google-chrome-stable
 
 # exec --no-startup-id randomize_background /home/srghma/.dotfiles/i3/wallpallers/*
 exec --no-startup-id $browser
@@ -199,7 +199,7 @@ bindsym XF86TouchpadToggle    exec switch_touchpad
 # lenovo :(
 bindsym XF86Calculator    exec switch_touchpad
 
-bindsym Print      exec "scrot /home/srghma/Pictures/%Y-%m-%d-%I%P-%M-%S-screenshot.png"
+bindsym Print      exec "scrot /home/srghma/Downloads/Pictures/%Y-%m-%d-%I%P-%M-%S-screenshot.png"
 bindsym $mod+Print exec "flameshot gui"
 
 # bindsym XF86Display         exec "arandr"

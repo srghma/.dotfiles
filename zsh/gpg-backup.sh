@@ -1,4 +1,4 @@
-GPG_BACKUP_DIR="$HOME/.dotfiles/secrets/gpg"
+GPG_BACKUP_DIR="$HOME/.dotfiles/secrets-ignored/gpg"
 USER_EMAIL="srghma@gmail.com"
 
 # https://gist.github.com/chrisroos/1205934
@@ -77,4 +77,3 @@ gpg-restore () {
   # ownertrust
   gpg --import-ownertrust $GPG_BACKUP_DIR/ownertrust.txt
 }
-

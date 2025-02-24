@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   ...
 }@args:
 {
@@ -32,55 +31,12 @@
   # environment.enableAllTerminfo = true;
   environment.variables = {
     EDITOR = "nvim";
+    GTK_THEME = "Adwaita:dark";
   };
 
   environment.etc."resolvconf.conf".text = ''
     name_servers='8.8.8.8'
   '';
-
-  #   theme.name = "Numix-SX-Light";
-  #   theme.package = pkgs.numix-sx-gtk-theme;
-
-  #   # TODO: not working, use home-manager
-  #   iconTheme.name    = "Numix-Circle";
-  #   iconTheme.package = pkgs.numix-icon-theme-circle;
-
-  #   cursorTheme.name    = "Vanilla-DMZ";
-  #   cursorTheme.package = pkgs.vanilla-dmz;
-
-  #   font = "Cantarell 9";
-
-  #   additionalGtk20 = ''
-  #     gtk-cursor-theme-size=24
-  #     gtk-toolbar-style=GTK_TOOLBAR_BOTH_HORIZ
-  #     gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR
-  #     gtk-button-images=0
-  #     gtk-menu-images=0
-  #     gtk-enable-event-sounds=1
-  #     gtk-enable-input-feedback-sounds=0
-  #     gtk-xft-antialias=1
-  #     gtk-xft-hinting=1
-  #     gtk-xft-hintstyle="hintslight"
-  #     gtk-xft-rgba="none"
-  #   '';
-
-  #   additionalGtk30 = ''
-  #     gtk-fallback-icon-theme=AwOkenDark
-  #     gtk-application-prefer-dark-theme=true
-  #     gtk-cursor-theme-size=0
-  #     gtk-toolbar-style=GTK_TOOLBAR_BOTH_HORIZ
-  #     gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR
-  #     gtk-button-images=0
-  #     gtk-menu-images=0
-  #     gtk-enable-event-sounds=1
-  #     gtk-enable-input-feedback-sounds=1
-  #     gtk-xft-antialias=1
-  #     gtk-xft-hinting=1
-  #     gtk-xft-hintstyle=hintfull
-  #     gtk-xft-rgba=rgb
-  #     gtk-modules=gail:atk-bridge
-  #   '';
-  # };
 
   qt = {
     enable = true;
@@ -106,7 +62,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   hardware = {
-    # bluetooth.enable = lib.mkDefault false;
     bluetooth.enable = false;
 
     graphics = {
@@ -186,30 +141,8 @@
         source ${./shells/docker-compose.sh}
         source ${./shells/docker.sh}
         source ${./shells/git.sh}
-
         DEFAULT_USER="srghma"
-
         autoload -U zmv
-
-        # gem
-        GEM_PATH="$GEM_HOME"
-        export PATH="$GEM_HOME/bin:$PATH"
-
-        # npm/yarn
-        export PATH="$HOME/.node_modules/bin:$PATH"
-
-        # npm/yarn local
-        export PATH="./node_modules/.bin:$PATH"
-
-        # .bin
-        export PATH="$HOME/.bin:$PATH"
-
-        DOTFILES="$HOME/.dotfiles"
-
-        PROJECT_PATHS=($HOME/projects)
-
-        export MAKEFLAGS="-j5"
-
         VI_MODE_DISABLE_CLIPBOARD=true
       '';
 
@@ -315,18 +248,24 @@
 
     hosts =
       let
-        block = [
-          # "twitter.com"  "www.twitter.com"
-          # "x.com"        "www.x.com"
-          # "youtube.com"  "www.youtube.com"  "m.youtube.com"
-          # "telegram.org"
-          # "www.telegram.org"
-          # "web.telegram.org"
-          # "zws2.web.telegram.org"
-          # "zws2-1.web.telegram.org"
-          # "pikabu.ru"    "www.pikabu.ru"
-          # "reddit.com"   "www.reddit.com"
-        ];
+        block =
+          builtins.concatMap
+            (domain: [
+              domain
+              ("www." + domain)
+            ])
+            [
+              # "twitter.com"
+              # "x.com"
+              # "youtube.com"
+              # "m.youtube.com"
+              # "telegram.org"
+              # "web.telegram.org"
+              # "zws2.web.telegram.org"
+              # "zws2-1.web.telegram.org"
+              # "pikabu.ru"
+              # "reddit.com"
+            ];
       in
       {
         "::0" = block;
@@ -342,7 +281,6 @@
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
-
     extraLocaleSettings = {
       LC_ADDRESS = "en_US.UTF-8";
       LC_IDENTIFICATION = "en_US.UTF-8";
@@ -354,23 +292,7 @@
       LC_TELEPHONE = "en_US.UTF-8";
       LC_TIME = "en_US.UTF-8";
     };
-    # inputMethod = {
-    #   enabled = "fcitx5";
-    #   # fcitx5.engines = with pkgs.fcitx-engines; [
-    #   #   rime
-    #   #   # libpinyin
-    #   #   # m17n
-    #   #   # cloudpinyin
-    #   # ];
-
-    #   # enabled = "fcitx";
-    #   # fcitx.engines = with pkgs.fcitx-engines; [
-    #   #   rime
-    #   #   # libpinyin
-    #   #   # m17n
-    #   #   # cloudpinyin
-    #   # ];
-    # };
+    # inputMethod = { enabled = "fcitx5"; fcitx5.engines = with pkgs.fcitx-engines; [ rime libpinyin m17n cloudpinyin ]; };
   };
 
   # time.timeZone = "Atlantic/Canary";

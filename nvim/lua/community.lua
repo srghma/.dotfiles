@@ -43,6 +43,7 @@ return {
   -- { import = "astrocommunity.motion.leap-nvim" },
   { import = "astrocommunity.motion.flash-nvim" },
   { import = "astrocommunity.editing-support.rainbow-delimiters-nvim" },
+  -- { import = "astrocommunity.completion.avante-nvim" },
   -- { import = "astrocommunity.editing-support.auto-save-nvim" },
   {
     "okuuva/auto-save.nvim",
@@ -82,7 +83,8 @@ return {
   -- { import = "astrocommunity.motion.nvim-spider" },
   -- { import = "astrocommunity.indent.mini-indentscope" },
 
-  { "nvim-treesitter/nvim-treesitter", dir = "/home/srghma/projects/nvim-treesitter" },
+  -- { "nvim-treesitter/nvim-treesitter", dir = "/home/srghma/projects/nvim-treesitter" },
+  { "nvim-treesitter/nvim-treesitter" },
   -- { "nvim-treesitter/nvim-treesitter", dev { path = "/home/srghma/projects/nvim-treesitter" }, },
 
   -- { "kevinhwang91/nvim-ufo", url = "https://github.com/srghma/nvim-ufo.git", rev = "512096fc1644466a99a08cdb9647b729866e88fc" },

@@ -21,6 +21,7 @@ image_default = [
 ]
 
 video_default = [
+  { command = "vlc", fork = true, silent = true },
   { command = "mpv", args = [
     "--",
   ], fork = true, silent = true },

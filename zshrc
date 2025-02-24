@@ -1,3 +1,22 @@
+# gem
+# GEM_PATH="$GEM_HOME"
+# export PATH="$GEM_HOME/bin:$PATH"
+
+# npm/yarn
+export PATH="$HOME/.node_modules/bin:$PATH"
+
+# npm/yarn local
+export PATH="./node_modules/.bin:$PATH"
+
+# .bin
+export PATH="$HOME/.bin:$PATH"
+
+DOTFILES="$HOME/.dotfiles"
+
+PROJECT_PATHS=($HOME/projects)
+
+export MAKEFLAGS="-j5"
+
 # from https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/common-aliases/common-aliases.plugin.zsh
 # unalias fd
 # unalias n

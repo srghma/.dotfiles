@@ -1,4 +1,7 @@
-# sudo nixos-rebuild switch --flake ~/.dotfiles --verbose
+# nix profile install nixpkgs\#yt-dlp --inputs-from ~/.dotfiles
+#
+# cd $HOME/.dotfiles && nix flake update
+# cd $HOME/.dotfiles && nix flake update && sudo nixos-rebuild switch --flake ~/.dotfiles --verbose
 # sudo nixos-rebuild dry-build --flake ~/.dotfiles --verbose
 #
 # nix repl
@@ -11,11 +14,12 @@
   description = "A simple NixOS flake";
 
   inputs = {
-    nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgsMaster.url = "github:NixOS/nixpkgs/master";
     nixpkgsVlc4.url = "github:PerchunPak/nixpkgs/vlc4";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
+    # nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
     # nixpkgsMyNeovimNightly.url = "github:srghma/nixpkgs/neovim2";
     nix-alien-pkgs.url = "github:thiagokokada/nix-alien";
     kb-light.url = "github:srghma/kb-light";
@@ -34,14 +38,10 @@
     # Idris2.inputs.nixpkgs.follows = "nixpkgs";
     # idris2-pack.url = "git+file:/home/srghma/projects/idris2-pack";
     # idris2-pack.inputs.nixpkgs.follows = "nixpkgs";
-
     # sops-nix.url = "github:Mic92/sops-nix";
     # sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-
-    zed = {
-      url = "github:zed-industries/zed";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
+    zed.url = "github:zed-industries/zed";
+    # zed.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -57,7 +57,7 @@
 
       nixpkgs = import inputs.nixpkgs nixosConfig;
       nixpkgsStable = import inputs.nixpkgsStable nixosConfig;
-      nixpkgsLocal = import inputs.nixpkgsLocal nixosConfig;
+      # nixpkgsLocal = import inputs.nixpkgsLocal nixosConfig;
       nixpkgsMaster = import inputs.nixpkgsMaster nixosConfig;
       nixpkgsVlc4 = import inputs.nixpkgsVlc4 nixosConfig;
     in
@@ -73,6 +73,7 @@
             nixpkgs.overlays = [ (_final: _prev: { inherit nixpkgsStable; }) ];
           }
           ./nixos/root/default.nix
+          "${inputs.nixos-hardware}/lenovo/ideapad/16iah8"
           (
             { pkgs, ... }:
             let
@@ -84,7 +85,7 @@
               nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
             in
             {
-              environment.systemPackages = with nixpkgsMaster.pkgs; [
+              environment.systemPackages = with nixpkgs.pkgs; [
                 # cd /home/srghma/projects/idris2-pack && nix-env --install $(nix build)
                 # cd /home/srghma/projects/Idris2 && nix-env --install $(nix build)
                 # inputs.Idris2.packages.${system}.default
@@ -95,7 +96,7 @@
 
                 keepassxc
                 telegram-desktop
-                google-chrome
+                nixpkgsMaster.pkgs.google-chrome
                 code-cursor
                 # chromium
                 # chromium
@@ -332,6 +333,7 @@
                 # ib-tws
                 # ib-controller
                 solargraph
+                ruby-lsp
                 # fontforge
                 # awscli2
                 # amazon-ecs-cli
@@ -383,7 +385,7 @@
                 vlc
                 handbrake
                 # nixpkgsVlc4.pkgs.vlc4
-                yt-dlp
+                nixpkgsMaster.pkgs.yt-dlp
                 plasma5Packages.kdeconnect-kde
 
                 # jsonls
@@ -396,7 +398,7 @@
                 zoxide
                 cachix
                 killall
-                nixpkgsLocal.pkgs.i3-volume
+                i3-volume
               ];
             }
           )
