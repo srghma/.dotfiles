@@ -11,8 +11,7 @@ nix-purge () {
   # O_O is it safe?
   # sudo rm -f /boot/loader/entries/*
 
-  sudo nix-env -p /nix/var/nix/profiles/system --delete-generations +1
-  nix-env --delete-generations +1
+  sudo nix-env --delete-generations +1
   nix-env --list-generations | cat
 
   sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 14d

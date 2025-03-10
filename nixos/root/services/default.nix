@@ -2,7 +2,7 @@
 
 with pkgs;
 
-rec {
+{
   # see https://github.com/NixOS/nixpkgs/blob/cad1c18743699fa7458f1e49f6cfab0b86b024e9/nixos/modules/services/databases/postgresql.nix#L12
 
   # To connect by local:

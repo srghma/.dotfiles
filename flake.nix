@@ -63,7 +63,19 @@
     in
     # nixpkgsMyNeovimNightly = import inputs.nixpkgsMyNeovimNightly nixosConfig;
     {
-      devShells.${system}.default = nixpkgs.mkShell { };
+      # devShells.${system}.default = nixpkgs.mkShell { };
+
+      packages.${system}.default =
+        let
+          pkgs = nixpkgs;
+        in
+        pkgs.python3.withPackages (python-pkgs: [
+          python-pkgs.pip
+          python-pkgs.setuptools
+          python-pkgs.srt
+          python-pkgs.openai-whisper
+          # python-pkgs.vosk-api
+        ]);
 
       nixosConfigurations.machine = inputs.nixpkgs.lib.nixosSystem {
         inherit system;
@@ -201,7 +213,7 @@
                 docker-compose
                 # mkpasswd
 
-                ctags
+                universal-ctags
                 # filezilla
                 firefox
                 asciinema

@@ -1,4 +1,13 @@
-{ config, lib, pkgs, modulesPath, inputs, settings, localpkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  inputs,
+  settings,
+  localpkgs,
+  ...
+}:
 
 let
   # mypkgs = pkgs.nixpkgsMaster.pkgs;
@@ -37,7 +46,8 @@ let
     formats/2/height = 480
     formats/2/fps = 20/1, 15/2
   '';
-in {
+in
+{
   environment.systemPackages = [
     mypkgs.webcamoid
     # mypkgs.akvcam
