@@ -199,7 +199,7 @@ bindsym XF86TouchpadToggle    exec switch_touchpad
 # lenovo :(
 bindsym XF86Calculator    exec switch_touchpad
 
-bindsym Print      exec "scrot /home/srghma/Downloads/Pictures/%Y-%m-%d-%I%P-%M-%S-screenshot.png"
+bindsym Print      exec "scrot --monitor 0 /home/srghma/Downloads/Pictures/%Y-%m-%d-%I%P-%M-%S-screenshot.png"
 bindsym $mod+Print exec "flameshot gui"
 
 # bindsym XF86Display         exec "arandr"
