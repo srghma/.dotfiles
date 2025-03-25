@@ -12,7 +12,7 @@ alias top="htop"
 # usage ln-s whatfile wherefile
 # alias ln-s="ln -sfT"
 
-alias share-wifi="sudo create_ap wlp3s0 enp2s0 MyAccessPoint passphrase"
+alias share-wifi="sudo create_ap wlp3s0 enp2s0 SrghmaWifi suckmydick666"
 alias wifi="nmtui"
 alias sctl="systemctl"
 

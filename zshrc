@@ -8,6 +8,8 @@ export PATH="$HOME/.node_modules/bin:$PATH"
 # npm/yarn local
 export PATH="./node_modules/.bin:$PATH"
 
+export PATH="$HOME/.config/emacs/bin:$PATH"
+
 # .bin
 export PATH="$HOME/.bin:$PATH"
 

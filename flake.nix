@@ -146,8 +146,8 @@
             in
             {
               environment.systemPackages = with nixpkgs.pkgs; [
-                # cd /home/srghma/projects/idris2-pack && nix-env --install $(nix build)
-                # cd /home/srghma/projects/Idris2 && nix-env --install $(nix build)
+                # cd /home/srghma/projects/idris2-pack && nix profile install $(nix build)
+                # cd /home/srghma/projects/Idris2 && nix profile install $(nix build)
                 # inputs.Idris2.packages.${system}.default
                 # inputs.idris2-pack.packages.${system}.default
 

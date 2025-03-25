@@ -102,4 +102,5 @@
         "workbench.action.tasks.configureTaskRunner",
         "workbench.action.tasks.runTask"
     ],
+    "C_Cpp.formatting": "disabled",
 }

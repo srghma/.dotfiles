@@ -9,11 +9,13 @@ let
 
   obs = mypkgs.wrapOBS {
     plugins = with mypkgs.obs-studio-plugins; [
-      v4l-utils
+      # v4l-utils
       # advanced-scene-switcher
       # obs-pipewire-audio-capture
       droidcam-obs
-      # obs-shaderfilter
+      obs-shaderfilter
+      obs-composite-blur
+      obs-vintage-filter
       # input-overlay
       # obs-source-clone
       # looking-glass-obs
@@ -23,14 +25,13 @@ let
       obs-backgroundremoval
       # obs-vaapi
       # obs-command-source
-      # obs-vintage-filter
       # obs-gstreamer
       # obs-vkcapture
       # obs-hyperion
       # obs-websocket
       # obs-livesplit-one
       # obs-move-transition
-      # obs-multi-rtmp
+      obs-multi-rtmp
       # obs-ndi
       # wlrobs
       # obs-nvfbc
