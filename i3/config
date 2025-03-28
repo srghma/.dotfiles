@@ -125,7 +125,7 @@ bindsym $mod+Ctrl+Shift+0 move workspace $WS19
 #-----------------
 
 # Rewind Audacious (Win + +)
-bindsym $mod+Shift+equal exec audacious --rew
+bindsym $mod+Shift+Equal exec audacious --rew
 
 # Forward Audacious (Win + =)
 bindsym $mod+equal exec audacious --fwd
@@ -157,10 +157,10 @@ bindsym $mod+e       exec $terminal -e tmuxx
 bindsym $mod+Shift+e exec $terminal -e tmux new
 bindsym $mod+Ctrl+e  exec code
 
-bindsym $mod+w       exec "rm -rfd /home/srghma/.config/google-chrome-beta/Default/GPUCache && $browser"
 # bindsym $mod+Shift+w exec qutebrowser
-bindsym $mod+Shift+s       exec $terminal -e joshuto
-bindsym $mod+s exec nautilus
+bindsym $mod+w       exec "rm -rfd /home/srghma/.config/google-chrome-beta/Default/GPUCache && $browser"
+bindsym $mod+Shift+s exec $terminal -e joshuto
+bindsym $mod+s       exec nautilus
 bindsym $mod+p       exec --no-startup-id "copyq show"
 bindsym $mod+n       exec anki
 bindsym $mod+m       exec $terminal -e "zsh -c 'screen -q -r -D cmus || screen -S cmus cmus'"
@@ -172,7 +172,6 @@ bindsym $mod+f       fullscreen
 bindsym $mod+r       mode "resize"
 
 bindsym $mod+BackSpace exec --no-startup-id "/home/srghma/.dotfiles/bin/i3-skip.sh"
-bindsym $mod+Shift+BackSpace exec --no-startup-id "/home/srghma/.dotfiles/bin/rofi-audio.sh"
 bindsym $mod+z       layout tabbed
 bindsym $mod+x       layout default
 bindsym $mod+v       split h
@@ -265,6 +264,31 @@ bindsym $mod+Control+Shift+Left   focus left;  split v; layout tabbed; focus rig
 bindsym $mod+Control+Shift+Down   focus down;  split v; layout tabbed; focus up;    move down
 bindsym $mod+Control+Shift+Up     focus up;    split v; layout tabbed; focus down;  move up
 bindsym $mod+Control+Shift+Right  focus right; split v; layout tabbed; focus left;  move right
+
+# -------------------------------------
+
+# use nix run nixpkgs#xorg.xev or nix run nixpkgs#xorg.xmodmap
+#
+# bindsym $mod+Shift+BackSpace exec --no-startup-id "/home/srghma/.dotfiles/bin/rofi-audio.js rofi"
+# bindsym $mod+Shift+Control+BackSpace exec --no-startup-id "/home/srghma/.dotfiles/bin/rofi-audio.js stop"
+# bindsym $mod+Shift+Alt+BackSpace exec --no-startup-id "/home/srghma/.dotfiles/bin/rofi-audio.js next"
+# bindsym $mod+mod2+KP_Enter exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js next
+# bindsym $mod+mod2+KP_minus exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js stop
+
+bindsym $mod+mod2+KP_1 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 1
+bindsym $mod+mod2+KP_2 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 2
+bindsym $mod+mod2+KP_3 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 3
+bindsym $mod+mod2+KP_4 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 4
+bindsym $mod+mod2+KP_5 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 5
+bindsym $mod+mod2+KP_6 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 6
+bindsym $mod+mod2+KP_7 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 7
+bindsym $mod+mod2+KP_8 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 8
+bindsym $mod+mod2+KP_9 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 9
+bindsym $mod+mod2+KP_0 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 10
+bindsym $mod+mod2+XF86AudioPlay exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js rofi
+bindsym $mod+mod2+XF86AudioPrev exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js prev
+bindsym $mod+mod2+XF86AudioNext exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js next
+bindsym $mod+mod2+XF86AudioStop exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js stop
 
 # -------------------------------------
 # - Modes
