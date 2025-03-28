@@ -424,9 +424,8 @@
                 # openbcigui
                 # neuromore
 
-                # (writeShellScriptBin "spago-migrate"
-                #   "${easy-purescript-nix-automatic.spago}/bin/spago migrate")
-
+                # nix profile install github:justinwoo/easy-purescript-nix#spago
+                # (writeShellScriptBin "spago-migrate" "${easy-purescript-nix-automatic.spago}/bin/spago migrate")
                 (writeShellScriptBin "ru" "${xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ru_swapped $DISPLAY")
                 (writeShellScriptBin "ua" "${xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ua_swapped $DISPLAY")
 

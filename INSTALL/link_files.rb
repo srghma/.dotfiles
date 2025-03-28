@@ -39,6 +39,7 @@ inhome_indotfiles = [
   ['.gnupg/gpg-agent.conf',                   'gpg-agent.conf'],
   ['.config/kak',                             'kak'],
   ['.config/doom',                            'doom'],
+  ['.config/rofi',                            'rofi'],
   # ['.config/lvim/config.lua',               'lvim/config.lua'],
 
   # ['.emacs', 'emacs'],

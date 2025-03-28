@@ -97,12 +97,12 @@ for dir in "$outputdir"/*/; do
   fi
   sd 'purescript-.purescript-' '' $(fd --type file)
   sd ' --pedantic-packages -- --censor-codes=UserDefinedWarning' ' --pedantic-packages' .github/workflows/ci.yml $(fd --type file)
-  sd -F 'url: https://raw.githubusercontent.com/.*' 'registry: 60.4.0' spago.yaml
-  sd -F 'registry: .*' 'registry: 60.4.0' spago.yaml
-  sd -F 'registry: .*' 'registry: 60.4.0' spago.yaml
+  sd 'url: https://raw.githubusercontent.com/.*' 'registry: 60.4.0' spago.yaml
+  sd 'registry: .*' 'registry: 60.4.0' spago.yaml
+  sd 'registry: .*' 'registry: 60.4.0' spago.yaml
   sd -F 'github.com/paluh' 'github.com/srghma' spago.yaml
   sd -F 'github.com/paluh' 'github.com/srghma' spago.yaml
-  sd -F 'ref: .*' 'ref: master' spago.yaml
+  sd 'ref: .*' 'ref: master' spago.yaml
   sd -F 'rimraf .pulp-cache' 'rimraf .spago' ./package.json
   sd -F 'pulp build -- --censor-lib --strict' 'spago build --censor-stats --strict --pedantic-packages' ./package.json
   sd -F 'spago -x test.dhall' 'spago' ./package.json
@@ -111,8 +111,11 @@ for dir in "$outputdir"/*/; do
   sd -F " --no-install" ' --offline' ./package.json
   sd -F " -x ./test.dhall" '' ./package.json
 
-  sd -F '"purescript": "^0.15.15",' '' ./package.json
-  sd -F '"spago": "^0.21.0"' '' ./package.json
+  sd '"purescript": ".*' '' ./package.json
+  sd '"spago": ".*' '' ./package.json
+  sd '"bower": ".*' '' ./package.json
+  sd '"pulp": ".*' '' ./package.json
+  sd -F 'https://github.com/lumihq' 'https://github.com/purescript-react' ./spago.yaml
   sd -F ' --censor-stats --strict --pedantic-packages' ' --censor-stats --strict --ensure-ranges --pedantic-packages' .github/workflows/ci.yml $(fd --type file)
   sd -F ' --ensure-ranges --ensure-ranges' ' --ensure-ranges' .github/workflows/ci.yml $(fd --type file)
   sd -F 'spago test --offline --censor-stats --strict --ensure-ranges' 'spago test --offline --censor-stats --strict' .github/workflows/ci.yml $(fd --type file)

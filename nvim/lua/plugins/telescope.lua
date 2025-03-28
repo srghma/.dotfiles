@@ -27,6 +27,7 @@ return {
       local actions_generate = require "telescope.actions.generate"
       return vim.tbl_deep_extend("force", opts, {
         defaults = {
+          file_ignore_patterns = { ".git/", "pnpm-lock.yaml" },
           -- layout_strategy = "vertical",
           -- layout_config = {
           --   height = 0.98,
