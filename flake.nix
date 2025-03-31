@@ -163,7 +163,7 @@
                 libreoffice
                 inkscape
                 # inputs.zed.packages.${system}.default
-                zed
+                zed-editor
                 zip
                 unzip
                 htop

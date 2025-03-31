@@ -269,26 +269,26 @@ bindsym $mod+Control+Shift+Right  focus right; split v; layout tabbed; focus lef
 
 # use nix run nixpkgs#xorg.xev or nix run nixpkgs#xorg.xmodmap
 #
-# bindsym $mod+Shift+BackSpace exec --no-startup-id "/home/srghma/.dotfiles/bin/rofi-audio.js rofi"
-# bindsym $mod+Shift+Control+BackSpace exec --no-startup-id "/home/srghma/.dotfiles/bin/rofi-audio.js stop"
-# bindsym $mod+Shift+Alt+BackSpace exec --no-startup-id "/home/srghma/.dotfiles/bin/rofi-audio.js next"
-# bindsym $mod+mod2+KP_Enter exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js next
-# bindsym $mod+mod2+KP_minus exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js stop
+# bindsym $mod+Shift+BackSpace exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js rofi
+# bindsym $mod+Shift+Control+BackSpace exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js stop
+# bindsym $mod+Shift+Alt+BackSpace exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js next
+# bindsym $mod+mod2+KP_Enter exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js next
+# bindsym $mod+mod2+KP_minus exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js stop
 
-bindsym $mod+mod2+KP_1 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 1
-bindsym $mod+mod2+KP_2 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 2
-bindsym $mod+mod2+KP_3 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 3
-bindsym $mod+mod2+KP_4 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 4
-bindsym $mod+mod2+KP_5 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 5
-bindsym $mod+mod2+KP_6 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 6
-bindsym $mod+mod2+KP_7 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 7
-bindsym $mod+mod2+KP_8 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 8
-bindsym $mod+mod2+KP_9 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 9
-bindsym $mod+mod2+KP_0 exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js choose 10
-bindsym $mod+mod2+XF86AudioPlay exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js rofi
-bindsym $mod+mod2+XF86AudioPrev exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js prev
-bindsym $mod+mod2+XF86AudioNext exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js next
-bindsym $mod+mod2+XF86AudioStop exec --no-startup-id /home/srghma/.dotfiles/bin/rofi-audio.js stop
+bindsym mod2+KP_1 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 1
+bindsym mod2+KP_2 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 2
+bindsym mod2+KP_3 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 3
+bindsym mod2+KP_4 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 4
+bindsym mod2+KP_5 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 5
+bindsym mod2+KP_6 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 6
+bindsym mod2+KP_7 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 7
+bindsym mod2+KP_8 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 8
+bindsym mod2+KP_9 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 9
+bindsym mod2+KP_0 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 10
+bindsym mod2+XF86AudioPlay exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js rofi
+bindsym mod2+XF86AudioPrev exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js prev
+bindsym mod2+XF86AudioNext exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js next
+bindsym mod2+XF86AudioStop exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js stop
 
 # -------------------------------------
 # - Modes

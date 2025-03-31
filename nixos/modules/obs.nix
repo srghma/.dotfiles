@@ -27,7 +27,7 @@ let
       # obs-gstreamer
       # obs-vkcapture
       # obs-hyperion
-      obs-websocket
+      # obs-websocket
       # obs-livesplit-one
       # obs-move-transition
       obs-multi-rtmp
