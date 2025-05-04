@@ -103,4 +103,10 @@
         "workbench.action.tasks.runTask"
     ],
     "C_Cpp.formatting": "disabled",
+    "files.readonlyInclude": {
+        "**/.cargo/git/checkouts/**/*.rs": true,
+        "**/.cargo/registry/src/**/*.rs": true,
+        "**/lib/rustlib/src/rust/library/**/*.rs": true
+    },
+    "diffEditor.ignoreTrimWhitespace": false,
 }

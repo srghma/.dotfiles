@@ -71,8 +71,124 @@ return {
     opts.commands["focus_first_file_in_directory"] = focus_some_file(function(x) return x[1] end)
     opts.commands["focus_last_file_in_directory"] = focus_some_file(function(x) return x[#x] end)
 
+    local function print_inspect_to_file(data)
+	    local filepath = "/tmp/mydebug.log"
+	    local file = io.open(filepath, "a")
+	    if not file then
+		    vim.notify("Could not open file for writing: " .. filepath, vim.log.levels.ERROR)
+		    return
+	    end
+	    file:write(vim.inspect(data) .. "\n")
+	    file:close()
+	    vim.notify(vim.inspect(data))
+    end
+
+    opts.window.mappings["@"] = "mycommand"
+    opts.commands["mycommand"] = function(state)
+	    if not state.clipboard then
+		    vim.notify("No state.clipboard", vim.log.levels.ERROR)
+		    return
+	    end
+
+      -- Get files marked for cut from the clipboard
+      local marked_files = {}
+
+      -- Check if clipboard stores nodes
+      for _i, x in pairs(state.clipboard) do
+        -- Check if the node is marked as cut (check for cut attribute)
+        if x.action == "cut" and x.node.type == "file" then
+          table.insert(marked_files, x.node.path)
+        end
+      end
+
+      -- Ensure we have files in the clipboard
+      if #marked_files == 0 then
+        vim.notify("No files marked for cut. Mark files with 'x' first.", vim.log.levels.WARN)
+        return
+      end
+
+      -- Check if register q has a macro
+      local macro_content = vim.fn.getreg("q")
+      vim.notify(macro_content)
+      if not macro_content or macro_content == "" then
+        vim.notify("No macro found in register 'q'. Record a macro with 'qq' first.", vim.log.levels.WARN)
+        return
+      end
+
+      -- Store current node ID for restoring position
+      -- local current_node = state.tree:get_node()
+      -- local current_node_id = current_node and current_node:get_id()
+
+      require("neo-tree.ui.renderer").close(state)
+
+      -- Store current buffer and window
+      local current_buf = vim.api.nvim_get_current_buf()
+      local current_win = vim.api.nvim_get_current_win()
+
+      -- Process cut files one by one
+      -- local opened_files_count = 0
+      --
+      -- for _, item in ipairs(marked_files) do
+      --   opened_files_count = opened_files_count + 1
+      --   vim.cmd("edit " .. vim.fn.fnameescape(item))
+      -- end
+      --
+      -- vim.notify("Files opened" .. opened_files_count .. " file(s)", vim.log.levels.INFO)
+
+      -- Process cut files one by one
+      local processed_count = 0
+
+      for _, item in ipairs(marked_files) do
+        processed_count = processed_count + 1
+
+        -- Open file in a buffer
+        vim.cmd("edit " .. vim.fn.fnameescape(item))
+
+        -- Run the macro from register q
+        vim.cmd("normal! @q")
+
+        -- Save the file
+        vim.cmd("write")
+      end
+
+      -- Return to the neo-tree window and buffer
+      vim.api.nvim_set_current_win(current_win)
+      vim.api.nvim_set_current_buf(current_buf)
+
+      -- Try to restore the previous selection
+      if current_node_id then
+        require("neo-tree.ui.renderer").focus_node(state, current_node_id)
+      end
+
+      -- Show success message
+      vim.notify("Ran macro '@q' on " .. processed_count .. " file(s)", vim.log.levels.INFO)
+    end
+
     opts.window.position = "left"
     opts.window.width = 40
+
+    -- opts.window.mappings["Q"] = {
+    --   function(_state)
+    --     local recording = vim.fn.reg_recording()
+    --     if recording == "" then
+    --       -- Start recording to register 'a'
+    --       vim.api.nvim_feedkeys("qa", "n", false)
+    --       vim.notify("Started recording macro to register 'a'")
+    --     else
+    --       -- Stop recording
+    --       vim.api.nvim_feedkeys("q", "n", false)
+    --       vim.notify("Stopped recording macro from register '" .. recording .. "'")
+    --     end
+    --   end,
+    --   desc = "Toggle macro recording in register a",
+    -- }
+    --
+    -- opts.window.mappings["@"] = {
+    --   function(_state)
+    --     vim.cmd("normal! @a")
+    --   end,
+    --   desc = "Run macro from register a",
+    -- }
 
     opts.window.mappings["K"] = "focus_first_file_in_directory"
     opts.window.mappings["J"] = "focus_last_file_in_directory"

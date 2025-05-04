@@ -36,11 +36,14 @@ git-remote-setup-fork () {
   # Set the origin to your fork
   git-remote-add-or-set-url origin "ssh://git@github.com/$USER/$reponame"
 
+  git fetch --all
+
   echo "Updated remotes: origin set to your fork, upstream set to the original repo."
 }
 
 git-remote-add-pr () {
-  prid="dunhamsteve:markdown-code-blocks"
+  # prid="dunhamsteve:markdown-code-blocks"
+  prid="$1"
 
   # Get the current origin URL
   origin=$(git remote get-url origin)
@@ -53,6 +56,7 @@ git-remote-add-pr () {
   # url="https://github.com/$username/$reponame/tree/$branch"
 
   git-remote-add-or-set-url "$username" "$url"  # Add or set the remote
+  # git fetch --all
   git fetch "$username"                        # Fetch the new remote
   git merge "$username/$branch"                # Merge the specified branch
 

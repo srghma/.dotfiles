@@ -9,6 +9,8 @@ export PATH="$HOME/.node_modules/bin:$PATH"
 export PATH="./node_modules/.bin:$PATH"
 
 export PATH="$HOME/.config/emacs/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/projects/spago-yaml-generate/bin:$PATH"
 
 # .bin
 export PATH="$HOME/.bin:$PATH"
