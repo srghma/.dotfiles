@@ -89,7 +89,7 @@ with pkgs;
 
     xkb.layout = "us,ua";
     xkb.options = "caps:swapescape,grp:rctrl_rshift_toggle";
-    xkb.variant = "qwerty";
+    # xkb.variant = "qwerty";
 
     # dpi = 96;
     dpi = 140;

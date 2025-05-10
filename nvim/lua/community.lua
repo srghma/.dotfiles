@@ -59,25 +59,25 @@ return {
   },
   { import = "astrocommunity.search.nvim-spectre" },
   -- { import = "astrocommunity.pack.haskell" },
-  { import = "astrocommunity.pack.purescript" },
+  -- { import = "astrocommunity.pack.purescript" },
   { import = "astrocommunity.pack.lean" },
   -- dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/idris2/init.lua",
 
   -- { import = "astrocommunity.pack.purescript" },
-  {
-    "AstroNvim/astrolsp",
-    opts = {
-      config = {
-        purescriptls = {
-          settings = {
-            purescript = {
-              formatter = "purs-tidy", -- add this to enable purs-tidy formatting on every save
-            },
-          },
-        },
-      },
-    },
-  },
+  -- {
+  --   "AstroNvim/astrolsp",
+  --   opts = {
+  --     config = {
+  --       purescriptls = {
+  --         settings = {
+  --           purescript = {
+  --             formatter = "purescript-tidy", -- add this to enable purs-tidy formatting on every save
+  --           },
+  --         },
+  --       },
+  --     },
+  --   },
+  -- },
 
   -- { import = "astrocommunity.editing-support.text-case-nvim" },
   -- { import = "astrocommunity.motion.nvim-spider" },

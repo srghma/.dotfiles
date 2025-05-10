@@ -1,0 +1,20 @@
+--- a/v4l2loopback.c	1970-01-01 07:00:01.000000000 +0700
++++ b/v4l2loopback.c	2025-05-07 17:46:54.547549296 +0700
+@@ -924,13 +924,12 @@
+ 			->device_nr;
+ 	__u32 capabilities = V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
+ 
+-	strscpy(cap->driver, "v4l2 loopback", sizeof(cap->driver));
+-	snprintf(cap->card, sizeof(cap->card), "%s", dev->card_label);
+-	snprintf(cap->bus_info, sizeof(cap->bus_info),
+-		 "platform:v4l2loopback-%03d", device_nr);
++	strscpy(cap->driver, "uvcvideo", sizeof(cap->driver));
++	strscpy(cap->card, "HD Pro Webcam C920", sizeof(cap->card));
++	snprintf(cap->bus_info, sizeof(cap->bus_info), "usb-0000:00:14.0-6");
+ 
+ 	if (dev->announce_all_caps) {
+-		capabilities |= V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_VIDEO_OUTPUT;
++		capabilities |= V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_VIDEO_OUTPUT | V4L2_CAP_DEVICE_CAPS;
+ 	} else {
+ 		if (dev->ready_for_capture) {
+ 			capabilities |= V4L2_CAP_VIDEO_CAPTURE;

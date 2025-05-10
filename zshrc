@@ -11,6 +11,7 @@ export PATH="./node_modules/.bin:$PATH"
 export PATH="$HOME/.config/emacs/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/projects/spago-yaml-generate/bin:$PATH"
+export PATH="/home/srghma/projects/purescript/.stack-work/install/x86_64-linux-nix/0758bbd929f42d4f66e05e01297cc69e13582002cc47d515e5cef6cbbf752f9d/9.6.6/bin:$PATH"
 
 # .bin
 export PATH="$HOME/.bin:$PATH"

@@ -1,25 +1,5 @@
--- vim.api.nvim_create_autocmd({ 'VimEnter', 'VimLeave' }, {
--- 	callback = function()
--- 		if vim.env.TMUX_PLUGIN_MANAGER_PATH then
--- 			vim.loop.spawn('/nix/store/3zg0dvhh2cfk59wh3d1ryhdzx7b5xlqg-tmuxplugin-tmux-window-name-2024-03-08/share/tmux-plugins/tmux-window-name/scripts/rename_session_windows.py', {})
--- 			-- uv.spawn(vim.env.TMUX_PLUGIN_MANAGER_PATH .. '/tmux-window-name/scripts/rename_session_windows.py', {})
--- 		end
--- 	end,
--- })
+if true then return end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
 
--- This will run last in the setup process and is a good place to configure
--- things like custom filetypes. This just pure lua so anything that doesn't
+-- This will run last in the setup process.
+-- This is just pure lua so anything that doesn't
 -- fit in the normal config locations above can go here
-
--- Set up custom filetypes
--- vim.filetype.add {
---   extension = {
---     idr = "idris",
---   },
---   -- filename = {
---   --   ["Foofile"] = "fooscript",
---   -- },
---   -- pattern = {
---   --   ["~/%.config/foo/.*"] = "fooscript",
---   -- },
--- }

@@ -19,6 +19,7 @@
     nixpkgsMaster.url = "github:NixOS/nixpkgs/master";
     nixpkgsVlc4.url = "github:PerchunPak/nixpkgs/vlc4";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgsTelegramOld.url = "github:NixOS/nixpkgs/5df43628fdf08d642be8ba5b3625a6c70731c19c";
     # nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
     # nixpkgsMyNeovimNightly.url = "github:srghma/nixpkgs/neovim2";
     nix-alien-pkgs.url = "github:thiagokokada/nix-alien";
@@ -55,76 +56,15 @@
         };
       };
 
+      # nixpkgsVlc4 = import inputs.nixpkgsVlc4 nixosConfig;
+      # nixpkgsMyNeovimNightly = import inputs.nixpkgsMyNeovimNightly nixosConfig;
+      # nixpkgsLocal = import inputs.nixpkgsLocal nixosConfig;
       nixpkgs = import inputs.nixpkgs nixosConfig;
       nixpkgsStable = import inputs.nixpkgsStable nixosConfig;
-      # nixpkgsLocal = import inputs.nixpkgsLocal nixosConfig;
       nixpkgsMaster = import inputs.nixpkgsMaster nixosConfig;
+      nixpkgsTelegramOld = import inputs.nixpkgsTelegramOld nixosConfig;
     in
-    # nixpkgsVlc4 = import inputs.nixpkgsVlc4 nixosConfig;
-    # nixpkgsMyNeovimNightly = import inputs.nixpkgsMyNeovimNightly nixosConfig;
     {
-      # devShells.${system}.default = nixpkgs.mkShell { };
-
-      # packages.${system}.default =
-      #   let
-      #     pkgs = nixpkgs;
-      #   in
-      #   pkgs.python3.withPackages (python-pkgs: [
-      #     python-pkgs.pip
-      #     python-pkgs.setuptools
-      #     python-pkgs.srt
-      #     python-pkgs.openai-whisper
-      #     # python-pkgs.vosk-api
-      #   ]);
-
-      packages.${system}.default =
-        let
-          pkgs = nixpkgs;
-        in
-        pkgs.conda.override {
-          extraPkgs = [ pkgs.kdenlive ];
-        };
-
-      # packages.${system}.default =
-      #   let
-      #     pkgs = nixpkgs;
-      #     pyver = "311";
-      #     # cd ${builtins.toString ./.} && pip3 install -r requirements-freeze.txt && cd -
-      #     prepare = ''
-      #       pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple/
-      #       pip3 install --upgrade pip setuptools wheel
-      #       pip3 install --upgrade openai-whisper vosk
-      #     '';
-      #   in
-      #   (pkgs.buildFHSEnv {
-      #     name = "venv-py${pyver}";
-      #     targetPkgs =
-      #       pkgs:
-      #       (
-      #         (with pkgs; [
-      #           # search: https://search.nixos.org/packages?&query=python+gssapi
-      #           # pkgs."python${pyver}Packages".gssapi
-      #           # heimdal.dev # for gssapi & krb5; See: https://github.com/NixOS/nixpkgs/issues/33103#issuecomment-796419851
-      #           kdenlive
-      #           python3
-      #           python3Packages.pip
-      #           python3Packages.virtualenv
-      #           openssl
-      #           zlib
-      #           (lib.hiPrio gcc) # for native build wheel
-      #         ])
-      #         ++ pkgs.pythonManylinuxPackages.manylinux1
-      #       );
-      #     profile =
-      #       ''
-      #         export PROMPT_COMMAND='PS1="\[\033[01;32m\]venv-py${pyver}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ ";unset PROMPT_COMMAND'
-      #         python3 -m venv --system-site-packages ${builtins.toString ./.venv-py${pyver}}
-      #         source ${builtins.toString ./.venv-py${pyver}/bin/activate}
-      #       ''
-      #       + prepare;
-      #     runScript = "bash";
-      #   });
-
       nixosConfigurations.machine = inputs.nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
@@ -151,11 +91,11 @@
                 # inputs.Idris2.packages.${system}.default
                 # inputs.idris2-pack.packages.${system}.default
 
-                nix-alien-pkgs.nix-alien
+                # nix-alien-pkgs.nix-alien
                 brightnessctl
 
                 keepassxc
-                telegram-desktop
+                nixpkgsTelegramOld.pkgs.telegram-desktop
                 nixpkgsMaster.pkgs.google-chrome
                 code-cursor
                 # chromium
@@ -171,7 +111,7 @@
                 ntfs3g
                 alsa-utils
 
-                okular
+                kdePackages.okular
 
                 pavucontrol
                 conky

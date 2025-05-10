@@ -95,6 +95,7 @@
   };
 
   programs = {
+    firejail.enable = true;
     nix-ld.enable = true; # for nvim codeium
 
     # droidcam.enable = true;
