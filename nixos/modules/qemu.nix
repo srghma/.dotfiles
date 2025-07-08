@@ -1,5 +1,5 @@
 # https://www.youtube.com/watch?v=rCVW8BGnYIc&ab_channel=TechSupportOnHold
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
 
@@ -13,7 +13,8 @@
   environment.systemPackages = with pkgs; [
     virt-manager
     virt-viewer
-    spice spice-gtk
+    spice
+    spice-gtk
     spice-protocol
     win-virtio
     win-spice

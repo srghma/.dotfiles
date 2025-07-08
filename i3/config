@@ -146,6 +146,8 @@ exec --no-startup-id keepassxc
 # exec --no-startup-id dropbox start
 exec --no-startup-id i3-battery-popup
 exec --no-startup-id flameshot
+exec --no-startup-id telegram-desktop
+exec --no-startup-id signal-desktop
 exec --no-startup-id "sh -c 'sleep 10; exec audacious'"
 
 # -------------------------------------
@@ -200,7 +202,7 @@ bindsym XF86TouchpadToggle    exec switch_touchpad
 # lenovo :(
 bindsym XF86Calculator    exec switch_touchpad
 
-bindsym Print      exec "scrot --monitor 0 /home/srghma/Downloads/Pictures/%Y-%m-%d-%I%P-%M-%S-screenshot.png"
+bindsym Print      exec "scrot --monitor 0 /home/srghma/Pictures/%Y-%m-%d-%I%P-%M-%S-screenshot.png"
 bindsym $mod+Print exec "flameshot gui"
 
 # bindsym XF86Display         exec "arandr"

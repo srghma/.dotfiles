@@ -207,7 +207,7 @@
 
   networking = {
     hostName = "machine";
-    hostId = "210b80eb"; # generated with `head -c 8 /etc/machine-id`
+    hostId = "36132bc9"; # generated with `head -c 8 /etc/machine-id`
 
     # wireless.enable = true;
     networkmanager.enable = true;
@@ -216,7 +216,7 @@
       # for libvirtd (https://nixos.org/nixops/manual/#idm140737318329504)
       # checkReversePath = false;
 
-      enable = true;
+      enable = false;
       # allowPing = true;
 
       allowedTCPPortRanges = [
@@ -381,12 +381,9 @@
 
   # virtualisation.anbox.enable = false;
 
-  ### USE qemu.nix!!
+  ### DONT USE virtualbox, USE nixos/modules/qemu.nix!!
   # virtualisation.virtualbox.host.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true; # for forwarding usb
-
-  # virtualisation.libvirtd.enable = true;
-  # virtualisation.memorySize = 1024;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

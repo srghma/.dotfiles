@@ -136,11 +136,11 @@ return {
         ["."] = { ":normal .<CR>", desc = "Repeat last normal command" },
 
         ["dm"] = {
-          [[:s:::g<right><right>]],
+          [[:s///g<right><right>]],
           desc = "Replace inside of visual selection",
         },
         ["DM"] = {
-          [[:Subs:::g<Right><Right>]],
+          [[:Subs///g<Right><Right>]],
           desc = "Replace inside of visual selection",
         },
         -- ['dm'] = { [[:lua vim.api.nvim_input(":s//<Right><Right><Right>")<CR>]], desc = "Replace inside of visual selection" },
@@ -182,7 +182,7 @@ return {
           desc = "Replace within all buffer",
         },
         ["DM"] = {
-          ":lua vim.api.nvim_input(':%Subs::<Right><Right><Right><Right>')<CR>",
+          ":lua vim.api.nvim_input(':Subs//<Right><Right><Right><Right>')<CR>",
           desc = "Replace within all buffer",
         },
 

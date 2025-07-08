@@ -44,3 +44,4 @@ bootstrap/idris2_app/*.ss
 # bootstrap/
 benchmark/benchmarks/*
 .zed/
+# src/lib/ui-library

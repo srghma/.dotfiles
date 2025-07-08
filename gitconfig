@@ -2,12 +2,9 @@
 
 [user]
   name = Serhii Khoma
-  email = srghma@gmail.com
+  email = melgaardbjorn@gmail.com
 [github]
-  user = srghma
-
-[credential]
-  helper = cache --timeout=3600
+  user = srghma2
 [core]
   autocrlf = false
   safecrlf = true
@@ -59,3 +56,9 @@
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
   required = true
+[credential "https://github.com"]
+	helper =
+	helper = !/run/current-system/sw/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/run/current-system/sw/bin/gh auth git-credential

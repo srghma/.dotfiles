@@ -62,7 +62,7 @@
       nixpkgs = import inputs.nixpkgs nixosConfig;
       nixpkgsStable = import inputs.nixpkgsStable nixosConfig;
       nixpkgsMaster = import inputs.nixpkgsMaster nixosConfig;
-      nixpkgsTelegramOld = import inputs.nixpkgsTelegramOld nixosConfig;
+      # nixpkgsTelegramOld = import inputs.nixpkgsTelegramOld nixosConfig;
     in
     {
       nixosConfigurations.machine = inputs.nixpkgs.lib.nixosSystem {
@@ -78,11 +78,11 @@
             { pkgs, ... }:
             let
               # dunsted-volume = pkgs.callPackage inputs.dunsted-volume { };
+              # nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
               kb-light = pkgs.callPackage inputs.kb-light { };
               i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
               switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
               purescript-overlay = inputs.purescript-overlay.packages.${system};
-              nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
             in
             {
               environment.systemPackages = with nixpkgs.pkgs; [
@@ -95,7 +95,7 @@
                 brightnessctl
 
                 keepassxc
-                nixpkgsTelegramOld.pkgs.telegram-desktop
+                telegram-desktop
                 nixpkgsMaster.pkgs.google-chrome
                 code-cursor
                 # chromium
@@ -141,8 +141,8 @@
                 # psmisc
                 # lxappearance
 
-                # ranger
-                joshuto
+                ranger
+                # joshuto
                 # termite
                 kitty
                 # nixpkgsMyNeovimNightly.pkgs.neovim
@@ -177,7 +177,8 @@
 
                 # mplayer
 
-                nodejs_latest
+                # nodejs_latest
+                nodejs_22
                 # pnpm
 
                 # netcat-openbsd # nc -U /var/run/acpid.socket
@@ -203,7 +204,7 @@
 
                 universal-ctags
                 # filezilla
-                firefox
+                # firefox
                 asciinema
                 tree
                 # youtube-dl
@@ -231,7 +232,6 @@
                 # nixpkgsLocal.pkgs.safeeyes
                 # cmus
 
-                # hubstaff
                 # hubstaff
 
                 # screen
@@ -262,6 +262,14 @@
 
                 (writeShellScriptBin "tmuxx" "tmux attach || tmux new-session")
 
+                (python3.withPackages (
+                  ps: with ps; [
+                    pynvim
+                    libtmux
+                    # pip
+                  ]
+                ))
+
                 # stack
 
                 # haskellPackages.intero
@@ -276,14 +284,6 @@
                 # pgFormatter
                 # python36Packages.syncthing-gtk
                 # arion
-
-                # (python3.withPackages (
-                #   ps: with ps; [
-                #     pynvim
-                #     libtmux
-                #     # pip
-                #   ]
-                # ))
 
                 # for vim
                 # haskellPackages.hindent
