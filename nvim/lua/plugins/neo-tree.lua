@@ -9,6 +9,14 @@ local function log_to_file(content)
   end
 end
 
+local function write_string_to_file(filepath, content)
+  local f = io.open(filepath, "w")
+  if not f then return false end
+  f:write(content)
+  f:close()
+  return true
+end
+
 local function focus_some_file(mylambda)
   return function(state)
     local log = require("neo-tree.log")
@@ -54,6 +62,25 @@ local function focus_some_file(mylambda)
   end
 end
 
+local function read_file_strip_copyright_if_present(filepath)
+  local file = io.open(filepath, "r")
+  if not file then
+    return "[ERROR: Could not read file]"
+  end
+
+  local lines = {}
+  for line in file:lines() do
+    table.insert(lines, line)
+  end
+  file:close()
+
+  if lines[1] and lines[1]:match("^%s*//%s*Copyright") then
+    table.remove(lines, 1)
+  end
+
+  return table.concat(lines, "\n")
+end
+
 return {
   "nvim-neo-tree/neo-tree.nvim",
   opts = function(_, opts)
@@ -83,8 +110,52 @@ return {
 	    vim.notify(vim.inspect(data))
     end
 
-    opts.window.mappings["@"] = "mycommand"
-    opts.commands["mycommand"] = function(state)
+    opts.window.mappings["@c"] = "copy_files_content_to_clipboard_for_chatgpt_marked_with_copy"
+    opts.commands["copy_files_content_to_clipboard_for_chatgpt_marked_with_copy"] = function(state)
+      if not state.clipboard then
+        vim.notify("No state.clipboard", vim.log.levels.ERROR)
+        return
+      end
+
+      local copied_items = vim.tbl_filter(function(item)
+        return item.action == "copy" and item.node.type == "file"
+      end, vim.tbl_values(state.clipboard))
+
+      if #copied_items == 0 then
+        vim.notify("No copied files found in clipboard", vim.log.levels.WARN)
+        return
+      end
+
+      local entries = vim.tbl_map(function(item)
+        local filepath = item.node.path
+        local relpath = vim.fn.fnamemodify(filepath, ":~:.")
+        local file_content = read_file_strip_copyright_if_present(filepath)
+        return {
+          path = relpath,
+          formatted = string.format("==== FILE: %s ====\n%s\n", relpath, file_content)
+        }
+      end, copied_items)
+
+      local final_output = table.concat(vim.tbl_map(function(e) return e.formatted end, entries), "\n")
+      local copied_paths = vim.tbl_map(function(e) return e.path end, entries)
+
+      local tmpfile = "/tmp/chatgpt-files.txt"
+      if not write_string_to_file(tmpfile, final_output) then
+        vim.notify("Failed to open temporary file for writing", vim.log.levels.ERROR)
+        return
+      end
+
+      local result = vim.fn.system({ "copyq", "copy", "--", tmpfile })
+
+      if vim.v.shell_error ~= 0 then
+        vim.notify("copyq failed:\n" .. result, vim.log.levels.ERROR)
+      else
+        vim.notify("Copied " .. #copied_paths .. " file(s):\n" .. table.concat(copied_paths, "\n"), vim.log.levels.INFO)
+      end
+    end
+
+    opts.window.mappings["@@"] = "run_macro_on_files_marked_with_cut"
+    opts.commands["run_macro_on_files_marked_with_cut"] = function(state)
 	    if not state.clipboard then
 		    vim.notify("No state.clipboard", vim.log.levels.ERROR)
 		    return

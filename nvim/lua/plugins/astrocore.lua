@@ -239,6 +239,24 @@ return {
         -- setting a mapping to false will disable it
         ["<C-s>"] = false,
         ["<C-S>"] = false,
+
+        ["<leader>lc"] = {
+          function()
+            local line_num = vim.fn.line(".") - 1
+            local diag = vim.diagnostic.get(0, { lnum = line_num })
+
+            if diag and #diag > 0 then
+              local msg = diag[1].message
+              local line_content = vim.api.nvim_buf_get_lines(0, line_num, line_num + 1, false)[1] or ""
+              local combined = "At: " .. line_content .. "\n  " .. msg
+              vim.fn.setreg("+", combined)  -- copy to system clipboard
+              vim.notify("Copied to clipboard:\n" .. combined, vim.log.levels.INFO)
+            else
+              vim.notify("No diagnostic on current line", vim.log.levels.WARN)
+            end
+          end,
+          desc = "Copy diagnostic and line to clipboard",
+        }
       },
     },
   },
