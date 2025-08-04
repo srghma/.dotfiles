@@ -162,4 +162,7 @@
         "-l src/Prelude.v",
         "-l src/Ssr.v",
     ],
+    "lean4.serverArgs": [
+        "-Dexperimental.module=true"
+    ],
 }

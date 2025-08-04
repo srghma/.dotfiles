@@ -22,17 +22,17 @@
     nixpkgsTelegramOld.url = "github:NixOS/nixpkgs/5df43628fdf08d642be8ba5b3625a6c70731c19c";
     # nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
     # nixpkgsMyNeovimNightly.url = "github:srghma/nixpkgs/neovim2";
-    nix-alien-pkgs.url = "github:thiagokokada/nix-alien";
-    kb-light.url = "github:srghma/kb-light";
-    kb-light.flake = false;
+    # nix-alien-pkgs.url = "github:thiagokokada/nix-alien";
+    # kb-light.url = "github:srghma/kb-light";
+    # kb-light.flake = false;
     # dunsted-volume.url = "github:srghma/dunsted-volume";
     # dunsted-volume.flake = false;
-    fix-github-https-repo.url = "github:srghma/fix-github-https-repo";
-    fix-github-https-repo.flake = false;
-    image_optim.url = "github:toy/image_optim";
-    image_optim.flake = false;
-    easy-purescript-nix-automatic.url = "github:srghma/easy-purescript-nix-automatic";
-    easy-purescript-nix-automatic.flake = false;
+    # fix-github-https-repo.url = "github:srghma/fix-github-https-repo";
+    # fix-github-https-repo.flake = false;
+    # image_optim.url = "github:toy/image_optim";
+    # image_optim.flake = false;
+    # easy-purescript-nix-automatic.url = "github:srghma/easy-purescript-nix-automatic";
+    # easy-purescript-nix-automatic.flake = false;
     purescript-overlay.url = "github:thomashoneyman/purescript-overlay";
     purescript-overlay.inputs.nixpkgs.follows = "nixpkgs";
     # Idris2.url = "git+file:/home/srghma/projects/Idris2";
@@ -79,7 +79,7 @@
             let
               # dunsted-volume = pkgs.callPackage inputs.dunsted-volume { };
               # nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
-              kb-light = pkgs.callPackage inputs.kb-light { };
+              # kb-light = pkgs.callPackage inputs.kb-light { };
               i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
               switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
               purescript-overlay = inputs.purescript-overlay.packages.${system};
@@ -245,7 +245,7 @@
                 # My packages
                 # dunsted-volume
                 # randomize_background
-                kb-light
+                # kb-light
                 switch_touchpad
                 # umsf
                 # fix-github-https-repo

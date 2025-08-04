@@ -58,6 +58,48 @@ return {
           end,
         },
       },
+      remove_lean_comments_cmd = {
+        {
+          event = "FileType",
+          pattern = "lean",
+          callback = function()
+            local function register_buffer_command_and_keymap(opts)
+              vim.keymap.set("n", opts.keymap, opts.fn, {
+                buffer = bufnr,
+                desc = opts.desc,
+              })
+
+              vim.api.nvim_buf_create_user_command(0, opts.command, opts.fn, {
+                desc = opts.desc,
+              })
+            end
+
+
+            register_buffer_command_and_keymap({
+              keymap = "<leader>lC",
+              command = "RemoveLeanComments",
+              desc = "Remove all Lean comments",
+              fn = function()
+                -- Delete line comments
+                vim.cmd [[silent! g/^\s*--/d]]
+                -- Delete multiline block comments like /- ... -/
+                vim.cmd [[silent! g/\/-/,/-\//d]]
+                vim.notify("Removed Lean comments", vim.log.levels.INFO)
+              end,
+            })
+
+            register_buffer_command_and_keymap({
+              keymap = "<leader>lK",
+              command = "KeepLeanDefinitions",
+              desc = "Keep only Lean definitions (def, instance, class, etc.)",
+              fn = function()
+                vim.cmd [[silent! g!/^.*\<\(def\|instance\|class\|abbrev\|opaque\|extern\|section\|end\)\>/d]]
+                vim.notify("Kept only Lean definitions", vim.log.levels.INFO)
+              end,
+            })
+          end,
+        },
+      },
     },
 
     -- Configure core features of AstroNvim

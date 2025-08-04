@@ -42,16 +42,16 @@ with pkgs;
   compton.enable = true;
   # keybase.enable = true;
 
+  gnome.gcr-ssh-agent.enable = false;
   # gnome.gnome-online-accounts.enable = false;
-  # gnome.gnome-user-share.enable = false;
-  # gnome.tracker.enable = false;
+  gnome.gnome-user-share.enable = false;
+  gnome.tinysparql.enable = false;
   # gnome.evolution-data-server.enable = false;
-  # gnome.tracker-miners.enable = false;
+  gnome.localsearch.enable = false;
   # gnome.gnome-keyring.enable = false;
   packagekit.enable = false;
   geoclue2.enable = false;
-  dleyna-renderer.enable = false;
-  dleyna-server.enable = false;
+  dleyna.enable = false;
   safeeyes.enable = false;
   # nextcloud-client.enable = true;
 
@@ -84,6 +84,8 @@ with pkgs;
     user = "srghma";
   };
 
+  desktopManager.gnome.enable = true;
+
   xserver = {
     enable = true;
 
@@ -100,10 +102,6 @@ with pkgs;
 
     windowManager = {
       i3.enable = true;
-    };
-
-    desktopManager = {
-      gnome.enable = true;
     };
 
     displayManager = {

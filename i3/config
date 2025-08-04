@@ -147,7 +147,7 @@ exec --no-startup-id keepassxc
 exec --no-startup-id i3-battery-popup
 exec --no-startup-id flameshot
 exec --no-startup-id telegram-desktop
-exec --no-startup-id signal-desktop
+exec --no-startup-id /nix/store/jf46172vm091cmzfhqyjxsfdq9nbaw8z-signal-desktop-7.62.0/bin/signal-desktop
 exec --no-startup-id "sh -c 'sleep 10; exec audacious'"
 
 # -------------------------------------
@@ -188,8 +188,8 @@ bindsym $mod+Shift+space focus mode_toggle
 bindsym $mod+space       floating toggle
 
 # multimedia keys
-bindsym XF86KbdBrightnessUp   exec "sudo kb-light + 1"
-bindsym XF86KbdBrightnessDown exec "sudo kb-light - 1"
+bindsym XF86KbdBrightnessUp   exec "brightnessctl -d '*kbd*' s +10%"
+bindsym XF86KbdBrightnessDown exec "brightnessctl -d '*kbd*' s 10%-"
 
 bindsym XF86AudioRaiseVolume  exec "i3-volume -a -n -c 0 up 5"
 bindsym XF86AudioLowerVolume  exec "i3-volume -a -n -c 0 down 5"
