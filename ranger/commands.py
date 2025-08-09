@@ -177,3 +177,28 @@ class fzf_select(Command):
                 self.fm.cd(fzf_file)
             else:
                 self.fm.select_file(fzf_file)
+
+class unzip(Command):
+    """
+    :unzip
+
+    Unzips the selected .zip file(s) into the current directory.
+    """
+
+    def execute(self):
+        import os
+        from ranger.core.loader import CommandLoader
+
+        # Get selected .zip files
+        zip_files = [f for f in self.fm.thistab.get_selection() if f.path.endswith(".zip")]
+
+        if not zip_files:
+            self.fm.notify("No .zip files selected", bad=True)
+            return
+
+        for fobj in zip_files:
+            descr = f"Unzipping {fobj.relative_path}"
+            cmd = ["unzip", "-o", fobj.path]  # -o to overwrite without prompting
+            loader = CommandLoader(args=cmd, descr=descr)
+            self.fm.loader.add(loader)
+

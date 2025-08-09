@@ -277,6 +277,7 @@ bindsym $mod+Control+Shift+Right  focus right; split v; layout tabbed; focus lef
 # bindsym $mod+mod2+KP_Enter exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js next
 # bindsym $mod+mod2+KP_minus exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js stop
 
+# press numlock button and then 1 button
 bindsym mod2+KP_1 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 1
 bindsym mod2+KP_2 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 2
 bindsym mod2+KP_3 exec --no-startup-id /home/srghma/projects/videochatru-extension/server/cli.js choose 3

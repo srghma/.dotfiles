@@ -6,11 +6,16 @@ bitbucket-delete-repository () {
 
 github-create-and-upload () {
   curdir=${PWD##*/}
-  repo_name=${1:-$curdir}
-  username=$USER
-  curl -u $username https://api.github.com/user/repos -d "{\"name\":\"$repo_name\"}"
+  raw_name=${1:-$curdir}
+  # Remove -master or -main suffix if present
+  repo_name=$(echo "$raw_name" | sed -E 's/-(master|main)$//')
+  # username="sergeynordicresults"
+  username="srghma-backup"
+  # username="$USER"
+  gh repo create "$username/$repo_name" --public
+  # curl -u "$username" https://api.github.com/user/repos -d "{\"name\":\"$repo_name\"}"
   git remote rm origin
-  git remote add origin git@github.com:$username/$repo_name.git
+  git remote add origin "git@github.com:$username/$repo_name.git"
   github-push-all
 }
 

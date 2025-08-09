@@ -192,9 +192,11 @@ function sync-jss() {
     fi
   }
 
-  for dir in ~/jss/*; do
-    work "$dir"
-  done
+  work "$HOME/jss/ui-library"
+
+  # for dir in ~/jss/*; do
+  #   work "$dir"
+  # done
 
   for subdir in admin-ui web corporate; do
     work "$HOME/jss/$subdir/src/lib/ui-library"

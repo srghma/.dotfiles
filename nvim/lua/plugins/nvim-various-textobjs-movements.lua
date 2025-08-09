@@ -1,6 +1,6 @@
 return {
   {
-    "srghma/nvim-various-textobjs-movements",
+    "srghma-backup/nvim-various-textobjs-movements",
     -- dir = "/home/srghma/projects/nvim-various-textobjs-movements",
     event = "User AstroFile",
 	  opts = {}, -- required
