@@ -81,6 +81,18 @@ local function read_file_strip_copyright_if_present(filepath)
   return table.concat(lines, "\n")
 end
 
+local function print_inspect_to_file(data)
+	local filepath = "/tmp/mydebug.log"
+	local file = io.open(filepath, "a")
+	if not file then
+		vim.notify("Could not open file for writing: " .. filepath, vim.log.levels.ERROR)
+		return
+	end
+	file:write(vim.inspect(data) .. "\n")
+	file:close()
+	vim.notify(vim.inspect(data))
+end
+
 return {
   "nvim-neo-tree/neo-tree.nvim",
   opts = function(_, opts)
@@ -98,16 +110,34 @@ return {
     opts.commands["focus_first_file_in_directory"] = focus_some_file(function(x) return x[1] end)
     opts.commands["focus_last_file_in_directory"] = focus_some_file(function(x) return x[#x] end)
 
-    local function print_inspect_to_file(data)
-	    local filepath = "/tmp/mydebug.log"
-	    local file = io.open(filepath, "a")
-	    if not file then
-		    vim.notify("Could not open file for writing: " .. filepath, vim.log.levels.ERROR)
+    opts.window.mappings["zz"] = "center_screen_zz"
+    opts.commands["center_screen_zz"] = function(state)
+      vim.cmd("normal! zz")
+    end
+
+    opts.window.mappings["<C-c>"] = "clear_clipboard" -- Map <C-c> to clear the clipboard
+    opts.commands["clear_clipboard"] = function(state)
+	    if not state.clipboard then
+		    vim.notify("No state.clipboard", vim.log.levels.INFO)
 		    return
 	    end
-	    file:write(vim.inspect(data) .. "\n")
-	    file:close()
-	    vim.notify(vim.inspect(data))
+
+      -- Count items by action dynamically
+      local action_counts = {}
+      for _, item in pairs(state.clipboard) do
+        local action = item.action or "unknown"
+        action_counts[action] = (action_counts[action] or 0) + 1
+      end
+
+      state.clipboard = {}
+      require("neo-tree.ui.renderer").redraw(state)
+      -- Notify with counts per action
+      local msg_parts = {}
+      for action, count in pairs(action_counts) do
+        table.insert(msg_parts, string.format("%d (%s)", count, action))
+      end
+      local msg = "Cleared neo-tree clipboard: " .. table.concat(msg_parts, " and ")
+      vim.notify(msg, vim.log.levels.INFO)
     end
 
     opts.window.mappings["@c"] = "copy_files_content_to_clipboard_for_chatgpt_marked_with_copy"
@@ -276,7 +306,6 @@ return {
     -- don't steal from 'zz'
     opts.window.mappings["z"] = false
     opts.window.mappings["Z"] = "close_all_nodes"
-    opts.window.mappings["zz"] = function(_state) vim.cmd("normal! zz") end
 
     opts.window.mappings["a"] = {
       "add",

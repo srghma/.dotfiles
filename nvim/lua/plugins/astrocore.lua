@@ -58,6 +58,16 @@ return {
           end,
         },
       },
+      set_lean_commentstring = {
+        {
+          event = "FileType",
+          pattern = "lean",
+          callback = function()
+            vim.bo.commentstring = "-- %s"
+            vim.bo.comments = ":--"
+          end,
+        },
+      },
       remove_lean_comments_cmd = {
         {
           event = "FileType",
@@ -274,63 +284,63 @@ return {
         ["gk"] = "gg",
 
         -- 🔍 literal grep (fixed string)
-        ["<leader>f<C-W>"] = {
-          function()
-            Snacks.picker.grep({
-              actions = {
-                -- toggles arg --fixed-strings
-                toggle_regex = function(picker, item)
-                  local opts = picker.opts --[[@as snacks.picker.grep.Config]]
-                  opts.regex = not opts.regex
-                  picker:find()
-                end,
-                glob_filter = function(picker, item)
-                  local opts = picker.opts --[[@as snacks.picker.grep.Config]]
-                  local prev_glob = opts.glob
-                  local glob = vim.fn.input("Enter glob filter: ", prev_glob or "")
-                  if prev_glob == glob then
-                    return
-                  end
-                  opts.custom_glob = #glob > 0
-                  opts.glob = glob
-                  picker:find()
-                end,
-                no_tests = function(picker, item)
-                  local glob = "{!**/tests/**,!**/*.spec.cy.tsx}"
-                  local prev_glob = picker.opts.glob
-                  if prev_glob == glob then
-                    picker.opts.glob = ""
-                  else
-                    picker.opts.glob = glob
-                  end
-                  picker:find()
-                end,
-              },
-              win = {
-                input = {
-                  keys = {
-                    ["r"] = { "toggle_regex", mode = { "n" } },
-                    ["g"] = { "glob_filter", mode = { "n" } },
-                    ["t"] = { "no_tests", mode = { "n" } },
-                  },
-                },
-              },
-              regex = false,
-              args = {
-                "-g",
-                "!{node_modules,.git,.direnv,dist}/",
-                "-g",
-                "!tsconfig.tsbuildinfo",
-                "-g",
-                "!yarn.lock",
-                "--trim",
-                "--ignore-case",
-              },
-              exclude = { "%.lock$", "%-lock.json$", "tsconfig.tsbuildinfo" },
-            })
-          end,
-          desc = "Literal grep (fixed string)",
-        },
+        -- ["<leader>f<C-W>"] = {
+        --   function()
+        --     Snacks.picker.grep({
+        --       actions = {
+        --         -- toggles arg --fixed-strings
+        --         toggle_regex = function(picker, item)
+        --           local opts = picker.opts --[[@as snacks.picker.grep.Config]]
+        --           opts.regex = not opts.regex
+        --           picker:find()
+        --         end,
+        --         glob_filter = function(picker, item)
+        --           local opts = picker.opts --[[@as snacks.picker.grep.Config]]
+        --           local prev_glob = opts.glob
+        --           local glob = vim.fn.input("Enter glob filter: ", prev_glob or "")
+        --           if prev_glob == glob then
+        --             return
+        --           end
+        --           opts.custom_glob = #glob > 0
+        --           opts.glob = glob
+        --           picker:find()
+        --         end,
+        --         no_tests = function(picker, item)
+        --           local glob = "{!**/tests/**,!**/*.spec.cy.tsx}"
+        --           local prev_glob = picker.opts.glob
+        --           if prev_glob == glob then
+        --             picker.opts.glob = ""
+        --           else
+        --             picker.opts.glob = glob
+        --           end
+        --           picker:find()
+        --         end,
+        --       },
+        --       win = {
+        --         input = {
+        --           keys = {
+        --             ["r"] = { "toggle_regex", mode = { "n" } },
+        --             ["g"] = { "glob_filter", mode = { "n" } },
+        --             ["t"] = { "no_tests", mode = { "n" } },
+        --           },
+        --         },
+        --       },
+        --       regex = false,
+        --       args = {
+        --         "-g",
+        --         "!{node_modules,.git,.direnv,dist}/",
+        --         "-g",
+        --         "!tsconfig.tsbuildinfo",
+        --         "-g",
+        --         "!yarn.lock",
+        --         "--trim",
+        --         "--ignore-case",
+        --       },
+        --       exclude = { "%.lock$", "%-lock.json$", "tsconfig.tsbuildinfo" },
+        --     })
+        --   end,
+        --   desc = "Literal grep (fixed string)",
+        -- },
 
         ["<C-M-d>"] = {
           function()

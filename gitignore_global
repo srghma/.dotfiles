@@ -45,3 +45,6 @@ bootstrap/idris2_app/*.ss
 benchmark/benchmarks/*
 .zed/
 # src/lib/ui-library
+
+docker/dev.yml
+config/initializers/constants.rb

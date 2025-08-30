@@ -8,8 +8,8 @@ return {
       down  = ']e',
       up    = '[e',
 
-      line_left  = '', 
-      line_right = '', 
+      line_left  = '',
+      line_right = '',
       line_down  = ']e',
       line_up    = '[e',
     }
