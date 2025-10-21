@@ -17,7 +17,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgsMaster.url = "github:NixOS/nixpkgs/master";
-    nixpkgsVlc4.url = "github:PerchunPak/nixpkgs/vlc4";
+    # nixpkgsVlc4.url = "github:PerchunPak/nixpkgs/vlc4";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgsTelegramOld.url = "github:NixOS/nixpkgs/5df43628fdf08d642be8ba5b3625a6c70731c19c";
     # nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
@@ -31,8 +31,8 @@
     # fix-github-https-repo.flake = false;
     # image_optim.url = "github:toy/image_optim";
     # image_optim.flake = false;
-    # easy-purescript-nix-automatic.url = "github:srghma/easy-purescript-nix-automatic";
-    # easy-purescript-nix-automatic.flake = false;
+    easy-purescript-nix-automatic.url = "github:srghma-backup/easy-purescript-nix-automatic";
+    easy-purescript-nix-automatic.flake = false;
     purescript-overlay.url = "github:thomashoneyman/purescript-overlay";
     purescript-overlay.inputs.nixpkgs.follows = "nixpkgs";
     # Idris2.url = "git+file:/home/srghma/projects/Idris2";
@@ -83,6 +83,9 @@
               i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
               switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
               purescript-overlay = inputs.purescript-overlay.packages.${system};
+              easy-purescript-nix-automatic = import inputs.easy-purescript-nix-automatic {
+                inherit pkgs;
+              };
             in
             {
               environment.systemPackages = with nixpkgs.pkgs; [
@@ -365,11 +368,11 @@
                 # neuromore
 
                 # nix profile install github:justinwoo/easy-purescript-nix#spago
-                # (writeShellScriptBin "spago-migrate" "${easy-purescript-nix-automatic.spago}/bin/spago migrate")
+                (writeShellScriptBin "spago-migrate" "${easy-purescript-nix-automatic.spago}/bin/spago migrate")
                 (writeShellScriptBin "ru" "${xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ru_swapped $DISPLAY")
                 (writeShellScriptBin "ua" "${xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ua_swapped $DISPLAY")
 
-                # purescript-overlay.spago-unstable
+                purescript-overlay.spago-unstable
                 purescript-overlay.purs
 
                 # npm install -g purs-tidy purs-backend-es spago@next
@@ -385,7 +388,7 @@
                 handbrake
                 # nixpkgsVlc4.pkgs.vlc4
                 nixpkgsMaster.pkgs.yt-dlp
-                plasma5Packages.kdeconnect-kde
+                # plasma5Packages.kdeconnect-kde
 
                 # jsonls
                 # js-debug-adapter

@@ -76,6 +76,7 @@ function n {
 # }
 
 alias nii="nix profile install"
+alias p="pnpm"
 
 path_array=(
   "$HOME/.dotfiles/bin"
@@ -153,56 +154,6 @@ function gpo-open() {
   /run/current-system/sw/bin/xdg-open "$final_url"
 }
 
-function sync-jss() {
-  RED='\033[0;31m'
-  GREEN='\033[0;32m'
-  YELLOW='\033[1;33m'
-  BLUE='\033[0;34m'
-  NC='\033[0m' # No Color
-
-  work() {
-    dir="$1"
-    echo -e "${BLUE}>> Entering $dir${NC}"
-    if cd "$dir"; then
-      echo -e "${YELLOW}Pulling latest changes...${NC}"
-      git pull || echo -e "${RED}Error: Failed to pull in $PWD${NC}"
-
-      # DONT CHECK IF ALREADY IN DEV AND ALREADY on commit of origin/develop
-      # Check for uncommitted changes
-      if ! git diff --quiet || ! git diff --cached --quiet; then
-        echo -e "${RED}Error: Uncommitted changes in $PWD${NC}"
-        return
-      fi
-
-      # Check for unpushed commits
-      if ! git diff --quiet @{u} 2>/dev/null; then
-        echo -e "${RED}Error: Unpushed commits in $PWD${NC}"
-        return
-      fi
-
-      # echo -e "${YELLOW}Checking out develop...${NC}"
-      # git checkout develop || echo -e "${RED}Error: Failed to checkout develop in $PWD${NC}"
-
-      # echo -e "${YELLOW}Resetting to origin/develop...${NC}"
-      # git reset --hard origin/develop
-
-      echo -e "${GREEN}✔ Finished $dir${NC}"
-    else
-      echo -e "${RED}Error: Directory not found or inaccessible: $dir${NC}"
-    fi
-  }
-
-  work "$HOME/jss/ui-library"
-
-  # for dir in ~/jss/*; do
-  #   work "$dir"
-  # done
-
-  for subdir in admin-ui web corporate; do
-    work "$HOME/jss/$subdir/src/lib/ui-library"
-  done
-}
-
 function sync_current_repo_to_github() {
   export DIRENV_DISABLE=true  # disable direnv temporarily
 
@@ -244,4 +195,17 @@ function sync_current_repo_to_github() {
   git push -u origin main || echo "⚠️  Push failed (maybe already pushed)"
 
   echo "✅ Done: $REPO_NAME"
+}
+
+tscfedit() {
+  local tmpfile=$(mktemp)
+  tsc --noEmit > "$tmpfile"
+  local files
+  files=($(grep -oE '^src/[^(]+' "$tmpfile" | sort -u))
+  if (( ${#files[@]} )); then
+    nvim "${files[@]}"
+  else
+    echo "No TS errors found."
+  fi
+  rm -f "$tmpfile"
 }

@@ -34,9 +34,11 @@ git-remote-setup-fork () {
   git-remote-add-or-set-url upstream "$origin"
 
   # Set the origin to your fork
-  git-remote-add-or-set-url origin "ssh://git@github.com/$USER/$reponame"
+  git-remote-add-or-set-url origin "ssh://git@github.com/$USER/$(basename "$(git remote get-url origin)")"
 
   git fetch --all
+
+  git-remote-add-or-set-url origin-old "ssh://git@github.com/srghma-old/$(basename "$(git remote get-url origin)")"
 
   echo "Updated remotes: origin set to your fork, upstream set to the original repo."
 }

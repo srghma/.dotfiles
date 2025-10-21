@@ -32,6 +32,10 @@ return {
   --   end
   -- }
 
+  -- { import = "astrocommunity.split-and-window.neominimap-nvim" },
+  { import = "astrocommunity.editing-support.auto-save-nvim" },
+  -- { import = "astrocommunity.pack.go" },
+  -- { import = "astrocommunity.pack.helm" },
   { import = "astrocommunity.pack.typescript" },
   -- { import = "astrocommunity.pack.nix" },
   { import = "astrocommunity.bars-and-lines.vim-illuminate" },
@@ -92,4 +96,6 @@ return {
   { "kevinhwang91/nvim-ufo", branch = "main", version = false, rev = "c96bb3bb853ff6253fe74f057df03e61fafd2403" },
   -- { "kevinhwang91/nvim-ufo", branch = "main" },
   { 'danilamihailov/beacon.nvim' },
+
+  { import = "astrocommunity.recipes.ai" },
 }

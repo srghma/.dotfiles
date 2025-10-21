@@ -45,3 +45,46 @@ bootstrap/idris2_app/*.ss
 benchmark/benchmarks/*
 .zed/
 # src/lib/ui-library
+
+# docker/dev.yml
+# config/initializers/constants.rb
+
+
+CMakeCache.txt
+CMakeFiles/
+Makefile
+Testing/
+cadical/
+cmake_install.cmake
+mimalloc/
+stage0-prefix/
+stage0/CMakeCache.txt
+stage0/CMakeFiles/
+stage0/CTestTestfile.cmake
+stage0/DartConfiguration.tcl
+stage0/Makefile
+stage0/bin/
+stage0/cmake_install.cmake
+stage0/githash.h
+stage0/include/
+stage0/initialize/
+stage0/kernel/
+stage0/leanc.sh
+stage0/lib/
+stage0/library/
+stage0/runtime/
+stage0/share/
+stage0/shell/
+stage0/src/lean
+stage0/stdlib.make
+stage0/temp/
+stage0/util/
+stage1-prefix/
+stage1/
+stage2-prefix/
+stage3-prefix/
+
+/dumps/dump.sql
+/dumps/file_url_to_data.json
+/dumps/sustainable_products_all_v3.xlsx
+/dumps/sustainable_products_all_v3_old.xlsx

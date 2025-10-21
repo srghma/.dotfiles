@@ -13,6 +13,7 @@
     # ../modules/cast-from-android.nix
     ../modules/qemu.nix
     ../modules/obs.nix
+    ../modules/dropbox.nix
     # ../modules/webcamoid.nix
     # ../modules/bluetooth-audio.nix
     ../modules/tmux.nix

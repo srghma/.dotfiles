@@ -109,9 +109,9 @@ with pkgs;
 
       # ${xorg.xkbcomp}/bin/xkbcomp ${../../../layouts/en_ru} $DISPLAY &
       # nix-shell -p xorg.xkbcomp --run "xkbcomp /home/srghma/.dotfiles/layouts/en_ru_swapped $DISPLAY"
-      sessionCommands = ''
-        ${xorg.xkbcomp}/bin/xkbcomp /home/srghma/.dotfiles/layouts/en_ua_swapped $DISPLAY
-      '';
+      #sessionCommands = ''
+      #  ${xorg.xkbcomp}/bin/xkbcomp /home/srghma/.dotfiles/layouts/en_ua_swapped $DISPLAY
+      #'';
     };
   };
 

@@ -165,4 +165,5 @@
     "lean4.serverArgs": [
         "-Dexperimental.module=true"
     ],
+    "gitlens.views.commitDetails.files.layout": "tree",
 }
