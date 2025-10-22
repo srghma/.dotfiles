@@ -198,14 +198,12 @@ function sync_current_repo_to_github() {
 }
 
 tscfedit() {
-  local tmpfile=$(mktemp)
-  tsc --noEmit > "$tmpfile"
   local files
-  files=($(grep -oE '^src/[^(]+' "$tmpfile" | sort -u))
+  files=($(./node_modules/.bin/tsc --pretty false 2>&1 | grep -o '^[^:(]\+' | sort -u))
+
   if (( ${#files[@]} )); then
     nvim "${files[@]}"
   else
-    echo "No TS errors found."
+    echo "✅ No TypeScript errors found — all good!"
   fi
-  rm -f "$tmpfile"
 }
