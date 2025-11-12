@@ -88,3 +88,7 @@ stage3-prefix/
 /dumps/file_url_to_data.json
 /dumps/sustainable_products_all_v3.xlsx
 /dumps/sustainable_products_all_v3_old.xlsx
+/dumps/my_sustainable_products_all.xlsx
+/docker-entrypoint.sh
+
+.~lock.*.xlsx#

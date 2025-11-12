@@ -199,7 +199,7 @@ function sync_current_repo_to_github() {
 
 tscfedit() {
   local files
-  files=($(./node_modules/.bin/tsc --pretty false 2>&1 | grep -o '^[^:(]\+' | sort -u))
+  files=($(./node_modules/.bin/tsc --pretty false 2>&1 | grep ': error TS' | grep -o '^[^:(]\+' | sort -u))
 
   if (( ${#files[@]} )); then
     nvim "${files[@]}"
