@@ -73,7 +73,7 @@ with pkgs;
   #   };
   # };
 
-  logind.lidSwitch = "ignore"; # Specifies what to be done when the laptop lid is closed.
+  logind.settings.Login.HandleLidSwitch = "ignore"; # Specifies what to be done when the laptop lid is closed.
   printing.enable = false;
 
   libinput.enable = true;

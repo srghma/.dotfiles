@@ -149,6 +149,7 @@ exec --no-startup-id flameshot
 exec --no-startup-id telegram-desktop
 exec --no-startup-id /nix/store/jf46172vm091cmzfhqyjxsfdq9nbaw8z-signal-desktop-7.62.0/bin/signal-desktop
 exec --no-startup-id "sh -c 'sleep 10; exec audacious'"
+exec --no-startup-id ua
 
 # -------------------------------------
 # Shortcuts
@@ -195,8 +196,10 @@ bindsym XF86AudioRaiseVolume  exec "i3-volume -a -n -c 0 up 5"
 bindsym XF86AudioLowerVolume  exec "i3-volume -a -n -c 0 down 5"
 bindsym XF86AudioMute         exec "i3-volume -a -n -c 0 mute"
 
-bindsym XF86MonBrightnessDown exec "sudo xbacklight -10"
-bindsym XF86MonBrightnessUp   exec "sudo xbacklight +10"
+# bindsym XF86MonBrightnessDown exec "sudo xbacklight -10"
+# bindsym XF86MonBrightnessUp   exec "sudo xbacklight +10"
+bindsym XF86MonBrightnessDown exec --no-startup-id "/home/srghma/.dotfiles/bin/brightness.sh down"
+bindsym XF86MonBrightnessUp   exec --no-startup-id "/home/srghma/.dotfiles/bin/brightness.sh up"
 
 bindsym XF86TouchpadToggle    exec switch_touchpad
 # lenovo :(

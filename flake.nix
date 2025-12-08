@@ -31,10 +31,10 @@
     # fix-github-https-repo.flake = false;
     # image_optim.url = "github:toy/image_optim";
     # image_optim.flake = false;
-    easy-purescript-nix-automatic.url = "github:srghma-backup/easy-purescript-nix-automatic";
-    easy-purescript-nix-automatic.flake = false;
-    purescript-overlay.url = "github:thomashoneyman/purescript-overlay";
-    purescript-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    # easy-purescript-nix-automatic.url = "github:srghma-backup/easy-purescript-nix-automatic";
+    # easy-purescript-nix-automatic.flake = false;
+    # purescript-overlay.url = "github:thomashoneyman/purescript-overlay";
+    # purescript-overlay.inputs.nixpkgs.follows = "nixpkgs";
     # Idris2.url = "git+file:/home/srghma/projects/Idris2";
     # Idris2.inputs.nixpkgs.follows = "nixpkgs";
     # idris2-pack.url = "git+file:/home/srghma/projects/idris2-pack";
@@ -82,10 +82,10 @@
               # kb-light = pkgs.callPackage inputs.kb-light { };
               i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
               switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
-              purescript-overlay = inputs.purescript-overlay.packages.${system};
-              easy-purescript-nix-automatic = import inputs.easy-purescript-nix-automatic {
-                inherit pkgs;
-              };
+              # purescript-overlay = inputs.purescript-overlay.packages.${system};
+              # easy-purescript-nix-automatic = import inputs.easy-purescript-nix-automatic {
+              #   inherit pkgs;
+              # };
             in
             {
               environment.systemPackages = with nixpkgs.pkgs; [
@@ -171,11 +171,11 @@
 
                 ## development
                 git
-                # gitAndTools.diff-so-fancy
-                gitAndTools.gh
-                gitAndTools.delta
-                gitAndTools.git-lfs
-                gitAndTools.git-crypt
+                gh
+                delta
+                git-lfs
+                git-crypt
+
                 meld
 
                 # mplayer
@@ -201,7 +201,7 @@
                 gcc
                 # inkscape
 
-                poppler_utils
+                poppler-utils
                 docker-compose
                 # mkpasswd
 
@@ -349,7 +349,7 @@
 
                 # android-studio
                 fd
-                gitAndTools.gh
+                gh
                 # tuxguitar
                 # musescore
                 # zoom
@@ -367,13 +367,13 @@
                 # openbcigui
                 # neuromore
 
-                # nix profile install github:justinwoo/easy-purescript-nix#spago
-                (writeShellScriptBin "spago-migrate" "${easy-purescript-nix-automatic.spago}/bin/spago migrate")
                 (writeShellScriptBin "ru" "${xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ru_swapped $DISPLAY")
                 (writeShellScriptBin "ua" "${xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ua_swapped $DISPLAY")
 
-                purescript-overlay.spago-unstable
-                purescript-overlay.purs
+                # nix profile install github:justinwoo/easy-purescript-nix#spago
+                # (writeShellScriptBin "spago-migrate" "${easy-purescript-nix-automatic.spago}/bin/spago migrate")
+                # purescript-overlay.spago-unstable
+                # purescript-overlay.purs
 
                 # npm install -g purs-tidy purs-backend-es spago@next
                 #

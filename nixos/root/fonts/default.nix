@@ -5,14 +5,14 @@
 
   packages = with pkgs; [
     corefonts
-    ubuntu_font_family
+    ubuntu-classic
     powerline-fonts
     font-awesome
     source-code-pro
     noto-fonts
     noto-fonts-cjk-sans
-    noto-fonts-emoji
-    emojione
+    noto-fonts-color-emoji
+    # emojione
     kanji-stroke-order-font
     ipafont
 
