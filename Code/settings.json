@@ -166,4 +166,5 @@
         "-Dexperimental.module=true"
     ],
     "gitlens.views.commitDetails.files.layout": "tree",
+    "geminicodeassist.updateChannel": "Insiders",
 }

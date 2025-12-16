@@ -35,7 +35,7 @@ git-remote-setup-fork () {
 
   # 3. Ensure the fork exists on GitHub
   echo "Ensuring fork exists on GitHub..."
-  gh repo fork --clone=false 2>/dev/null || echo "Fork already exists or check skipped."
+  gh repo fork --clone=false --remote=true 2>/dev/null || echo "Fork already exists or check skipped."
 
   # 4. Determine the correct Upstream URL
   # We ask GitHub API for the parent repository to be the source of truth,
