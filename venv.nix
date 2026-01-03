@@ -10,5 +10,4 @@
 let
   makeOverridable = f: f { } // { override = y: makeOverridable (x: f (x // y)); };
 in
-makeOverridable (
-)
+makeOverridable ()

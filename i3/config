@@ -155,9 +155,10 @@ exec --no-startup-id ua
 # Shortcuts
 # -------------------------------------
 bindsym $mod+Return  exec $terminal
-bindsym $mod+Shift+q exec $terminal
-bindsym $mod+e       exec $terminal -e tmuxx
-bindsym $mod+Shift+e exec $terminal -e tmux new
+# bindsym $mod+Shift+q exec $terminal
+# bindsym $mod+e       exec $terminal -e tmuxx
+# bindsym $mod+Shift+e exec $terminal -e tmux new
+bindsym $mod+Shift+e exec $terminal
 bindsym $mod+Ctrl+e  exec code
 
 # bindsym $mod+Shift+w exec qutebrowser

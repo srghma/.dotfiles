@@ -2,7 +2,7 @@
 #
 # cd $HOME/.dotfiles && nix flake update
 # cd $HOME/.dotfiles && nix flake update && sudo nixos-rebuild switch --flake ~/.dotfiles --verbose
-# sudo nixos-rebuild dry-build --flake ~/.dotfiles --verbose
+# sudo nixos-rebuild dry-build --flake ~/.dotfiles --verbose --show-trace
 #
 # nix repl
 # :lf .
@@ -15,7 +15,7 @@
 
   inputs = {
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgsMaster.url = "github:NixOS/nixpkgs/master";
     # nixpkgsVlc4.url = "github:PerchunPak/nixpkgs/vlc4";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -261,7 +261,15 @@
 
                 # hlint
                 # auto-hie-wrapper # use all-hies.unstable.combined ..
-                stack
+                nixpkgsMaster.pkgs.stack
+
+                (nixpkgsMaster.pkgs.haskell-language-server.override {
+                  supportedGhcVersions = [
+                    # "90"
+                    # "94"
+                    "910"
+                  ];
+                })
 
                 (writeShellScriptBin "tmuxx" "tmux attach || tmux new-session")
 

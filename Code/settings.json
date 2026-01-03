@@ -70,7 +70,6 @@
     "files.associations": {
         "*.bkp": "latex"
     },
-    "haskell.manageHLS": "PATH",
     "purescript.censorWarnings": [
         "MissingTypeDeclaration",
         "UserDefinedWarning",
@@ -162,9 +161,13 @@
         "-l src/Prelude.v",
         "-l src/Ssr.v",
     ],
-    "lean4.serverArgs": [
-        "-Dexperimental.module=true"
-    ],
     "gitlens.views.commitDetails.files.layout": "tree",
     "geminicodeassist.updateChannel": "Insiders",
+    "geminicodeassist.project": "myproject-1704716005885",
+    "geminicodeassist.inlineSuggestions.enableAuto": false,
+    "workbench.secondarySideBar.defaultVisibility": "visible",
+    "workbench.editorAssociations": {
+        "*.copilotmd": "vscode.markdown.preview.editor",
+        "*.pdf": "default"
+    },
 }
