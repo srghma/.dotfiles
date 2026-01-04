@@ -158,6 +158,7 @@ bindsym $mod+Return  exec $terminal
 # bindsym $mod+Shift+q exec $terminal
 # bindsym $mod+e       exec $terminal -e tmuxx
 # bindsym $mod+Shift+e exec $terminal -e tmux new
+bindsym $mod+e exec $terminal --single-instance
 bindsym $mod+Shift+e exec $terminal
 bindsym $mod+Ctrl+e  exec code
 

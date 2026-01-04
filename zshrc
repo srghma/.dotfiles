@@ -26,6 +26,10 @@ export MAKEFLAGS="-j5"
 # from https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/common-aliases/common-aliases.plugin.zsh
 # unalias fd
 # unalias n
+alias l="lsd -la"
+alias ls="lsd -la"
+alias lt='lsd --tree'
+# alias ls="ls --hyperlink=auto --color=auto"
 
 # eval "$(direnv hook zsh)"
 
