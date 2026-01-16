@@ -105,6 +105,9 @@ fpath=($HOME/.my-completions $fpath)
 # pnpm completion zsh > ~/.config/completion-for-pnpm.zsh
 source ~/.config/completion-for-pnpm.zsh
 
+# bun completions zsh > ~/.config/completion-for-bun.zsh
+source ~/.config/completion-for-bun.zsh
+
 # just --completions zsh > ~/.config/completion-for-just.zsh
 # source ~/.config/completion-for-just.zsh
 
@@ -123,3 +126,24 @@ esac
 
 # export LANG=en_US.UTF-8
 # export LC_ALL=en_US.UTF-8
+
+###############################
+# IMPORTANT: kitty-scrollback.nvim only supports zsh 5.9 or greater for command-line editing,
+# please check your version by running: zsh --version
+# add the following environment variables to your zsh config (e.g., ~/.zshrc)
+autoload -Uz edit-command-line
+zle -N edit-command-line
+function kitty_scrollback_edit_command_line() {
+  local VISUAL='/home/srghma/.local/share/nvim/lazy/kitty-scrollback.nvim/scripts/edit_command_line.sh'
+  zle edit-command-line
+  zle kill-whole-line
+}
+zle -N kitty_scrollback_edit_command_line
+bindkey '^x^e' kitty_scrollback_edit_command_line
+# [optional] pass arguments to kitty-scrollback.nvim in command-line editing mode
+# by using the environment variable KITTY_SCROLLBACK_NVIM_EDIT_ARGS
+# export KITTY_SCROLLBACK_NVIM_EDIT_ARGS=''
+source $HOME/.dotfiles/secrets/aristotle-lean-key.sh
+
+# ln -sf $HOME/projects/mm0/mm0-hs/.stack-work/dist/x86_64-linux-nix/ghc-9.10.3/build/mm0-hs/mm0-hs ~/.dotfiles/bin/mm0-hs
+# ln -sf /home/srghma/projects/mm0/mm0-rs/target/release/mm0-rs ~/.dotfiles/bin/mm0-rs

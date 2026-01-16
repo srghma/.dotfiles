@@ -52,6 +52,7 @@ return {
   {
     "okuuva/auto-save.nvim",
     event = { "User AstroFile", "InsertEnter" },
+    cond = vim.env.KITTY_SCROLLBACK_NVIM ~= 'true',
     opts = {
       trigger_events = { -- See :h events
         immediate_save = { "BufLeave", "TabLeave", "FocusLost", "VimLeavePre" }, -- vim events that trigger an immediate save

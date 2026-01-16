@@ -170,4 +170,13 @@
         "*.copilotmd": "vscode.markdown.preview.editor",
         "*.pdf": "default"
     },
+    "khmer-spellchecker.colorizingMode": "Segmenter",
+    "editor.fontSize": 12,
+    "metamath-zero.executablePath": "/home/srghma/projects/mm0/mm0-rs/target/release/mm0-rs",
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
 }
