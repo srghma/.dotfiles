@@ -19,7 +19,8 @@ git-remote-setup-fork () {
   local my_gh_user
   my_gh_user=$(gh api user -q .login)
 
-  if [ -z "$my_gh_user" ]; then
+  # FIX: Check if empty OR if output looks like a JSON error (starts with '{')
+  if [ -z "$my_gh_user" ] || [[ "$my_gh_user" == "{"* ]]; then
     echo "Error: Could not retrieve GitHub username. Is 'gh' installed and authenticated?"
     return 1
   fi
@@ -45,7 +46,8 @@ git-remote-setup-fork () {
   local parent_ssh_url
   parent_ssh_url=$(gh repo view --json parent -q .parent.sshUrl 2>/dev/null)
 
-  if [ -n "$parent_ssh_url" ]; then
+  # Check if we got a valid URL (and not a JSON error or empty string)
+  if [ -n "$parent_ssh_url" ] && [[ "$parent_ssh_url" != "{"* ]]; then
     # Case A: The repo is a fork, use the real parent
     upstream_url="$parent_ssh_url"
   else

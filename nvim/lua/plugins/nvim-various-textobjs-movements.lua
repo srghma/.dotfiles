@@ -10,7 +10,8 @@ return {
     opts = {
       mappings = {
         n = {
-          ["H"] = ':lua vim.lsp.buf.hover()<CR>',
+          ["K"] = '', -- disables
+          ["H"] = ':lua vim.lsp.buf.hover()<CR>', -- before was K
         },
       },
     },
