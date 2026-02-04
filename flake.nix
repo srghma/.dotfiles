@@ -19,6 +19,10 @@
     nixpkgsMaster.url = "github:NixOS/nixpkgs/master";
     # nixpkgsVlc4.url = "github:PerchunPak/nixpkgs/vlc4";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgsTelegramOld.url = "github:NixOS/nixpkgs/5df43628fdf08d642be8ba5b3625a6c70731c19c";
     # nixpkgsLocal.url = "git+file:/home/srghma/projects/nixpkgs";
     # nixpkgsMyNeovimNightly.url = "github:srghma/nixpkgs/neovim2";
@@ -45,12 +49,22 @@
     # zed.inputs.nixpkgs.follows = "nixpkgs";
   };
 
+  nixConfig = {
+    extra-substituters = [
+      "https://mio.cachix.org/"
+    ];
+    extra-trusted-public-keys = [
+      "mio.cachix.org-1:FlupyyLPURqwdRqtPT/LBWKsXY7JKsDkzZQo2K6LeMM="
+    ];
+  };
+
   outputs =
     inputs:
     let
       system = "x86_64-linux";
       nixosConfig = {
         inherit system;
+        overlays = [ inputs.nur.overlays.default ];
         config = {
           allowUnfree = true;
         };
@@ -81,7 +95,8 @@
               # nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
               # kb-light = pkgs.callPackage inputs.kb-light { };
               i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
-              bifrost = pkgs.callPackage ./nixos/pkgs/bifrost { };
+              # bifrost = pkgs.callPackage ./nixos/pkgs/bifrost/package.nix { };
+              odin4 = pkgs.callPackage ./nixos/pkgs/odin4 { };
               switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
               # purescript-overlay = inputs.purescript-overlay.packages.${system};
               # easy-purescript-nix-automatic = import inputs.easy-purescript-nix-automatic {
@@ -90,7 +105,8 @@
             in
             {
               environment.systemPackages = with nixpkgs.pkgs; [
-                bifrost
+                # nur.repos.mio.bifrost
+                odin4
                 # cd /home/srghma/projects/idris2-pack && nix profile install $(nix build)
                 # cd /home/srghma/projects/Idris2 && nix profile install $(nix build)
                 # inputs.Idris2.packages.${system}.default

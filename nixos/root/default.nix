@@ -113,7 +113,7 @@
     java.enable = true;
     # chromium.enable = true; # add chrome and chromium config files to /etc
 
-    adb.enable = true; # from https://nixos.wiki/wiki/Android
+    # android-tools.enable = true; # from https://nixos.wiki/wiki/Android
 
     ssh = {
       # don't forget to `ssh-add` to add key to keychain
