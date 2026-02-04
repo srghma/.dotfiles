@@ -27,8 +27,8 @@ export MAKEFLAGS="-j5"
 # unalias fd
 # unalias n
 alias l="lsd -la"
-alias ls="lsd -la"
-alias lt='lsd --tree'
+alias ls="lsd -la --total-size"
+alias lt='lsd --tree --total-size'
 # alias ls="ls --hyperlink=auto --color=auto"
 
 # eval "$(direnv hook zsh)"

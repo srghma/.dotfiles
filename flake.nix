@@ -81,6 +81,7 @@
               # nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
               # kb-light = pkgs.callPackage inputs.kb-light { };
               i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
+              bifrost = pkgs.callPackage ./nixos/pkgs/bifrost { };
               switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
               # purescript-overlay = inputs.purescript-overlay.packages.${system};
               # easy-purescript-nix-automatic = import inputs.easy-purescript-nix-automatic {
@@ -89,6 +90,7 @@
             in
             {
               environment.systemPackages = with nixpkgs.pkgs; [
+                bifrost
                 # cd /home/srghma/projects/idris2-pack && nix profile install $(nix build)
                 # cd /home/srghma/projects/Idris2 && nix profile install $(nix build)
                 # inputs.Idris2.packages.${system}.default
