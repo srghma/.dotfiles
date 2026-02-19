@@ -83,6 +83,7 @@ function n {
 alias nii="nix profile install"
 alias p="pnpm"
 alias npm="pnpm"
+alias npx="pnpx"
 
 path_array=(
   "$HOME/.dotfiles/bin"

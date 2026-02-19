@@ -1,7 +1,8 @@
-{ pkgs
-, lib
-, config
-, ...
+{
+  pkgs,
+  lib,
+  config,
+  ...
 }:
 let
   dir = "/var/lib/vicuna";
@@ -34,7 +35,7 @@ in
     home = dir;
     group = "vicuna";
   };
-  users.groups.vicuna = {};
+  users.groups.vicuna = { };
 
   # flake.nix
   #{
@@ -81,7 +82,10 @@ in
 
   systemd.services.fastchat-direnv-allow = {
     wantedBy = [ "multi-user.target" ];
-    path = [ config.nix.package pkgs.git ];
+    path = [
+      config.nix.package
+      pkgs.git
+    ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -96,7 +100,10 @@ in
   systemd.services.fastchat-worker = {
     wantedBy = [ "multi-user.target" ];
     after = [ "fastchat-direnv-allow.service" ];
-    path = [ config.nix.package pkgs.git ];
+    path = [
+      config.nix.package
+      pkgs.git
+    ];
     # for direnv to work
     environment.HOME = dir;
     environment.LD_LIBRARY_PATH = "${pkgs.cudatoolkit_11}/lib64";
@@ -109,7 +116,10 @@ in
   systemd.services.fastchat-controller = {
     wantedBy = [ "multi-user.target" ];
     after = [ "fastchat-direnv-allow.service" ];
-    path = [ config.nix.package pkgs.git ];
+    path = [
+      config.nix.package
+      pkgs.git
+    ];
     # for direnv to work
     environment.HOME = dir;
 
@@ -121,7 +131,10 @@ in
   systemd.services.fastchat-web = {
     wantedBy = [ "multi-user.target" ];
     after = [ "fastchat-direnv-allow.service" ];
-    path = [ config.nix.package pkgs.git ];
+    path = [
+      config.nix.package
+      pkgs.git
+    ];
     # for direnv to work
     environment.HOME = dir;
 
@@ -133,7 +146,10 @@ in
   systemd.services.fastchat-api = {
     wantedBy = [ "multi-user.target" ];
     after = [ "fastchat-direnv-allow.service" ];
-    path = [ config.nix.package pkgs.git ];
+    path = [
+      config.nix.package
+      pkgs.git
+    ];
     # for direnv to work
     environment.HOME = dir;
 

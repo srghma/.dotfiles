@@ -1,5 +1,10 @@
 # Support for custom keyboards:
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
 
@@ -8,7 +13,11 @@ let
 
   package = pkgs.stdenvNoCC.mkDerivation {
     name = "keyboard-script";
-    phases = [ "unpackPhase" "installPhase" "fixupPhase" ];
+    phases = [
+      "unpackPhase"
+      "installPhase"
+      "fixupPhase"
+    ];
     src = ./.;
 
     installPhase = ''
@@ -56,39 +65,45 @@ in
       description = "List of keyboard devices";
       default = [
         # { vendor = "feed"; product = "3060"; } # Dactyl Manuform Mini
-        { vendor = "feed"; product = "0000"; } # Redox
+        {
+          vendor = "feed";
+          product = "0000";
+        } # Redox
       ];
     };
   };
 
   config = lib.mkIf cfg.enable {
-    services.udev.extraRules =
-      lib.concatMapStringsSep "\n"
-        (kbd:
-          let
-            common = [
-              ''ATTRS{idVendor}=="${kbd.vendor}"''
-              ''ATTRS{idProduct}=="${kbd.product}"''
-              ''TAG+="uaccess"''
-              ''RUN{builtin}+="uaccess"''
-              ''OWNER="${username}"''
-            ];
+    services.udev.extraRules = lib.concatMapStringsSep "\n" (
+      kbd:
+      let
+        common = [
+          ''ATTRS{idVendor}=="${kbd.vendor}"''
+          ''ATTRS{idProduct}=="${kbd.product}"''
+          ''TAG+="uaccess"''
+          ''RUN{builtin}+="uaccess"''
+          ''OWNER="${username}"''
+        ];
 
-            add = [
-              ''SUBSYSTEMS=="usb"''
-              ''ACTION=="add"''
-            ] ++ common ++ [
-              ''RUN+="${package}/bin/keyboard.sh add"''
-            ];
+        add = [
+          ''SUBSYSTEMS=="usb"''
+          ''ACTION=="add"''
+        ]
+        ++ common
+        ++ [
+          ''RUN+="${package}/bin/keyboard.sh add"''
+        ];
 
-            remove = [
-              ''SUBSYSTEMS=="usb"''
-              ''ACTION=="remove"''
-            ] ++ common ++ [
-              ''RUN+="${package}/bin/keyboard.sh rm"''
-            ];
-          in
-          lib.concatStringsSep "," add + "\n" + lib.concatStringsSep "," remove)
-        cfg.devices;
+        remove = [
+          ''SUBSYSTEMS=="usb"''
+          ''ACTION=="remove"''
+        ]
+        ++ common
+        ++ [
+          ''RUN+="${package}/bin/keyboard.sh rm"''
+        ];
+      in
+      lib.concatStringsSep "," add + "\n" + lib.concatStringsSep "," remove
+    ) cfg.devices;
   };
 }

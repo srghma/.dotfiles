@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  # config,
+  ...
+}:
+{
   nix.extraOptions = ''
     !include /home/srghma/.dotfiles/secrets-ignored/nix-extra-config.conf
   '';

@@ -1,11 +1,6 @@
 {
   config,
-  lib,
   pkgs,
-  modulesPath,
-  inputs,
-  settings,
-  localpkgs,
   ...
 }:
 

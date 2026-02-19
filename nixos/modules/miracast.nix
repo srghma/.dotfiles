@@ -1,4 +1,13 @@
-{ config, lib, pkgs, modulesPath, inputs, settings, localpkgs, ... }:
+{
+  # config,
+  # lib,
+  # pkgs,
+  # modulesPath,
+  # inputs,
+  # settings,
+  # localpkgs,
+  ...
+}:
 {
   ## this config also hosts gnome-network-displays and its variables
   #environment.sessionVariables = {
