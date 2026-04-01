@@ -14,6 +14,75 @@ git-remote-add-or-set-url() {
   fi
 }
 
+gh-repo-create-and-push () {
+  # Creates a GitHub repo from current dir, fixes remotes, pushes main.
+  # Deletes upstream if it exists (since it might be wrong).
+  #
+  # Usage:
+  #   gh-repo-create-and-push myrepo            # private by default
+  #   gh-repo-create-and-push myrepo public
+  #   gh-repo-create-and-push myrepo private
+  #
+  # Requirements: gh authenticated, git repo initialized.
+
+  setopt localoptions errexit pipefail
+
+  local repo_name="$1"
+  local visibility="${2:-public}"
+
+  if [ -z "$repo_name" ]; then
+    echo "Usage: gh-repo-create-and-push <repo_name> [public|private]"
+    return 1
+  fi
+
+  if [[ "$visibility" != "public" && "$visibility" != "private" ]]; then
+    echo "Error: visibility must be 'public' or 'private'"
+    return 1
+  fi
+
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Error: not inside a git repository"
+    return 1
+  fi
+
+  # ensure gh works
+  local my_gh_user
+  my_gh_user=$(gh api user -q .login 2>/dev/null)
+
+  if [ -z "$my_gh_user" ] || [[ "$my_gh_user" == "{"* ]]; then
+    echo "Error: Could not retrieve GitHub username. Is 'gh' installed and authenticated?"
+    return 1
+  fi
+
+  echo "GitHub user: $my_gh_user"
+  echo "Repo name:   $repo_name"
+  echo "Visibility:  $visibility"
+
+  # delete upstream if it exists (can be wrong)
+  git remote remove upstream 2>/dev/null || true
+
+  # delete origin if it exists (can be wrong)
+  git remote remove origin 2>/dev/null || true
+
+  # create repo on github and set origin
+  echo "Creating GitHub repo..."
+  if [[ "$visibility" == "public" ]]; then
+    gh repo create "$repo_name" --source=. --remote=origin --public
+  else
+    gh repo create "$repo_name" --source=. --remote=origin --private
+  fi
+
+  # ensure main branch
+  git branch -M main 2>/dev/null || true
+
+  # push
+  echo "Pushing..."
+  git push -u origin main
+
+  echo "Done."
+  git remote -v
+}
+
 git-remote-setup-fork () {
   # 1. Get current authentic GitHub username
   local my_gh_user

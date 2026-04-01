@@ -47,6 +47,11 @@
     # sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     zed.url = "github:zed-industries/zed";
     # zed.inputs.nixpkgs.follows = "nixpkgs";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   nixConfig = {
@@ -82,6 +87,7 @@
       nixosConfigurations.machine = inputs.nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
+          inputs.home-manager.nixosModules.home-manager
           # inputs.sops-nix.nixosModules.sops
           {
             nixpkgs.overlays = [ (_final: _prev: { inherit nixpkgsStable; }) ];
@@ -104,6 +110,11 @@
               # };
             in
             {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+
+              home-manager.users.srghma = import ./home.nix;
+
               environment.systemPackages = with nixpkgs.pkgs; [
                 # nur.repos.mio.bifrost
                 odin4

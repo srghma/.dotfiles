@@ -194,9 +194,9 @@ bindsym $mod+space       floating toggle
 bindsym XF86KbdBrightnessUp   exec "brightnessctl -d '*kbd*' s +10%"
 bindsym XF86KbdBrightnessDown exec "brightnessctl -d '*kbd*' s 10%-"
 
-bindsym XF86AudioRaiseVolume  exec "i3-volume -a -n -c 0 up 5"
-bindsym XF86AudioLowerVolume  exec "i3-volume -a -n -c 0 down 5"
-bindsym XF86AudioMute         exec "i3-volume -a -n -c 0 mute"
+bindsym XF86AudioRaiseVolume  exec "i3-volume -n up 5"
+bindsym XF86AudioLowerVolume  exec "i3-volume -n down 5"
+bindsym XF86AudioMute         exec "i3-volume -n mute"
 
 # bindsym XF86MonBrightnessDown exec "sudo xbacklight -10"
 # bindsym XF86MonBrightnessUp   exec "sudo xbacklight +10"
