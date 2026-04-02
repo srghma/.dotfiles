@@ -1,3 +1,5 @@
+#!/usr/bin/env bash -euo pipefail
+
 # gh repo list purescript-contrib --limit 100 --json name --jq '.[].name' | cat
 
 outputdir="$HOME/projects/contrib"

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -euo pipefail
 
 
 ##! /usr/bin/env nix-shell

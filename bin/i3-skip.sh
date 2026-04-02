@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -euo pipefail
 
 # nix profile install nixpkgs#xdotool
 #

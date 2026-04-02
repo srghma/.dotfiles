@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -euo pipefail
 # encode--encode.sh
 #
 # Encrypts directories listed in ~/.config/encode-list.txt using agevault.

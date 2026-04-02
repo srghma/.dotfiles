@@ -22,7 +22,7 @@ let
 
     installPhase = ''
       mkdir -p $out/bin
-      export nixpath=${pkgs.xorg.setxkbmap}/bin:${pkgs.xorg.xkbcomp}/bin:${pkgs.xorg.xinput}/bin:${pkgs.gnugrep}/bin:${pkgs.coreutils}/bin
+      export nixpath=${pkgs.xorg.setxkbmap}/bin:${pkgs.xkbcomp}/bin:${pkgs.xinput}/bin:${pkgs.gnugrep}/bin:${pkgs.coreutils}/bin
       substituteAll ${./disable-main-keyboard.sh} $out/bin/keyboard.sh
       chmod 0555 $out/bin/keyboard.sh
     '';

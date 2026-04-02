@@ -112,10 +112,13 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-
               home-manager.users.srghma = import ./home.nix;
 
               environment.systemPackages = with nixpkgs.pkgs; [
+                home-manager
+
+                pulseaudio # for /home/srghma/.dotfiles/bin/my-volume.sh
+
                 # nur.repos.mio.bifrost
                 odin4
                 # cd /home/srghma/projects/idris2-pack && nix profile install $(nix build)
@@ -187,7 +190,7 @@
                 code-minimap
                 # alejandra
                 # nixfmt-classic
-                nixfmt-rfc-style
+                nixfmt
                 statix
                 selene
                 deadnix
@@ -404,8 +407,8 @@
                 # openbcigui
                 # neuromore
 
-                (writeShellScriptBin "ru" "${xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ru_swapped $DISPLAY")
-                (writeShellScriptBin "ua" "${xorg.xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ua_swapped $DISPLAY")
+                (writeShellScriptBin "ru" "${xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ru_swapped $DISPLAY")
+                (writeShellScriptBin "ua" "${xkbcomp}/bin/xkbcomp -w /home/srghma/.dotfiles/layouts/en_ua_swapped $DISPLAY")
 
                 # nix profile install github:justinwoo/easy-purescript-nix#spago
                 # (writeShellScriptBin "spago-migrate" "${easy-purescript-nix-automatic.spago}/bin/spago migrate")

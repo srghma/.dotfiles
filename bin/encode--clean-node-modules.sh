@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -euo pipefail
 # Remove all node_modules directories inside paths listed in ~/.config/encode-list.txt
 
 set -euo pipefail
