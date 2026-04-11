@@ -99,4 +99,5 @@ return {
   { 'danilamihailov/beacon.nvim' },
 
   { import = "astrocommunity.recipes.ai" },
+  { import = "astrocommunity.pack.lua" },
 }
