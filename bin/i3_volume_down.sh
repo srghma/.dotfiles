@@ -1,4 +1,5 @@
-#!/usr/bin/env bash -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
 # read volume (e.g. "Volume: 0.42")
 read -r _ vol _ < <(wpctl get-volume @DEFAULT_AUDIO_SINK@)

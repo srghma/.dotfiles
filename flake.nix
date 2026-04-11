@@ -52,15 +52,20 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    antigravity-nix = {
+      url = "github:jacopone/antigravity-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   nixConfig = {
-    extra-substituters = [
-      "https://mio.cachix.org/"
-    ];
-    extra-trusted-public-keys = [
-      "mio.cachix.org-1:FlupyyLPURqwdRqtPT/LBWKsXY7JKsDkzZQo2K6LeMM="
-    ];
+    # extra-substituters = [
+    #   "https://mio.cachix.org/"
+    # ];
+    # extra-trusted-public-keys = [
+    #   "mio.cachix.org-1:FlupyyLPURqwdRqtPT/LBWKsXY7JKsDkzZQo2K6LeMM="
+    # ];
   };
 
   outputs =
@@ -104,6 +109,7 @@
               # bifrost = pkgs.callPackage ./nixos/pkgs/bifrost/package.nix { };
               odin4 = pkgs.callPackage ./nixos/pkgs/odin4 { };
               switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
+              browseros = pkgs.callPackage ./nixos/pkgs/browseros { };
               # purescript-overlay = inputs.purescript-overlay.packages.${system};
               # easy-purescript-nix-automatic = import inputs.easy-purescript-nix-automatic {
               #   inherit pkgs;
@@ -115,12 +121,16 @@
               home-manager.users.srghma = import ./home.nix;
 
               environment.systemPackages = with nixpkgs.pkgs; [
+                inputs.antigravity-nix.packages.x86_64-linux.default
+                browseros
+                xsel # for nvim copy to clipboard
+
                 home-manager
 
                 pulseaudio # for /home/srghma/.dotfiles/bin/my-volume.sh
 
                 # nur.repos.mio.bifrost
-                odin4
+                # odin4
                 # cd /home/srghma/projects/idris2-pack && nix profile install $(nix build)
                 # cd /home/srghma/projects/Idris2 && nix profile install $(nix build)
                 # inputs.Idris2.packages.${system}.default
@@ -132,13 +142,13 @@
                 keepassxc
                 telegram-desktop
                 nixpkgsMaster.pkgs.google-chrome
-                code-cursor
+                # code-cursor
                 # chromium
                 # chromium
                 libreoffice
                 inkscape
                 # inputs.zed.packages.${system}.default
-                zed-editor
+                # zed-editor
                 zip
                 unzip
                 htop
@@ -153,7 +163,7 @@
 
                 dunst
                 copyq
-                yq-go # for tmux joshmedeski/tmux-nerd-font-window-name
+                # yq-go # for tmux joshmedeski/tmux-nerd-font-window-name
                 rofi
                 pasystray
                 scrot
@@ -196,7 +206,7 @@
                 deadnix
                 nixd
 
-                vscode
+                # vscode
                 # vscode.fhs
                 audacious
                 # nix
@@ -281,27 +291,27 @@
                 # dunsted-volume
                 # randomize_background
                 # kb-light
-                switch_touchpad
+                # switch_touchpad # TODO: have updated
                 # umsf
                 # fix-github-https-repo
 
                 # xmind
                 jq
-                rubocop
+                # rubocop
 
                 # all-hies.latest # all-hies.unstable.latest
 
                 # hlint
                 # auto-hie-wrapper # use all-hies.unstable.combined ..
-                nixpkgsMaster.pkgs.stack
+                # nixpkgsMaster.pkgs.stack
 
-                (nixpkgsMaster.pkgs.haskell-language-server.override {
-                  supportedGhcVersions = [
-                    # "90"
-                    # "94"
-                    "910"
-                  ];
-                })
+                # (nixpkgsMaster.pkgs.haskell-language-server.override {
+                #   supportedGhcVersions = [
+                #     # "90"
+                #     # "94"
+                #     "910"
+                #   ];
+                # })
 
                 (writeShellScriptBin "tmuxx" "tmux attach || tmux new-session")
 
@@ -425,7 +435,7 @@
 
                 watchexec
                 vlc
-                handbrake
+                # handbrake
                 # nixpkgsVlc4.pkgs.vlc4
                 nixpkgsMaster.pkgs.yt-dlp
                 # plasma5Packages.kdeconnect-kde

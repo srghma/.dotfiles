@@ -1,4 +1,5 @@
-#!/usr/bin/env bash -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
 # get current brightness (float)
 cur=$(sudo xbacklight -getf)

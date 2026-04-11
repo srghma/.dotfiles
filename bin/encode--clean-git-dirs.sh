@@ -1,4 +1,5 @@
-#!/usr/bin/env bash -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 # Recursively find git repositories and reset them
 
 set -euo pipefail
