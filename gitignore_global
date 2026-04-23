@@ -92,3 +92,5 @@ stage3-prefix/
 /docker-entrypoint.sh
 
 .~lock.*.xlsx#
+
+**/.claude/settings.local.json

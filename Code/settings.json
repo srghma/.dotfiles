@@ -164,7 +164,7 @@
     "gitlens.views.commitDetails.files.layout": "tree",
     "geminicodeassist.updateChannel": "Insiders",
     "geminicodeassist.project": "myproject-1704716005885",
-    "workbench.secondarySideBar.defaultVisibility": "visible",
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
     "workbench.editorAssociations": {
         "*.copilotmd": "vscode.markdown.preview.editor",
         "*.pdf": "default"
@@ -181,4 +181,6 @@
     "gitlens.ai.model": "vscode",
     "gitlens.ai.vscode.model": "copilot:gpt-4.1",
     "geminicodeassist.codeGenerationPaneViewEnabled": true,
+    "chat.agent.enabled": false,
+    "chat.disableAIFeatures": true,
 }

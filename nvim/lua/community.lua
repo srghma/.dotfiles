@@ -41,6 +41,7 @@ return {
   { import = "astrocommunity.bars-and-lines.vim-illuminate" },
   -- { import = "astrocommunity.pack.haskell" },
   { import = "astrocommunity.pack.rust" },
+  { import = "astrocommunity.pack.svelte" },
   { import = "astrocommunity.pack.just" },
   -- { import = "astrocommunity.pack.purescript" },
   { import = "astrocommunity.motion.nvim-spider" },
@@ -52,7 +53,7 @@ return {
   {
     "okuuva/auto-save.nvim",
     event = { "User AstroFile", "InsertEnter" },
-    cond = vim.env.KITTY_SCROLLBACK_NVIM ~= 'true',
+    cond = vim.env.KITTY_SCROLLBACK_NVIM ~= "true",
     opts = {
       trigger_events = { -- See :h events
         immediate_save = { "BufLeave", "TabLeave", "FocusLost", "VimLeavePre" }, -- vim events that trigger an immediate save
@@ -96,7 +97,7 @@ return {
   -- cd ~/.local/share/nvim/lazy/nvim-ufo/ && git pull origin main
   { "kevinhwang91/nvim-ufo", branch = "main", version = false, rev = "c96bb3bb853ff6253fe74f057df03e61fafd2403" },
   -- { "kevinhwang91/nvim-ufo", branch = "main" },
-  { 'danilamihailov/beacon.nvim' },
+  { "danilamihailov/beacon.nvim" },
 
   { import = "astrocommunity.recipes.ai" },
   { import = "astrocommunity.pack.lua" },

@@ -17,6 +17,9 @@ export PATH="$HOME/projects/spago-yaml-generate/bin:$PATH"
 export PATH="$HOME/.bin:$PATH"
 export PATH="$HOME/projects/nixpkgs/result/bin:$PATH"
 
+# claude code was complaining in /doctor
+export PATH="$HOME/.local/bin:$PATH"
+
 DOTFILES="$HOME/.dotfiles"
 
 PROJECT_PATHS=($HOME/projects $HOME/jss $HOME/trivial-rs)
@@ -149,3 +152,5 @@ source $HOME/.dotfiles/secrets/aristotle-lean-key.sh
 
 # ln -sf $HOME/projects/mm0/mm0-hs/.stack-work/dist/x86_64-linux-nix/ghc-9.10.3/build/mm0-hs/mm0-hs ~/.dotfiles/bin/mm0-hs
 # ln -sf /home/srghma/projects/mm0/mm0-rs/target/release/mm0-rs ~/.dotfiles/bin/mm0-rs
+
+alias aristotle='uvx --from aristotlelib@latest aristotle'
