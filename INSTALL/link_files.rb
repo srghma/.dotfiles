@@ -40,6 +40,7 @@ inhome_indotfiles = [
   ['.config/kak',                             'kak'],
   ['.config/doom',                            'doom'],
   ['.config/rofi',                            'rofi'],
+  ['.bunfig.toml',                            'bunfig.toml'],
   # ['.config/lvim/config.lua',               'lvim/config.lua'],
 
   # ['.emacs', 'emacs'],

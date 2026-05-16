@@ -183,4 +183,5 @@
     "geminicodeassist.codeGenerationPaneViewEnabled": true,
     "chat.agent.enabled": false,
     "chat.disableAIFeatures": true,
+    "continue.enableConsole": true,
 }

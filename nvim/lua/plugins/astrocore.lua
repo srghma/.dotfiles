@@ -51,7 +51,7 @@ return {
           nested = true, -- trigger other autocommands as buffers open
           callback = function()
             -- Only load the session if nvim was started with no args
-            if vim.fn.argc(-1) == 0 and vim.env.KITTY_SCROLLBACK_NVIM ~= 'true' then
+            if vim.fn.argc(-1) == 0 and vim.env.KITTY_SCROLLBACK_NVIM ~= "true" then
               -- try to load a directory session using the current working directory
               require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
             end
@@ -65,126 +65,6 @@ return {
           callback = function()
             vim.bo.commentstring = "-- %s"
             vim.bo.comments = ":--"
-          end,
-        },
-      },
-      remove_lean_comments_cmd = {
-        {
-          event = "FileType",
-          pattern = "lean",
-          callback = function()
-            local function register_buffer_command_and_keymap(opts)
-              vim.keymap.set("n", opts.keymap, opts.fn, {
-                buffer = bufnr,
-                desc = opts.desc,
-              })
-
-              vim.api.nvim_buf_create_user_command(0, opts.command, opts.fn, {
-                desc = opts.desc,
-              })
-            end
-
-
-            register_buffer_command_and_keymap({
-              keymap = "<leader>lC",
-              command = "RemoveLeanComments",
-              desc = "Remove all Lean comments",
-              fn = function()
-                -- Delete line comments
-                vim.cmd [[silent! g/^\s*--/d]]
-                -- Delete multiline block comments like /- ... -/
-                vim.cmd [[silent! g/\/-/,/-\//d]]
-                vim.notify("Removed Lean comments", vim.log.levels.INFO)
-              end,
-            })
-
-            register_buffer_command_and_keymap({
-              keymap = "<leader>lK",
-              command = "KeepLeanDefinitions",
-              desc = "Keep only Lean definitions (def, instance, class, etc.)",
-              fn = function()
-                vim.cmd [[silent! g!/^.*\<\(def\|instance\|class\|abbrev\|opaque\|extern\|section\|end\|namespace\|inductive\)\>/d]]
-                vim.cmd('silent! g/^@\\[\\s\\+extern[^]]\\+\\]\\s*$/join')
-                vim.notify("Kept only Lean definitions", vim.log.levels.INFO)
-              end,
-            })
-
-            register_buffer_command_and_keymap({
-              keymap = "<leader>lmI",
-              command = "IndentLeanNamespaces",
-              desc = "Auto-indent all namespace ... end blocks",
-              fn = function()
-                -- in current file should
-                --
-                --
-                -- ```
-                -- namespace BaseIO
-                -- @[extern "lean_io_as_task"] opaque asTask (act : BaseIO α) (prio := Task.Priority.default) : BaseIO (Task α) :=
-                -- @[extern "lean_io_map_task"] opaque mapTask (f : α → BaseIO β) (t : Task α) (prio := Task.Priority.default) (sync := false) :
-                -- @[extern "lean_io_bind_task"] opaque bindTask (t : Task α) (f : α → BaseIO (Task β)) (prio := Task.Priority.default)
-                -- def chainTask (t : Task α) (f : α → BaseIO Unit) (prio := Task.Priority.default)
-                -- def mapTasks (f : List α → BaseIO β) (tasks : List (Task α)) (prio := Task.Priority.default)
-                -- end BaseIO
-                -- ```
-                -- to
-                -- ```
-                -- namespace BaseIO
-                --   @[extern "lean_io_as_task"] opaque asTask (act : BaseIO α) (prio := Task.Priority.default) : BaseIO (Task α) :=
-                --   @[extern "lean_io_map_task"] opaque mapTask (f : α → BaseIO β) (t : Task α) (prio := Task.Priority.default) (sync := false) :
-                --   @[extern "lean_io_bind_task"] opaque bindTask (t : Task α) (f : α → BaseIO (Task β)) (prio := Task.Priority.default)
-                --   def chainTask (t : Task α) (f : α → BaseIO Unit) (prio := Task.Priority.default)
-                --   def mapTasks (f : List α → BaseIO β) (tasks : List (Task α)) (prio := Task.Priority.default)
-                -- end BaseIO
-                -- ```
-                local function indent_namespaces()
-                  local buf = vim.api.nvim_get_current_buf()
-                  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-                  local new_lines = {}
-                  local indent_level = 0
-
-                  for i, line in ipairs(lines) do
-                    local trimmed = line:match("^%s*(.-)%s*$")
-
-                    -- Check if line starts a namespace
-                    if trimmed:match("^namespace%s+") then
-                      -- Keep namespace line with current indentation level
-                      local current_indent = string.rep("  ", indent_level)
-                      table.insert(new_lines, current_indent .. trimmed)
-                      -- Increase indent level for content inside this namespace
-                      indent_level = indent_level + 1
-
-                    -- Check if line is an end statement (matching namespace or other blocks)
-                    elseif trimmed:match("^end%s") or trimmed == "end" then
-                      -- Decrease indent level first
-                      if indent_level > 0 then
-                        indent_level = indent_level - 1
-                      end
-                      -- Apply indentation to end statement
-                      local current_indent = string.rep("  ", indent_level)
-                      table.insert(new_lines, current_indent .. trimmed)
-
-                    -- Regular content line
-                    else
-                      local current_indent = string.rep("  ", indent_level)
-
-                      -- Apply indentation to non-empty lines
-                      if trimmed ~= "" then
-                        table.insert(new_lines, current_indent .. trimmed)
-                      else
-                        -- Preserve empty lines as-is
-                        table.insert(new_lines, "")
-                      end
-                    end
-                  end
-
-                  -- Apply the changes to the buffer
-                  vim.api.nvim_buf_set_lines(buf, 0, -1, false, new_lines)
-                end
-
-                indent_namespaces()
-                vim.notify("Indented namespace blocks", vim.log.levels.INFO)
-              end,
-            })
           end,
         },
       },
@@ -283,65 +163,6 @@ return {
         ["gj"] = "G",
         ["gk"] = "gg",
 
-        -- 🔍 literal grep (fixed string)
-        -- ["<leader>f<C-W>"] = {
-        --   function()
-        --     Snacks.picker.grep({
-        --       actions = {
-        --         -- toggles arg --fixed-strings
-        --         toggle_regex = function(picker, item)
-        --           local opts = picker.opts --[[@as snacks.picker.grep.Config]]
-        --           opts.regex = not opts.regex
-        --           picker:find()
-        --         end,
-        --         glob_filter = function(picker, item)
-        --           local opts = picker.opts --[[@as snacks.picker.grep.Config]]
-        --           local prev_glob = opts.glob
-        --           local glob = vim.fn.input("Enter glob filter: ", prev_glob or "")
-        --           if prev_glob == glob then
-        --             return
-        --           end
-        --           opts.custom_glob = #glob > 0
-        --           opts.glob = glob
-        --           picker:find()
-        --         end,
-        --         no_tests = function(picker, item)
-        --           local glob = "{!**/tests/**,!**/*.spec.cy.tsx}"
-        --           local prev_glob = picker.opts.glob
-        --           if prev_glob == glob then
-        --             picker.opts.glob = ""
-        --           else
-        --             picker.opts.glob = glob
-        --           end
-        --           picker:find()
-        --         end,
-        --       },
-        --       win = {
-        --         input = {
-        --           keys = {
-        --             ["r"] = { "toggle_regex", mode = { "n" } },
-        --             ["g"] = { "glob_filter", mode = { "n" } },
-        --             ["t"] = { "no_tests", mode = { "n" } },
-        --           },
-        --         },
-        --       },
-        --       regex = false,
-        --       args = {
-        --         "-g",
-        --         "!{node_modules,.git,.direnv,dist}/",
-        --         "-g",
-        --         "!tsconfig.tsbuildinfo",
-        --         "-g",
-        --         "!yarn.lock",
-        --         "--trim",
-        --         "--ignore-case",
-        --       },
-        --       exclude = { "%.lock$", "%-lock.json$", "tsconfig.tsbuildinfo" },
-        --     })
-        --   end,
-        --   desc = "Literal grep (fixed string)",
-        -- },
-
         ["<C-M-d>"] = {
           function()
             local line = vim.fn.line "."
@@ -431,46 +252,20 @@ return {
 
         ["<leader>lc"] = {
           function()
-            local line_num = vim.fn.line(".") - 1
+            local line_num = vim.fn.line "." - 1
             local diag = vim.diagnostic.get(0, { lnum = line_num })
 
             if diag and #diag > 0 then
               local msg = diag[1].message
               local line_content = vim.api.nvim_buf_get_lines(0, line_num, line_num + 1, false)[1] or ""
               local combined = "At: " .. line_content .. "\n  " .. msg
-              vim.fn.setreg("+", combined)  -- copy to system clipboard
+              vim.fn.setreg("+", combined) -- copy to system clipboard
               vim.notify("Copied to clipboard:\n" .. combined, vim.log.levels.INFO)
             else
               vim.notify("No diagnostic on current line", vim.log.levels.WARN)
             end
           end,
           desc = "Copy diagnostic and line to clipboard",
-        },
-
-        ["<leader>oc"] = {
-          function()
-            local function get_copyq_content()
-              local output = vim.fn.system({ "copyq", "read" }):gsub("\n$", "")
-              return output ~= "" and output or nil
-            end
-
-            local function open_file_from_path(file_path)
-              local expanded_path = vim.fn.fnamemodify(file_path, ":p")
-              if vim.fn.filereadable(expanded_path) == 1 then
-                vim.cmd("edit " .. vim.fn.fnameescape(expanded_path))
-              else
-                vim.notify("File not found: " .. file_path, vim.log.levels.ERROR)
-              end
-            end
-
-            local file_path = get_copyq_content()
-            if file_path then
-              open_file_from_path(file_path)
-            else
-              vim.notify("No content found in CopyQ", vim.log.levels.WARN)
-            end
-          end,
-          desc = "Open file path from CopyQ",
         },
       },
     },
