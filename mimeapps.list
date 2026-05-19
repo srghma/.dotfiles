@@ -27,6 +27,7 @@ application/vnd.ms-powerpoint.addin.macroEnabled.12=google-chrome.desktop
 application/vnd.ms-powerpoint.presentation.macroEnabled.12=google-chrome.desktop
 application/vnd.ms-powerpoint.template.macroEnabled.12=google-chrome.desktop
 application/vnd.ms-powerpoint.slideshow.macroEnabled.12=google-chrome.desktop
+x-scheme-handler/obsidian=obsidian.desktop
 
 [Added Associations]
 x-scheme-handler/mailto=thunderbird.desktop;

@@ -1,3 +1,5 @@
+# vim: set filetype=gitignore :
+
 .projectile-cache.eld
 .rake_tasks
 .DS_Store
@@ -58,11 +60,13 @@ cadical/
 cmake_install.cmake
 mimalloc/
 stage0-prefix/
-stage0/
+# stage0/
 stage1-prefix/
 stage1/
 stage2-prefix/
 stage3-prefix/
+
+tests/lake/tests/manifest/lake-packages/bar
 
 /dumps/dump.sql
 /dumps/file_url_to_data.json

@@ -85,7 +85,7 @@ function n {
 
 alias nii="nix profile install"
 alias p="pnpm"
-# alias node="bun"
+alias node="bun"
 alias npm="pnpm"
 alias npx="pnpx"
 
