@@ -36,7 +36,7 @@ alias lt='lsd --tree --total-size'
 
 # eval "$(direnv hook zsh)"
 
-source $HOME/projects/zsh-nr/index.sh
+# source $HOME/projects/zsh-nr/index.sh
 # source $HOME/.dotfiles/secrets-ignored/cachixSigningKey.sh
 
 for file in $HOME/.dotfiles/zsh/*.sh; do
