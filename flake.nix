@@ -121,7 +121,7 @@
               home-manager.users.srghma = import ./home.nix;
 
               environment.systemPackages = with nixpkgs.pkgs; [
-                inputs.antigravity-nix.packages.x86_64-linux.default
+                # inputs.antigravity-nix.packages.x86_64-linux.default
                 browseros
                 xsel # for nvim copy to clipboard
 

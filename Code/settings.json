@@ -184,4 +184,5 @@
     "chat.agent.enabled": false,
     "chat.disableAIFeatures": true,
     "continue.enableConsole": true,
+    "task.allowAutomaticTasks": "on",
 }

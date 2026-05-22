@@ -155,3 +155,4 @@ source $HOME/.dotfiles/secrets/aristotle-lean-key.sh
 # ln -sf /home/srghma/projects/mm0/mm0-rs/target/release/mm0-rs ~/.dotfiles/bin/mm0-rs
 
 alias aristotle='uvx --from aristotlelib@latest aristotle'
+alias antigravity='antigravity-ide'
