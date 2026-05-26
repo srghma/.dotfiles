@@ -20,6 +20,11 @@ export PATH="$HOME/projects/nixpkgs/result/bin:$PATH"
 # claude code was complaining in /doctor
 export PATH="$HOME/.local/bin:$PATH"
 
+# mm0
+# export PATH="$HOME/projects/mm0/mm0-hs/.stack-work/dist/x86_64-linux-nix/ghc-9.10.3/build/mm0-hs:$PATH"
+# export PATH="$HOME/projects/mm0/mm0-rs/target/release:$PATH"
+export PATH="$HOME/projects/mm0/result/bin/:$PATH"
+
 DOTFILES="$HOME/.dotfiles"
 
 PROJECT_PATHS=($HOME/projects $HOME/jss $HOME/trivial-rs)
@@ -150,9 +155,6 @@ bindkey '^x^e' kitty_scrollback_edit_command_line
 # by using the environment variable KITTY_SCROLLBACK_NVIM_EDIT_ARGS
 # export KITTY_SCROLLBACK_NVIM_EDIT_ARGS=''
 source $HOME/.dotfiles/secrets/aristotle-lean-key.sh
-
-# ln -sf $HOME/projects/mm0/mm0-hs/.stack-work/dist/x86_64-linux-nix/ghc-9.10.3/build/mm0-hs/mm0-hs ~/.dotfiles/bin/mm0-hs
-# ln -sf /home/srghma/projects/mm0/mm0-rs/target/release/mm0-rs ~/.dotfiles/bin/mm0-rs
 
 alias aristotle='uvx --from aristotlelib@latest aristotle'
 alias antigravity='antigravity-ide'

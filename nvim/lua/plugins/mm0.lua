@@ -14,15 +14,15 @@ return {
       },
       config = {
         mm0_ls = {
-          cmd = { "/home/srghma/mm0-debug.sh" },
-          -- cmd = { "mm0-rs", "server", "-d" },
+          -- cmd = { "/home/srghma/mm0-debug.sh" },
+          cmd = { "mm0-rs", "server", "-d" },
           filetypes = { "metamath-zero" },
-          root_dir = require("lspconfig.util").root_pattern(".git"),
+          root_dir = require("lspconfig.util").root_pattern ".git",
           single_file_support = true,
           -- FIX: Send an empty object so the server doesn't panic on 'null'
           init_options = vim.empty_dict(),
         },
       },
     },
-  }
+  },
 }
