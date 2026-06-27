@@ -1,4 +1,4 @@
-# vim: ft=i3
+# vim: ft=toml
 
 set $mod Mod4
 floating_modifier $mod
@@ -207,9 +207,9 @@ bindsym XF86AudioMute        exec --no-startup-id "/home/srghma/.dotfiles/bin/my
 bindsym XF86MonBrightnessDown exec --no-startup-id "/home/srghma/.dotfiles/bin/brightness.sh down"
 bindsym XF86MonBrightnessUp   exec --no-startup-id "/home/srghma/.dotfiles/bin/brightness.sh up"
 
-bindsym XF86TouchpadToggle    exec switch_touchpad
+bindsym XF86TouchpadToggle    exec /home/srghma/.dotfiles/bin/touchpad-switch.sh # switch_touchpad
 # lenovo :(
-bindsym XF86Calculator    exec switch_touchpad
+bindsym XF86Calculator    exec /home/srghma/.dotfiles/bin/touchpad-switch.sh # switch_touchpad
 
 bindsym Print      exec "scrot --monitor 0 /home/srghma/Pictures/%Y-%m-%d-%I%P-%M-%S-screenshot.png"
 bindsym $mod+Print exec "flameshot gui"

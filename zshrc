@@ -89,11 +89,11 @@ function n {
 #   ' sh {} +
 # }
 
-alias nii="nix profile install"
+alias nii="nix profile add"
 alias p="pnpm"
-alias node="bun"
-alias npm="pnpm"
-alias npx="pnpx"
+alias node="bun" # works in zsh for me and also works allows to execute pnpm that throws 'error: No such built-in module: node:sqlite' if node=bun in PATH
+# alias npm="pnpm"
+# alias npx="pnpx"
 
 path_array=(
   "$HOME/.dotfiles/bin"

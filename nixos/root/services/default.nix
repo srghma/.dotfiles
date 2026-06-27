@@ -37,23 +37,23 @@ with pkgs;
 
   # i2pd.enable = true;
 
-  keyd = {
-    enable = true;
-    keyboards = {
-      default = {
-        ids = [ "*" ];
-        settings = {
-          main = {
-            # Swap left control and Fn (fn is often called 'fn' or 'coffee' depending on kernel)
-            # Note: If your Fn key doesn't emit any scan code to linux at all,
-            # software remapping won't be able to catch it, but most modern ThinkPads do.
-            leftctrl = "fn";
-            fn = "leftctrl";
-          };
-        };
-      };
-    };
-  };
+  # keyd = {
+  #   enable = true;
+  #   keyboards = {
+  #     default = {
+  #       ids = [ "*" ];
+  #       settings = {
+  #         main = {
+  #           # Swap left control and Fn (fn is often called 'fn' or 'coffee' depending on kernel)
+  #           # Note: If your Fn key doesn't emit any scan code to linux at all,
+  #           # software remapping won't be able to catch it, but most modern ThinkPads do.
+  #           leftctrl = "fn";
+  #           fn = "leftctrl";
+  #         };
+  #       };
+  #     };
+  #   };
+  # };
 
   openssh.enable = true;
   xbanish.enable = true; # xbanish hides the mouse cursor when you start typing, and shows it again when the mouse cursor moves or a mouse button is pressed

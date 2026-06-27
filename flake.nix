@@ -152,7 +152,7 @@
                 zip
                 unzip
                 htop
-                silver-searcher
+                ripgrep
                 ntfs3g
                 alsa-utils
 
@@ -222,7 +222,7 @@
 
                 # mplayer
 
-                # nodejs_latest
+                nodejs_latest # if run bun then "error: No such built-in module: node:sqlite"
                 # nodejs_22
                 # pnpm
 
