@@ -8,7 +8,7 @@ inhome_indotfiles = [
   ['.tmux.conf',                              'tmux.conf'],
   ['.i3/config',                              'i3/config'],
 
-  ['.config/joshuto',              'joshuto'],
+  ['.config/joshuto',                         'joshuto'],
 
   ['.config/ranger/commands.py',              'ranger/commands.py'],
   ['.config/ranger/rc.conf',                  'ranger/rc.conf'],
@@ -35,12 +35,12 @@ inhome_indotfiles = [
   ['.config/nvim',                            'nvim'],
 
   ['.cabal/config',                           'cabal_config'],
-  # ['.spaceemacs',                                          'spaceemacs'],
+  # ['.spaceemacs',                           'spaceemacs'],
   ['.gnupg/gpg-agent.conf',                   'gpg-agent.conf'],
   ['.config/kak',                             'kak'],
   ['.config/doom',                            'doom'],
   ['.config/rofi',                            'rofi'],
-  ['.bunfig.toml',                            'bunfig.toml'],
+  ['.bunfig.toml',                            '.bunfig.toml'],
   # ['.config/lvim/config.lua',               'lvim/config.lua'],
 
   # ['.emacs', 'emacs'],

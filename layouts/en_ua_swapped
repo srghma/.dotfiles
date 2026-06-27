@@ -13,6 +13,12 @@ xkb_keymap {
     replace key <RALT> { [ Control_L ] };
     modifier_map Control { <RALT> };
 
+    // // swap left alt and left control
+    // replace key <LALT> { [ Control_L, Control_L ] };
+    // replace key <LCTL> { [ Alt_L, Meta_L ] };
+    // modifier_map Control { <LALT> };
+    // modifier_map Mod1 { <LCTL> };
+
     // swap ; and : only in us layout
     replace key <AC10> { [ colon, semicolon ], [ Cyrillic_zhe, Cyrillic_ZHE ] };
 
@@ -40,4 +46,3 @@ xkb_keymap {
     // keycode 90 = 0
   };
 };
-

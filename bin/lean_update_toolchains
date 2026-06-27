@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# vim: set filetype=bash :
+
+set -euo pipefail
+
+PROJECTS_DIR="$HOME/projects"
+NEW_TOOLCHAIN="leanprover/lean4:v4.30.0"
+
+# Project directories inside ~/projects to skip entirely
+IGNORE_PROJECTS=(
+  "lean4"
+)
+
+find_args=()
+
+for project in "${IGNORE_PROJECTS[@]}"; do
+  find_args+=(
+    -path "$PROJECTS_DIR/$project" -prune -o
+  )
+done
+
+find "$PROJECTS_DIR" \
+  "${find_args[@]}" \
+  -type d \( -name .lake -o -name .git \) -prune -o \
+  -type f -name "lean-toolchain" -print0 |
+while IFS= read -r -d '' file; do
+  echo "Updating: $file"
+  printf '%s\n' "$NEW_TOOLCHAIN" > "$file"
+done
+
+echo "Done."

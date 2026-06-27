@@ -122,7 +122,7 @@
 
               environment.systemPackages = with nixpkgs.pkgs; [
                 # inputs.antigravity-nix.packages.x86_64-linux.default
-                browseros
+                # browseros
                 xsel # for nvim copy to clipboard
 
                 home-manager
@@ -223,7 +223,7 @@
                 # mplayer
 
                 # nodejs_latest
-                nodejs_22
+                # nodejs_22
                 # pnpm
 
                 # netcat-openbsd # nc -U /var/run/acpid.socket

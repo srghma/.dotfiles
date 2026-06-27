@@ -3,9 +3,9 @@
 # export PATH="$GEM_HOME/bin:$PATH"
 
 # npm/yarn
-export PATH="$HOME/.node_modules/bin:$PATH"
+# export PATH="$HOME/.node_modules/bin:$PATH"
 
-# npm/yarn local
+# npm/yarn/pnpm local
 export PATH="./node_modules/.bin:$PATH"
 
 export PATH="$HOME/.config/emacs/bin:$PATH"
@@ -21,9 +21,10 @@ export PATH="$HOME/projects/nixpkgs/result/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # mm0
-# export PATH="$HOME/projects/mm0/mm0-hs/.stack-work/dist/x86_64-linux-nix/ghc-9.10.3/build/mm0-hs:$PATH"
+export PATH="$HOME/projects/mm0/mm0-hs/.stack-work/dist/x86_64-linux-nix/ghc-9.10.3/build/mm0-hs:$PATH"
 # export PATH="$HOME/projects/mm0/mm0-rs/target/release:$PATH"
 export PATH="$HOME/projects/mm0/result/bin/:$PATH"
+export PATH="$HOME/projects/mm0/mm0-c/:$PATH"
 
 DOTFILES="$HOME/.dotfiles"
 
@@ -126,11 +127,7 @@ source ~/.config/completion-for-bun.zsh
 # eval "$(zoxide init zsh)"
 
 # pnpm
-export PNPM_HOME="/home/srghma/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
+export PATH="$HOME/.local/share/pnpm/bin:$PATH"
 # pnpm end
 
 # export LD_LIBRARY_PATH=$(pwd)/.lake/packages/LeanCopilot/.lake/build/lib:$LD_LIBRARY_PATH

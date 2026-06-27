@@ -138,8 +138,8 @@
       enableCompletion = true;
       autosuggestions.enable = true;
 
+      # source ${./zsh/movements.sh}
       interactiveShellInit = ''
-        source ${./zsh/movements.sh}
         source ${./shells/docker-compose.sh}
         source ${./shells/docker.sh}
         source ${./shells/git.sh}
