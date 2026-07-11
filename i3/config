@@ -164,10 +164,10 @@ bindsym $mod+Ctrl+e  exec code
 
 # bindsym $mod+Shift+w exec qutebrowser
 bindsym $mod+w       exec "rm -rfd /home/srghma/.config/google-chrome-beta/Default/GPUCache && $browser"
-bindsym $mod+Shift+s exec $terminal -e joshuto
+# bindsym $mod+Shift+s exec $terminal -e joshuto
 bindsym $mod+s       exec nautilus
 bindsym $mod+p       exec --no-startup-id "copyq show"
-bindsym $mod+n       exec anki
+# bindsym $mod+n       exec anki
 bindsym $mod+m       exec $terminal -e "zsh -c 'screen -q -r -D cmus || screen -S cmus cmus'"
 bindsym $mod+Shift+m exec pavucontrol
 
@@ -211,7 +211,9 @@ bindsym XF86TouchpadToggle    exec /home/srghma/.dotfiles/bin/touchpad-switch.sh
 # lenovo :(
 bindsym XF86Calculator    exec /home/srghma/.dotfiles/bin/touchpad-switch.sh # switch_touchpad
 
-bindsym Print      exec "scrot --monitor 0 /home/srghma/Pictures/%Y-%m-%d-%I%P-%M-%S-screenshot.png"
+# Screenshots with notification
+bindsym Print exec --no-startup-id /home/srghma/.dotfiles/bin/i3-screenshot.sh
+
 bindsym $mod+Print exec "flameshot gui"
 
 # bindsym XF86Display         exec "arandr"

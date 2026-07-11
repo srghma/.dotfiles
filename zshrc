@@ -103,6 +103,7 @@ path_array=(
   # "/nix/store/sk1959yrzisz1qf4p4sgjf55mdngvdqh-idris2-lsp-2024-01-21/bin/"
   "$HOME/projects/zed/result/bin"
   "$HOME/projects/idris2-lsp/result/bin"
+  "$HOME/projects/rsorder/target/release/"
   # "$HOME/projects/idris2-lsp/result-newest-not-working/bin"
   # "$HOME/projects/idris2-lsp/result-old-working/bin"
 )

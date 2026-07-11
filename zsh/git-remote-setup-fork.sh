@@ -150,23 +150,60 @@ git-remote-setup-fork () {
 }
 
 git-remote-add-pr () {
-  # prid="dunhamsteve:markdown-code-blocks"
-  prid="$1"
+  local input="$1"
+  local prid
 
-  # Get the current origin URL
-  origin=$(git remote get-url origin)
-  # Extract the repository name from the origin URL
-  reponame=$(basename "$origin" .git)  # Remove the .git suffix
+  if [[ -z "$input" ]]; then
+    echo "Usage: git-remote-add-pr <username:branch> OR <github-pr-url>"
+    return 1
+  fi
 
-  username=$(echo "$prid" | cut -d ':' -f 1)  # Extract username
-  branch=$(echo "$prid" | cut -d ':' -f 2)    # Extract branch
+  # 1. Handle GitHub PR URL input (e.g., https://github.com/owner/repo/pull/123)
+  if [[ "$input" == *"github.com/"*"/pull/"* ]]; then
+    echo "Detected GitHub PR URL. Fetching details via gh..."
+
+    # Use gh to get the head (source) of the PR in owner:branch format
+    prid=$(gh pr view "$input" --json headRepositoryOwner,headRefName --template '{{.headRepositoryOwner.login}}:{{.headRefName}}' 2>/dev/null)
+
+    if [[ -z "$prid" ]]; then
+      echo "Error: Could not fetch PR details. Ensure 'gh' is authenticated and the URL is valid."
+      return 1
+    fi
+  else
+    prid="$input"
+  fi
+
+  # 2. Extract username and branch from "user:branch"
+  if [[ "$prid" != *":"* ]]; then
+    echo "Error: Input must be in format 'username:branch' or a GitHub PR URL."
+    return 1
+  fi
+
+  local username branch origin reponame url
+  username=$(echo "$prid" | cut -d ':' -f 1)
+  branch=$(echo "$prid" | cut -d ':' -f 2)
+
+  # 3. Get the current repository name from origin
+  origin=$(git remote get-url origin 2>/dev/null)
+  if [[ -z "$origin" ]]; then
+    echo "Error: No 'origin' remote found. Cannot determine repository name."
+    return 1
+  fi
+
+  reponame=$(basename "$origin" .git)
+
+  # 4. Construct URL and apply
+  # Using git@github.com format as per your existing logic
   url="git@github.com:$username/$reponame.git"
-  # url="https://github.com/$username/$reponame/tree/$branch"
 
-  git-remote-add-or-set-url "$username" "$url"  # Add or set the remote
-  # git fetch --all
-  git fetch "$username"                        # Fetch the new remote
-  git merge "$username/$branch"                # Merge the specified branch
+  echo "Setting up remote for $username..."
+  git-remote-add-or-set-url "$username" "$url"
 
-  echo "Remote $username has been set up with URL: $url"
+  echo "Fetching $username..."
+  git fetch "$username"
+
+  echo "Merging $username/$branch..."
+  git merge "$username/$branch"
+
+  echo "Successfully merged $username:$branch"
 }
