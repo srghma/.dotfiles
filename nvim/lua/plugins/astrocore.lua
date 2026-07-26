@@ -97,8 +97,8 @@ return {
       },
       i = {
         -- Insert mode remaps for register insertions
-        ["<C-r>"] = "<C-r><C-p>",
-        ["<M-p>"] = "<C-r><C-p>+",
+        ["<C-v>"] = "<C-r><C-p>+",
+        -- ["<M-p>"] = "<C-r><C-p>+",
       },
       c = {
         ["<M-p>"] = "<C-r>+",
@@ -130,15 +130,7 @@ return {
         -- Move current line
         ["]e"] = { ":m .+1<CR>==" },
         ["[e"] = { ":m .-2<CR>==" },
-        -- Paste from system clipboard
-        ["p"] = '"+p',
-        ["P"] = '"+P',
-        -- Copy from system clipboard
-        ["y"] = '"+y',
-        ["Y"] = '"+y$',
-        -- Delete and yank mappings
-        [",d"] = '"+d',
-        [",D"] = '"+D',
+
         [",w"] = ":w!<CR>",
 
         ["#"] = { "gc", remap = true, desc = "Toggle comment" },
@@ -196,15 +188,6 @@ return {
           desc = "Replace within all buffer",
         },
 
-        -- Paste from system clipboard
-        ["p"] = '"+p',
-        ["P"] = '"+P',
-        -- Copy from system clipboard
-        ["y"] = '"+y',
-        ["Y"] = '"+y$',
-        -- Delete and yank mappings
-        [",d"] = '"+d',
-        [",D"] = '"+D',
         [",w"] = ":w!<CR>",
 
         -- -- Window management

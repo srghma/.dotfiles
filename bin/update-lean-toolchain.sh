@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-NEW="${1:-}" # leanprover/lean4:v4.30.0-rc2
+# NEW="${1:-}" # leanprover/lean4:v4.33.0-rc1
+NEW="leanprover/lean4:v4.33.0-rc1"
 
 if [[ -z "$NEW" ]]; then
   echo "Usage: $0 leanprover/lean4:v4.xx.x"
@@ -10,20 +11,22 @@ fi
 
 # taken from `elan toolchain gc --delete`
 PROJECTS=(
-  "$HOME/projects/lean-pipes/pipes"
-  "$HOME/projects/lean-pipes/correctness"
-  "$HOME/projects/lean-spec"
-  "$HOME/projects/lean-glob"
-  "$HOME/projects/lean-spec/.lake/packages/mathlib"
-  "$HOME/projects/lean-nonempty"
-  "$HOME/projects/mm0/mm0-lean4"
-  "$HOME/projects/mm-lean4"
-  "$HOME/projects/khmer/lllll"
-  "$HOME/projects/aenasverif/aeneas/tests/lean"
-  "$HOME/projects/aenasverif/icfp-tutorial"
-  "$HOME/projects/aenasverif/aeneas/backends/lean"
-  "$HOME/projects/purescript-backend-optimizer"
-  "$HOME/projects/import-graph"
+ "/home/srghma/projects/LSpec"
+ "/home/srghma/projects/PLFaLean"
+ "/home/srghma/projects/iris-lean/Iris"
+ "/home/srghma/projects/iris-lean/IrisMath"
+ "/home/srghma/projects/lean-glob"
+ "/home/srghma/projects/lean-nonempty"
+ "/home/srghma/projects/lean-rust-parser"
+ "/home/srghma/projects/lean-spec"
+ "/home/srghma/projects/lean4-unicode-basic/common"
+ "/home/srghma/projects/lean4-unicode-basic/docs"
+ "/home/srghma/projects/lean4-unicode-basic/lean-scripts"
+ "/home/srghma/projects/lean4-unicode-basic/lib"
+ "/home/srghma/projects/lean4-unicode-basic/table-generators"
+ "/home/srghma/projects/lean4-unicode-basic/tests"
+ "/home/srghma/projects/lean4lean"
+ "/home/srghma/projects/rc-correctness"
 )
 
 echo "Installing toolchain: $NEW"
@@ -52,9 +55,9 @@ for p in "${PROJECTS[@]}"; do
   echo "$NEW" > "$p/lean-toolchain"
 
   # optional: update lake deps immediately
-  if [[ -f "$p/lakefile.lean" || -f "$p/lakefile.toml" ]]; then
-    (cd "$p" && lake update) || true
-  fi
+  # if [[ -f "$p/lakefile.lean" || -f "$p/lakefile.toml" ]]; then
+  #   (cd "$p" && lake update) || true
+  # fi
 done
 
 echo

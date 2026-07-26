@@ -104,6 +104,7 @@ path_array=(
   "$HOME/projects/zed/result/bin"
   "$HOME/projects/idris2-lsp/result/bin"
   "$HOME/projects/rsorder/target/release/"
+  "$HOME/projects/rust-find-duplicates/target/release/"
   # "$HOME/projects/idris2-lsp/result-newest-not-working/bin"
   # "$HOME/projects/idris2-lsp/result-old-working/bin"
 )
