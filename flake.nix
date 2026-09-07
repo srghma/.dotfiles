@@ -107,9 +107,9 @@
               # kb-light = pkgs.callPackage inputs.kb-light { };
               i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
               # bifrost = pkgs.callPackage ./nixos/pkgs/bifrost/package.nix { };
-              odin4 = pkgs.callPackage ./nixos/pkgs/odin4 { };
-              switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
-              browseros = pkgs.callPackage ./nixos/pkgs/browseros { };
+              # odin4 = pkgs.callPackage ./nixos/pkgs/odin4 { };
+              # switch_touchpad = pkgs.callPackage ./nixos/pkgs/switch_touchpad { };
+              # browseros = pkgs.callPackage ./nixos/pkgs/browseros { };
               # purescript-overlay = inputs.purescript-overlay.packages.${system};
               # easy-purescript-nix-automatic = import inputs.easy-purescript-nix-automatic {
               #   inherit pkgs;
