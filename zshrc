@@ -155,5 +155,8 @@ bindkey '^x^e' kitty_scrollback_edit_command_line
 # export KITTY_SCROLLBACK_NVIM_EDIT_ARGS=''
 source $HOME/.dotfiles/secrets/aristotle-lean-key.sh
 
-alias aristotle='uvx --from aristotlelib@latest aristotle'
+# alias aristotle='uvx --from aristotlelib@latest aristotle'
+# OR
+# uv tool install aristotlelib
+# + just aristotle
 alias antigravity='antigravity-ide'

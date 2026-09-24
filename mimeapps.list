@@ -34,6 +34,7 @@ x-scheme-handler/tg=org.telegram.desktop.desktop
 x-scheme-handler/tonsite=org.telegram.desktop.desktop
 x-scheme-handler/mid=userapp-Thunderbird-7XR9S3.desktop
 x-scheme-handler/net.thunderbird=userapp-Thunderbird-ISUAT3.desktop
+x-scheme-handler/antigravity=antigravity.desktop
 
 [Added Associations]
 x-scheme-handler/mailto=userapp-Thunderbird-7XR9S3.desktop;thunderbird.desktop;

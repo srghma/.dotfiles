@@ -16,8 +16,14 @@
 [diff-so-fancy]
 	stripLeadingSymbols = false
 [delta]
-  navigate = true    # use n and N to move between diff sections
-  ; side-by-side = true
+  navigate = true
+  ; side-by-side = false          # Long lines are much easier to read inline
+  ; line-numbers = true
+
+  # Fine-tune intra-line (within-line) highlighting colors:
+  minus-emph-style = bold red 52
+  plus-emph-style = bold green 22
+  ; syntax-theme = Dracula
 [interactive]
   diffFilter = delta --color-only
 [alias]
@@ -30,6 +36,7 @@
 [rebase]
   instructionFormat = (%an <%ae>) %s
 [diff]
+  ; external = difft
   tool = meld
 	colormoved = dimmed-zebra
 	algorithm = histogram

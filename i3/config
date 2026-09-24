@@ -140,14 +140,14 @@ set $browser  google-chrome-stable --remote-debugging-port=4444
 
 # exec --no-startup-id randomize_background /home/srghma/.dotfiles/i3/wallpallers/*
 exec --no-startup-id $browser
-exec --no-startup-id copyq
+exec --no-startup-id sh -c "QT_QPA_PLATFORM=xcb copyq"
 exec --no-startup-id pasystray
 exec --no-startup-id keepassxc
 # exec --no-startup-id dropbox start
 exec --no-startup-id i3-battery-popup
 exec --no-startup-id flameshot
 exec --no-startup-id telegram-desktop
-exec --no-startup-id /nix/store/jf46172vm091cmzfhqyjxsfdq9nbaw8z-signal-desktop-7.62.0/bin/signal-desktop
+# exec --no-startup-id /nix/store/jf46172vm091cmzfhqyjxsfdq9nbaw8z-signal-desktop-7.62.0/bin/signal-desktop
 exec --no-startup-id "sh -c 'sleep 10; exec audacious'"
 exec --no-startup-id ua
 
