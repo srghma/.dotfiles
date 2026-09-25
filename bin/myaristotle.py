@@ -3,6 +3,9 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "aristotlelib",
+#     "pydantic>=2.0.0",
+#     "rich>=13.0.0",
+#     "readchar>=4.0.0",
 # ]
 # ///
 
@@ -16,40 +19,30 @@ import os
 from pathlib import Path
 import re
 import shutil
-import signal
 import subprocess
 import sys
 import tempfile
-import textwrap
 from typing import Any, Callable
 
-try:
-    import termios
-    import tty
-except ImportError:
-    termios = None
-    tty = None
+from pydantic import BaseModel, Field, field_validator
+import readchar
+from readchar import key as K
+from rich.console import Console, Group
+from rich.live import Live
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
 
+import aristotlelib
 from aristotlelib import AgentTask, Project, set_api_key
+import aristotlelib.api_request
+import aristotlelib.aristotle_object
 
-# Cache directory
+console = Console()
+err_console = Console(stderr=True)
+
 CACHE_DIR = Path.home() / ".cache" / "aristotle"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
-
-# Optional static project -> env var or key mapping
-DEFAULT_PROJECT_TO_KEY_ENV: dict[str, str] = {}
-
-# ANSI styles
-RESET = "\033[0m"
-BOLD = "\033[1m"
-DIM = "\033[2m"
-CYAN = "\033[36m"
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
-MAGENTA = "\033[35m"
-RED = "\033[31m"
-BLUE = "\033[34m"
-REVERSE = "\033[7m"
 
 TERMINAL_STATUSES = {
     "COMPLETE",
@@ -58,8 +51,121 @@ TERMINAL_STATUSES = {
     "CANCELLED",
     "ERROR",
 }
+NON_USER_EVENT_TYPES = {2, 3, 4, 5, 6, 7, 8, 9, 16}
 
-ANSI_ESCAPE = re.compile(r"\x1b\[[0-9;]*[a-zA-Z]")
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Config Models (Pydantic)
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def parse_project_id(target: str | None) -> str:
+    """Extracts raw UUID if given an Aristotle web URL or returns the UUID directly."""
+    if not target:
+        return ""
+    target_str = str(target).strip()
+    match = re.search(r"projects/([0-9a-fA-F-]{36})", target_str)
+    if match:
+        return match.group(1)
+    match_uuid = re.search(
+        r"([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})",
+        target_str,
+    )
+    if match_uuid:
+        return match_uuid.group(1)
+    return target_str
+
+
+class BranchConfig(BaseModel):
+    project_id: str
+    paths: list[str] | None = None
+    push: bool | None = None
+    commit: bool | None = None
+
+    @field_validator("project_id", mode="before")
+    @classmethod
+    def _clean_project_id(cls, v: Any) -> str:
+        return parse_project_id(str(v))
+
+
+class RepoConfig(BaseModel):
+    interval: int = 60
+    push: bool = True
+    commit: bool = True
+    paths: list[str] = Field(default_factory=list)
+    branches: dict[str, BranchConfig] = Field(default_factory=dict)
+
+    @field_validator("branches", mode="before")
+    @classmethod
+    def _coerce_branches(cls, v: Any) -> dict[str, Any]:
+        if not isinstance(v, dict):
+            return {}
+        normalized = {}
+        for b_name, b_val in v.items():
+            if isinstance(b_val, str):
+                normalized[b_name] = {"project_id": b_val}
+            else:
+                normalized[b_name] = b_val
+        return normalized
+
+
+class AristotleConfig(BaseModel):
+    project_id_to_key: dict[str, str] = Field(default_factory=dict)
+    repos: dict[Path, RepoConfig] = Field(default_factory=dict)
+
+    @field_validator("project_id_to_key", mode="before")
+    @classmethod
+    def _clean_keys(cls, v: Any) -> dict[str, str]:
+        if not isinstance(v, dict):
+            return {}
+        return {parse_project_id(str(k)): str(val) for k, val in v.items()}
+
+    @field_validator("repos", mode="before")
+    @classmethod
+    def _resolve_repo_paths(cls, v: Any) -> dict[str, Any]:
+        if not isinstance(v, dict):
+            return {}
+        resolved = {}
+        for r_path, r_cfg in v.items():
+            exp = Path(os.path.expandvars(os.path.expanduser(str(r_path).strip()))).resolve()
+            resolved[str(exp)] = r_cfg  # <-- Fix: return str, Pydantic casts to Path
+        return resolved
+
+
+def load_config() -> AristotleConfig:
+    """Loads configuration from MYARISTOTLE_CONFIG with backward compatibility."""
+    raw = os.environ.get("MYARISTOTLE_CONFIG", "").strip()
+    if raw:
+        try:
+            expanded = os.path.expandvars(os.path.expanduser(raw))
+            data = json.loads(expanded)
+            return AristotleConfig.model_validate(data)
+        except Exception as e:
+            err_console.print(f"[yellow]⚠️  Warning: Failed to parse MYARISTOTLE_CONFIG: {e}[/yellow]")
+
+    # Legacy fallback
+    p_to_k = {}
+    legacy_keys = os.environ.get("ARISTOTLE_PROJECT_ID_TO_KEY")
+    if legacy_keys:
+        try:
+            p_to_k = {parse_project_id(k): v for k, v in json.loads(legacy_keys).items()}
+        except Exception:
+            pass
+
+    repos_dict: dict[Path, Any] = {}
+    legacy_repos = os.environ.get("ARISTOTLE_REPO_LOCATION_AND_BRANCH_TO_PROJECT_ID", "").strip()
+    if legacy_repos:
+        for line in legacy_repos.splitlines():
+            line = os.path.expandvars(os.path.expanduser(line.strip()))
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            target_key, proj = line.split("=", 1)
+            if ":" in target_key:
+                r_part, b_part = target_key.rsplit(":", 1)
+                r_path = Path(r_part.strip()).resolve()
+                repos_dict.setdefault(r_path, {"branches": {}})["branches"][b_part.strip()] = proj.strip()
+
+    return AristotleConfig(project_id_to_key=p_to_k, repos=repos_dict)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -86,121 +192,95 @@ class BranchTarget:
     branch: str
     project_id: str
     raw_target: str
+    repo_dir: Path
+    repo_name: str
+    paths: list[str] | None = None
+    push: bool = True
+    commit: bool = True
+
+
+def update_aristotle_client_auth(api_key: str):
+    os.environ["ARISTOTLE_API_KEY"] = api_key
+    try:
+        set_api_key(api_key)
+    except Exception:
+        pass
+
+    for mod in (aristotlelib, aristotlelib.api_request, aristotlelib.aristotle_object):
+        for attr in ("api_key", "API_KEY", "_api_key"):
+            if hasattr(mod, attr):
+                setattr(mod, attr, api_key)
+
+    primary_client = getattr(aristotlelib.api_request, "client", None)
+    if primary_client is not None:
+        try:
+            new_c = type(primary_client)()
+            for attr in ("api_key", "_api_key"):
+                setattr(new_c, attr, api_key)
+            if hasattr(new_c, "headers") and new_c.headers is not None:
+                new_c.headers["Authorization"] = f"Bearer {api_key}"
+            aristotlelib.api_request.client = new_c
+            aristotlelib.aristotle_object.client = new_c
+        except Exception:
+            pass
 
 
 def setup_auth(project_id: str | None = None) -> str:
-    """
-    Selects API key using:
-    1. ARISTOTLE_PROJECT_ID_TO_KEY json env mapping (or DEFAULT_PROJECT_TO_KEY_ENV)
-    2. Fallback to generic ARISTOTLE_API_KEY
-    """
-    mapping = dict(DEFAULT_PROJECT_TO_KEY_ENV)
-
-    env_map_json = os.environ.get("ARISTOTLE_PROJECT_ID_TO_KEY")
-    if env_map_json:
-        try:
-            custom_map = json.loads(env_map_json)
-            if isinstance(custom_map, dict):
-                mapping.update(custom_map)
-        except Exception as e:
-            print(
-                f"{YELLOW}⚠️  Warning: Failed to parse ARISTOTLE_PROJECT_ID_TO_KEY: {e}{RESET}",
-                file=sys.stderr,
-            )
+    cfg = load_config()
+    clean_pid = parse_project_id(project_id) if project_id else None
 
     api_key = None
-    if project_id and project_id in mapping:
-        val = str(mapping[project_id]).strip()
-        if val.startswith("$"):
-            var_name = val[1:]
-            api_key = os.environ.get(var_name)
-        elif val in os.environ:
-            api_key = os.environ.get(val)
-        else:
-            api_key = val
+    if clean_pid and clean_pid in cfg.project_id_to_key:
+        val = cfg.project_id_to_key[clean_pid]
+        api_key = os.environ.get(val[1:] if val.startswith("$") else val, val)
 
     if not api_key:
         api_key = os.environ.get("ARISTOTLE_API_KEY")
 
     if not api_key:
-        print(
-            f"{RED}Error: Could not determine Aristotle API key for project '{project_id or 'unknown'}'.{RESET}\n"
-            f"Please ensure ARISTOTLE_API_KEY or ARISTOTLE_PROJECT_ID_TO_KEY is set in your environment.",
-            file=sys.stderr,
+        err_console.print(
+            f"[red]Error: Could not determine Aristotle API key for project '{clean_pid or 'unknown'}'.[/red]\n"
+            f"Configured project IDs in MYARISTOTLE_CONFIG: {list(cfg.project_id_to_key.keys())}"
         )
         sys.exit(1)
 
-    os.environ["ARISTOTLE_API_KEY"] = api_key
-    set_api_key(api_key)
+    update_aristotle_client_auth(api_key)
     return api_key
-
-
-def parse_project_id(target: str) -> str:
-    match = re.search(r"projects/([0-9a-fA-F-]{36})", target)
-    if match:
-        return match.group(1)
-    match_uuid = re.search(
-        r"([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})",
-        target,
-    )
-    if match_uuid:
-        return match_uuid.group(1)
-    return target
 
 
 def extract_status_str(status_raw: Any) -> str:
     return str(getattr(status_raw, "value", status_raw)).split(".")[-1]
 
 
-def status_badge(status_raw: Any, percent: int | None = None) -> str:
+def status_badge(status_raw: Any, percent: int | None = None) -> Text:
     s = extract_status_str(status_raw)
     pct = f" ({percent}%)" if percent is not None and "PROGRESS" in s else ""
     if "PROGRESS" in s:
-        return f"{YELLOW}🔄 {s}{pct}{RESET}"
+        return Text.from_markup(f"[yellow]🔄 {s}{pct}[/yellow]")
     if "ERROR" in s:
-        return f"{RED}⚠️  {s}{RESET}"
+        return Text.from_markup(f"[red]⚠️  {s}[/red]")
     if "COMPLETE" in s or "SUCCESS" in s:
-        return f"{GREEN}✅ {s}{RESET}"
+        return Text.from_markup(f"[green]✅ {s}[/green]")
     if "FAIL" in s:
-        return f"{RED}❌ {s}{RESET}"
+        return Text.from_markup(f"[red]❌ {s}[/red]")
     if "QUEUE" in s:
-        return f"{BLUE}⏳ {s}{RESET}"
-    return f"ℹ️  {s}{pct}"
-
-
-def format_badge_fixed_width(status_raw: Any, percent: int | None = None) -> str:
-    s = extract_status_str(status_raw)
-    pct = f" {percent}%" if percent is not None and "PROGRESS" in s else ""
-    if "PROGRESS" in s:
-        lbl = f"🔄 IN_PROG{pct}"
-        return f"{YELLOW}{lbl:<15}{RESET}"
-    if "ERROR" in s:
-        return f"{RED}⚠️  ERROR      {RESET}"
-    if "COMPLETE" in s or "SUCCESS" in s:
-        return f"{GREEN}✅ COMPLETE   {RESET}"
-    if "FAIL" in s:
-        return f"{RED}❌ FAILED     {RESET}"
-    if "CANCEL" in s:
-        return f"{RED}🚫 CANCELLED  {RESET}"
-    if "QUEUE" in s:
-        return f"{BLUE}⏳ QUEUED     {RESET}"
-    return f"{DIM}ℹ️  {s[:11]:<11}{RESET}"
+        return Text.from_markup(f"[blue]⏳ {s}[/blue]")
+    return Text.from_markup(f"[dim]ℹ️  {s}{pct}[/dim]")
 
 
 def extract_task_id(task: Any) -> str | None:
     if isinstance(task, dict):
-        return (
-            task.get("agent_task_id")
-            or task.get("id")
-            or task.get("object_id")
-        )
+        return task.get("agent_task_id") or task.get("id") or task.get("object_id")
     for attr in ("agent_task_id", "id", "object_id"):
         val = getattr(task, attr, None)
         if val:
             return str(val)
     if hasattr(task, "model_dump"):
-        d = task.model_dump()
-        return d.get("agent_task_id") or d.get("id") or d.get("object_id")
+        try:
+            d = task.model_dump()
+            return d.get("agent_task_id") or d.get("id") or d.get("object_id")
+        except Exception:
+            pass
     return None
 
 
@@ -212,168 +292,165 @@ async def fetch_project_tasks(project: Project, limit: int = 10):
         return res[0]
     if hasattr(res, "tasks"):
         return res.tasks
-    if isinstance(res, list):
-        return res
-    return [res]
+    return res if isinstance(res, list) else [res]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Text Formatting & Git Helpers
+# Git & Prompt Helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-def visible_len(s: str) -> int:
-    return len(ANSI_ESCAPE.sub("", s))
+def get_current_git_repo_and_branch(cwd: Path | None = None) -> tuple[Path | None, str | None]:
+    cwd = (cwd or Path.cwd()).resolve()
+    try:
+        res_root = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+        )
+        if res_root.returncode != 0:
+            return None, None
+        repo_root = Path(res_root.stdout.strip()).resolve()
+
+        res_branch = subprocess.run(
+            ["git", "branch", "--show-current"],
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+        )
+        branch = res_branch.stdout.strip() or None
+        return repo_root, branch
+    except Exception:
+        return None, None
 
 
-def truncate_visible(s: str, max_width: int) -> str:
-    cur_width = 0
-    res = []
-    tokens = re.split(r"(\x1b\[[0-9;]*[a-zA-Z])", s)
-    for tok in tokens:
-        if not tok:
-            continue
-        if tok.startswith("\x1b["):
-            res.append(tok)
-        else:
-            for ch in tok:
-                if cur_width >= max_width:
-                    res.append("…")
-                    res.append(RESET)
-                    return "".join(res)
-                res.append(ch)
-                cur_width += 1
-    return "".join(res)
+def resolve_project_id(target: str | None = None, cwd: Path | None = None) -> str:
+    cwd = (cwd or Path.cwd()).resolve()
+    clean_target = parse_project_id(target)
+    if clean_target and len(clean_target) == 36 and clean_target.count("-") == 4:
+        return clean_target
 
+    cfg = load_config()
+    repo_root, current_branch = get_current_git_repo_and_branch(cwd)
 
-def pad_visible(s: str, width: int) -> str:
-    vlen = visible_len(s)
-    if vlen < width:
-        return s + " " * (width - vlen)
-    return truncate_visible(s, width)
+    if repo_root and repo_root in cfg.repos:
+        repo_cfg = cfg.repos[repo_root]
+        check_branch = target or current_branch
+        if check_branch and check_branch in repo_cfg.branches:
+            return repo_cfg.branches[check_branch].project_id
+
+    if clean_target:
+        return clean_target
+
+    err_console.print(
+        f"[red]Error: Could not determine Aristotle project ID for {repo_root or cwd}.[/red]\n"
+        f"Branch: {current_branch or 'unknown'}\n"
+        f"Please specify a project ID or configure MYARISTOTLE_CONFIG."
+    )
+    sys.exit(1)
 
 
 def extract_first_line_prompt(prompt: str | None, max_chars: int = 60) -> str:
-    if not prompt:
+    if not prompt or not prompt.strip():
         return ""
     for raw_line in prompt.strip().splitlines():
-        line = raw_line.strip()
-        line = re.sub(r"^#+\s*", "", line)
-        line = re.sub(r"^[-*]\s*", "", line)
+        line = re.sub(r"^([#\-*> ]+)", "", raw_line.strip())
+        if re.match(r"^You wrote\b", line, re.IGNORECASE):
+            continue
         if line:
-            if len(line) > max_chars:
-                line = line[: max_chars - 3].rsplit(" ", 1)[0] + "..."
-            return line
+            return (line[: max_chars - 3].rsplit(" ", 1)[0] + "...") if len(line) > max_chars else line
     return ""
 
 
-def build_git_commit_message(
-    task: TaskInfo | None = None,
-    *,
-    task_id: str | None = None,
-    status_str: str | None = None,
-    prompt: str | None = None,
-    end_msg: str | None = None,
-) -> str:
-    if task is not None:
-        t_id = task.task_id
-        st = task.status
-        pr = task.prompt
-        end = task.end_msg
-    else:
-        t_id = task_id or ""
-        st = status_str or ""
-        pr = prompt or ""
-        end = end_msg
-
-    first_line = extract_first_line_prompt(pr, max_chars=60)
-    commit_title = f"Aristotle: {t_id[:8]} ({st})"
+def build_git_commit_message(task: TaskInfo) -> str:
+    pr_clean = task.prompt.strip() if task.prompt else ""
+    first_line = extract_first_line_prompt(pr_clean, max_chars=60)
+    commit_title = f"Aristotle: {task.task_id[:8]} ({task.status})"
     if first_line:
         commit_title += f" - {first_line}"
 
     lines = [
         commit_title,
         "",
-        f"Task ID: {t_id}",
-        f"Status:  {st}",
+        f"Task ID: {task.task_id}",
+        f"Status:  {task.status}",
         "",
         "=== My Prompt ===",
-        pr.strip() if pr else "(No prompt recorded)",
+        pr_clean or "(No prompt recorded)",
     ]
 
-    if st in TERMINAL_STATUSES:
-        lines.append("")
-        lines.append("=== Aristotle End Message ===")
-        lines.append(end.strip() if end else "(No end message)")
+    if task.status in TERMINAL_STATUSES:
+        lines.extend([
+            "",
+            "=== Aristotle End Message ===",
+            task.end_msg.strip() if task.end_msg else "(No end message)",
+        ])
 
     return "\n".join(lines)
 
 
-def is_task_in_git(task_id: str, branch: str | None = None) -> bool:
+def is_task_in_git(task_id: str, branch: str | None = None, cwd: Path | None = None) -> bool:
+    cwd = (cwd or Path.cwd()).resolve()
     try:
         cmd = ["git", "log"]
         if branch:
             cmd.append(branch)
         cmd.extend(["-n", "50", f"--grep=Task ID: {task_id}"])
-        res = subprocess.run(cmd, capture_output=True, text=True)
-        if res.returncode == 0 and res.stdout.strip():
-            return True
-
-        cmd[-1] = f"--grep=Aristotle: {task_id[:8]}"
-        res = subprocess.run(cmd, capture_output=True, text=True)
+        res = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd)
         return res.returncode == 0 and bool(res.stdout.strip())
     except Exception:
         return False
 
 
-def git_checkout(branch: str) -> bool:
-    git_status = subprocess.run(
-        ["git", "status", "--porcelain"], capture_output=True, text=True
-    ).stdout.strip()
+def git_checkout(branch: str, cwd: Path | None = None) -> bool:
+    cwd = (cwd or Path.cwd()).resolve()
 
-    if git_status:
-        print(
-            f"{RED}⚠️  Cannot switch to branch '{branch}': working tree has uncommitted changes.{RESET}\n"
-            f"{DIM}{git_status}{RESET}",
-            file=sys.stderr,
-        )
-        return False
-
-    current_branch = subprocess.run(
-        ["git", "branch", "--show-current"], capture_output=True, text=True
+    # 1. Check current branch first — if already on it, no checkout needed!
+    curr = subprocess.run(
+        ["git", "branch", "--show-current"],
+        capture_output=True,
+        text=True,
+        cwd=cwd,
     ).stdout.strip()
-    if current_branch == branch:
+    if curr == branch:
         return True
 
-    res = subprocess.run(["git", "checkout", branch], capture_output=True, text=True)
-    if res.returncode != 0:
-        print(
-            f"{RED}⚠️  Failed to checkout '{branch}':\n{res.stderr}{RESET}",
-            file=sys.stderr,
+    # 2. Only if we actually need to switch branches, ensure working tree is clean
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        capture_output=True,
+        text=True,
+        cwd=cwd,
+    ).stdout.strip()
+    if status:
+        err_console.print(
+            f"[red]⚠️ Cannot switch to '{branch}' in {cwd}: uncommitted changes.[/red]\n"
+            f"[dim]{status}[/dim]"
         )
         return False
-    return True
+
+    res = subprocess.run(["git", "checkout", branch], capture_output=True, text=True, cwd=cwd)
+    return res.returncode == 0
 
 
-def git_commit_changes(commit_msg: str, push: bool = True) -> bool:
-    git_status = subprocess.run(
-        ["git", "status", "--porcelain"], capture_output=True, text=True
-    ).stdout.strip()
-
-    if not git_status:
-        print(f"{DIM}No git working tree changes detected.{RESET}")
+def git_commit_changes(commit_msg: str, push: bool = True, cwd: Path | None = None) -> bool:
+    cwd = (cwd or Path.cwd()).resolve()
+    status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, cwd=cwd).stdout.strip()
+    if not status:
+        console.print(f"[dim][{cwd.name}] No git working tree changes detected.[/dim]")
         return False
 
-    print(f"{BOLD}{GREEN}📝 Changes detected. Committing...{RESET}")
-    subprocess.run(["git", "add", "."], check=True)
-    subprocess.run(["git", "commit", "-m", commit_msg], check=True)
+    console.print(f"[bold green]📝 [{cwd.name}] Changes detected. Committing...[/bold green]")
+    subprocess.run(["git", "add", "."], check=True, cwd=cwd)
+    subprocess.run(["git", "commit", "-m", commit_msg], check=True, cwd=cwd)
 
     if push:
-        print(f"{BOLD}{BLUE}🚀 Pushing to remote...{RESET}")
+        console.print(f"[bold blue]🚀 [{cwd.name}] Pushing to remote...[/bold blue]")
         try:
-            subprocess.run(["git", "push"], check=True)
+            subprocess.run(["git", "push"], check=True, cwd=cwd)
         except subprocess.CalledProcessError as e:
-            print(f"{RED}⚠️  Git push failed: {e}{RESET}")
+            err_console.print(f"[red]⚠️ Git push failed in {cwd}: {e}[/red]")
             return False
     return True
 
@@ -383,12 +460,11 @@ def git_commit_changes(commit_msg: str, push: bool = True) -> bool:
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-def load_task_cache(task_id: str):
+def load_task_cache(task_id: str) -> dict | None:
     f = CACHE_DIR / f"{task_id}.json"
     if f.exists():
         try:
-            with open(f, "r", encoding="utf-8") as fp:
-                return json.load(fp)
+            return json.loads(f.read_text(encoding="utf-8"))
         except Exception:
             return None
     return None
@@ -397,18 +473,16 @@ def load_task_cache(task_id: str):
 def save_task_cache(task_id: str, data: dict):
     f = CACHE_DIR / f"{task_id}.json"
     try:
-        with open(f, "w", encoding="utf-8") as fp:
-            json.dump(data, fp, indent=2, ensure_ascii=False)
+        f.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     except Exception:
         pass
 
 
-def get_synced_tasks(project_id: str) -> set:
+def get_synced_tasks(project_id: str) -> set[str]:
     f = CACHE_DIR / f"synced_{project_id}.json"
     if f.exists():
         try:
-            with open(f, "r", encoding="utf-8") as fp:
-                return set(json.load(fp).get("synced_task_ids", []))
+            return set(json.loads(f.read_text(encoding="utf-8")).get("synced_task_ids", []))
         except Exception:
             return set()
     return set()
@@ -419,79 +493,59 @@ def mark_task_synced(project_id: str, task_id: str):
     synced.add(task_id)
     f = CACHE_DIR / f"synced_{project_id}.json"
     try:
-        with open(f, "w", encoding="utf-8") as fp:
-            json.dump({"synced_task_ids": sorted(list(synced))}, fp, indent=2)
+        f.write_text(json.dumps({"synced_task_ids": sorted(list(synced))}, indent=2), encoding="utf-8")
     except Exception:
         pass
 
 
-async def extract_initial_prompt(task: Any) -> str:
-    try:
-        res = task.get_events(limit=100)
-        if inspect.isawaitable(res):
-            res = await res
-        events = res[0] if isinstance(res, tuple) else res
-        for ev in reversed(events):
-            d = ev.model_dump() if hasattr(ev, "model_dump") else vars(ev)
-            if d.get("event_type") == 1 or d.get("type") == 1:
-                content = d.get("content") or d.get("message")
-                if content and content.strip():
-                    return content.strip()
-    except Exception:
-        pass
-    return (
-        getattr(task, "description", None)
-        or getattr(task, "name", None)
-        or "No prompt found"
-    )
-
-
-async def get_task_details(task_obj: Any, task_id: str, status_str: str):
-    cached = load_task_cache(task_id)
-    if (
-        cached
-        and cached.get("status") in TERMINAL_STATUSES
-        and cached.get("prompt")
-    ):
-        return cached["prompt"], cached.get("output_summary"), True
-
-    end_msg = getattr(task_obj, "output_summary", None)
-    if hasattr(task_obj, "model_dump"):
-        end_msg = end_msg or task_obj.model_dump().get("output_summary")
-
-    full_task = task_obj
-    if not hasattr(full_task, "get_events"):
-        full_task = await AgentTask.from_id(task_id)
-        if not end_msg:
-            end_msg = getattr(full_task, "output_summary", None)
-
-    prompt = await extract_initial_prompt(full_task)
-
-    if status_str in TERMINAL_STATUSES:
-        save_task_cache(
-            task_id,
-            {
-                "task_id": task_id,
-                "status": status_str,
-                "prompt": prompt,
-                "output_summary": end_msg,
-            },
-        )
-    return prompt, end_msg, False
+async def extract_prompt_from_task(task: Any) -> str:
+    if not task:
+        return ""
+    for attr in ("prompt", "initial_prompt", "user_prompt", "input", "description", "name"):
+        val = getattr(task, attr, None)
+        if isinstance(val, str) and val.strip() and not val.strip().endswith("..."):
+            return val.strip()
+    return ""
 
 
 async def get_task_info(task_obj: Any, task_id: str | None = None) -> TaskInfo | None:
     t_id = task_id or extract_task_id(task_obj)
     if not t_id:
         return None
+
     raw_status = getattr(task_obj, "status", "")
     status_str = extract_status_str(raw_status)
     pct = getattr(task_obj, "percent_complete", None)
     created_at = str(getattr(task_obj, "created_at", "N/A"))
 
-    prompt, end_msg, from_cache = await get_task_details(
-        task_obj, t_id, status_str
-    )
+    cached = load_task_cache(t_id)
+    if cached and cached.get("status") in TERMINAL_STATUSES and cached.get("prompt"):
+        return TaskInfo(
+            task_id=t_id,
+            status=status_str,
+            raw_status=raw_status,
+            percent=pct,
+            created_at=created_at,
+            prompt=cached["prompt"],
+            end_msg=cached.get("output_summary"),
+            is_terminal=(status_str in TERMINAL_STATUSES),
+            from_cache=True,
+            task_obj=task_obj,
+        )
+
+    end_msg = getattr(task_obj, "output_summary", None)
+    prompt = await extract_prompt_from_task(task_obj)
+
+    if not prompt:
+        try:
+            full_task = await AgentTask.from_id(t_id)
+            prompt = await extract_prompt_from_task(full_task)
+            end_msg = end_msg or getattr(full_task, "output_summary", None)
+        except Exception:
+            pass
+
+    if status_str in TERMINAL_STATUSES:
+        save_task_cache(t_id, {"task_id": t_id, "status": status_str, "prompt": prompt, "output_summary": end_msg})
 
     return TaskInfo(
         task_id=t_id,
@@ -502,27 +556,23 @@ async def get_task_info(task_obj: Any, task_id: str | None = None) -> TaskInfo |
         prompt=prompt,
         end_msg=end_msg,
         is_terminal=(status_str in TERMINAL_STATUSES),
-        from_cache=from_cache,
+        from_cache=False,
         task_obj=task_obj,
     )
 
 
-async def fetch_tasks_info(
-    raw_tasks: list,
-    max_concurrency: int = 5,
-    on_progress: Callable[[int, int], None] | None = None,
-) -> list[TaskInfo]:
-    sem = asyncio.Semaphore(max_concurrency)
+async def fetch_tasks_info(raw_tasks: list, on_progress: Callable[[int, int], None] | None = None) -> list[TaskInfo]:
+    sem = asyncio.Semaphore(5)
     total = len(raw_tasks)
-    completed = 0
+    done = 0
 
     async def _load(t):
-        nonlocal completed
+        nonlocal done
         async with sem:
             info = await get_task_info(t)
-        completed += 1
+        done += 1
         if on_progress:
-            on_progress(completed, total)
+            on_progress(done, total)
         return info
 
     results = await asyncio.gather(*(_load(t) for t in raw_tasks))
@@ -530,334 +580,116 @@ async def fetch_tasks_info(
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Full-Screen Interactive Task Selector
+# Interactive Task Selector (Rich + readchar)
 # ─────────────────────────────────────────────────────────────────────────────
-
-
-def read_terminal_key(fd: int) -> str:
-    b = os.read(fd, 32)
-    if not b:
-        return ""
-    if b in (b"\x1b[A", b"\x1bOA"):
-        return "UP"
-    if b in (b"\x1b[B", b"\x1bOB"):
-        return "DOWN"
-    if b in (b"\x1b[C", b"\x1bOC"):
-        return "RIGHT"
-    if b in (b"\x1b[D", b"\x1bOD"):
-        return "LEFT"
-    if b == b"\x1b[5~":
-        return "PAGE_UP"
-    if b == b"\x1b[6~":
-        return "PAGE_DOWN"
-    if b in (b"\x1b[H", b"\x1b[1~"):
-        return "HOME"
-    if b in (b"\x1b[F", b"\x1b[4~"):
-        return "END"
-    if b in (b"\r", b"\n"):
-        return "ENTER"
-    if b == b" ":
-        return "SPACE"
-    if b == b"\x1b":
-        return "ESC"
-    if b == b"\x03":
-        return "CTRL_C"
-    if b == b"\x04":
-        return "CTRL_D"
-    try:
-        return b.decode("utf-8", errors="ignore")
-    except Exception:
-        return ""
 
 
 def select_task_interactive(tasks_info: list[TaskInfo], project_id: str) -> TaskInfo | None:
-    if not termios or not tty:
+    if not sys.stdin.isatty():
         return tasks_info[0] if tasks_info else None
-
-    try:
-        tty_in = open("/dev/tty", "rb", buffering=0)
-        tty_out = open("/dev/tty", "w", encoding="utf-8")
-    except Exception:
-        return tasks_info[0] if tasks_info else None
-
-    fd_in = tty_in.fileno()
-    old_settings = termios.tcgetattr(fd_in)
 
     selected_idx = 0
-    scroll_top = 0
 
-    def sigwinch_handler(signum, frame):
-        pass
+    def render_ui() -> Panel:
+        table = Table(box=None, expand=True, show_header=True, header_style="bold dim")
+        table.add_column("", width=3)
+        table.add_column("Status", width=16)
+        table.add_column("Task ID", width=10)
+        table.add_column("Created", width=12)
+        table.add_column("Prompt", overflow="ellipsis")
 
-    if hasattr(signal, "SIGWINCH"):
+        for idx, item in enumerate(tasks_info):
+            is_sel = idx == selected_idx
+            prefix = "[bold cyan]❯[/bold cyan]" if is_sel else " "
+            style = "bold cyan" if is_sel else ""
+            created_short = item.created_at[5:16] if len(item.created_at) >= 16 else item.created_at
+            first_line = extract_first_line_prompt(item.prompt, max_chars=50)
+
+            table.add_row(
+                prefix,
+                status_badge(item.raw_status, item.percent),
+                Text(item.task_id[:8], style=style),
+                Text(created_short, style="dim"),
+                Text(first_line, style=style),
+            )
+
+        cur = tasks_info[selected_idx]
+        details = Table.grid(padding=(0, 2))
+        details.add_column(style="bold")
+        details.add_column()
+        details.add_row("Task ID:", f"[cyan]{cur.task_id}[/cyan]")
+        details.add_row("Status:", status_badge(cur.raw_status, cur.percent))
+        details.add_row("Created:", f"[dim]{cur.created_at}[/dim]")
+
+        preview_group: list[Any] = [
+            table,
+            Text("─" * 40, style="dim"),
+            details,
+            Text("\n📥 My Prompt:", style="bold cyan"),
+            Panel(cur.prompt.strip() or "(No prompt)", border_style="dim", expand=True),
+        ]
+
+        if cur.is_terminal and cur.end_msg:
+            preview_group.extend([
+                Text("📤 Aristotle Response:", style="bold green"),
+                Panel(cur.end_msg.strip(), border_style="dim", expand=True),
+            ])
+
+        preview_group.append(
+            Text(
+                "\n[↑/k] Up  [↓/j] Down  [1-9] Jump  [Enter] Select & Commit  [q/Esc] Cancel",
+                style="dim italic",
+            )
+        )
+
+        return Panel(
+            Group(*preview_group),
+            title=f"[bold magenta]🧠 Aristotle Task Selector[/bold magenta] [dim]• {project_id}[/dim]",
+            border_style="cyan",
+        )
+
+    with Live(render_ui(), console=console, screen=True, auto_refresh=False) as live:
+        while True:
+            live.update(render_ui(), refresh=True)
+            k = readchar.readkey()
+
+            if k in (K.UP, "k", "K"):
+                selected_idx = max(0, selected_idx - 1)
+            elif k in (K.DOWN, "j", "J"):
+                selected_idx = min(len(tasks_info) - 1, selected_idx + 1)
+            elif k in (K.ENTER, K.CR):
+                return tasks_info[selected_idx]
+            elif k in (K.ESC, "q", "Q", K.CTRL_C, K.CTRL_D):
+                return None
+            elif k.isdigit() and 1 <= int(k) <= len(tasks_info):
+                selected_idx = int(k) - 1
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Sync & Pull Logic
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def collect_rsync_excludes_for_git(cwd: Path) -> list[str]:
+    excludes = ["/.git/", "/.git", "/.gitignore", "/.gitattributes", "/.gitmodules"]
+    root_gi = cwd / ".gitignore"
+    if root_gi.is_file():
         try:
-            signal.signal(signal.SIGWINCH, sigwinch_handler)
+            for line in root_gi.read_text(encoding="utf-8", errors="replace").splitlines():
+                clean = line.strip()
+                if clean and not clean.startswith(("#", "!")) and clean not in excludes:
+                    excludes.append(clean)
         except Exception:
             pass
-
-    try:
-        tty.setcbreak(fd_in)
-        tty_out.write("\033[?1049h\033[?25l")
-        tty_out.flush()
-
-        while True:
-            cols, rows = shutil.get_terminal_size(fallback=(100, 30))
-            cols = max(cols, 60)
-            rows = max(rows, 16)
-
-            list_height = max(3, min(len(tasks_info), (rows - 9) // 2))
-
-            if selected_idx < scroll_top:
-                scroll_top = selected_idx
-            elif selected_idx >= scroll_top + list_height:
-                scroll_top = selected_idx - list_height + 1
-
-            screen_lines = []
-
-            # Header
-            header_title = f" 🧠 ARISTOTLE TASK SELECTOR  {DIM}•  Project: {project_id}{RESET}"
-            screen_lines.append(f"┌─{pad_visible(header_title, cols - 3)}┐")
-            screen_lines.append(
-                f"│ {BOLD}Select a task to generate its git commit message:{RESET}"
-                + " " * max(0, cols - 51)
-                + "│"
-            )
-            screen_lines.append("├" + "─" * (cols - 2) + "┤")
-
-            # Task list
-            for i in range(list_height):
-                item_idx = scroll_top + i
-                if item_idx < len(tasks_info):
-                    item = tasks_info[item_idx]
-                    is_sel = item_idx == selected_idx
-                    tag = f"[{item_idx + 1}]"
-                    badge = format_badge_fixed_width(
-                        item.raw_status, item.percent
-                    )
-                    created_raw = item.created_at
-                    created = (
-                        created_raw[5:16]
-                        if len(created_raw) >= 16
-                        else created_raw
-                    )
-                    p_summary = extract_first_line_prompt(
-                        item.prompt, max_chars=max(15, cols - 52)
-                    )
-
-                    if is_sel:
-                        row_txt = f"{BOLD}{CYAN}❯ {tag:<4}{RESET} {badge} {BOLD}{item.task_id[:8]}{RESET} {DIM}{created}{RESET}  {BOLD}{p_summary}{RESET}"
-                    else:
-                        row_txt = f"  {DIM}{tag:<4}{RESET} {badge} {item.task_id[:8]} {DIM}{created}{RESET}  {p_summary}"
-
-                    screen_lines.append(f"│ {pad_visible(row_txt, cols - 4)} │")
-                else:
-                    screen_lines.append(f"│{' ' * (cols - 2)}│")
-
-            # Middle Divider
-            cur_item = tasks_info[selected_idx]
-            mid_title = f" Details Preview: {cur_item.task_id[:8]} ({cur_item.status}) "
-            screen_lines.append(
-                f"├─{BOLD}{CYAN}{mid_title}{RESET}"
-                + "─" * max(0, cols - visible_len(mid_title) - 3)
-                + "┤"
-            )
-
-            # Preview Pane
-            preview_max_lines = rows - len(screen_lines) - 2
-            preview_body = []
-
-            preview_body.append(
-                f"  {BOLD}Task ID:{RESET}  {CYAN}{cur_item.task_id}{RESET}"
-            )
-            preview_body.append(
-                f"  {BOLD}Status:{RESET}   {status_badge(cur_item.raw_status, cur_item.percent)}"
-            )
-            preview_body.append(
-                f"  {BOLD}Created:{RESET}  {DIM}{cur_item.created_at}{RESET}"
-            )
-            preview_body.append("")
-            preview_body.append(f"  {BOLD}{CYAN}📥 My Prompt:{RESET}")
-
-            p_text = (
-                cur_item.prompt.strip()
-                if cur_item.prompt
-                else "(No prompt recorded)"
-            )
-            for pl in p_text.splitlines():
-                if not pl.strip():
-                    preview_body.append("")
-                else:
-                    wrapped = textwrap.wrap(pl, width=max(20, cols - 8)) or [""]
-                    for w in wrapped:
-                        preview_body.append(f"    {w}")
-
-            if cur_item.is_terminal:
-                preview_body.append("")
-                preview_body.append(
-                    f"  {BOLD}{GREEN}📤 Aristotle Response Summary:{RESET}"
-                )
-                end_text = (
-                    cur_item.end_msg.strip()
-                    if cur_item.end_msg
-                    else "(No end message recorded)"
-                )
-                for el in end_text.splitlines():
-                    if not el.strip():
-                        preview_body.append("")
-                    else:
-                        wrapped = textwrap.wrap(
-                            el, width=max(20, cols - 8)
-                        ) or [""]
-                        for w in wrapped:
-                            preview_body.append(f"    {w}")
-            else:
-                preview_body.append("")
-                preview_body.append(
-                    f"  {YELLOW}⏳ Task is in progress — Git commit message will contain prompt only.{RESET}"
-                )
-
-            for pi in range(preview_max_lines):
-                if pi < len(preview_body):
-                    if (
-                        pi == preview_max_lines - 1
-                        and len(preview_body) > preview_max_lines
-                    ):
-                        line_str = f"  {DIM}... ({len(preview_body) - preview_max_lines + 1} more lines) ...{RESET}"
-                    else:
-                        line_str = preview_body[pi]
-                    screen_lines.append(f"│{pad_visible(line_str, cols - 2)}│")
-                else:
-                    screen_lines.append(f"│{' ' * (cols - 2)}│")
-
-            # Help Bar
-            help_str = " [↑/k] Up  [↓/j] Down  [1-9] Jump  [Enter] Select & Commit  [q/Esc] Cancel "
-            screen_lines.append(
-                f"└─{DIM}{help_str}{RESET}"
-                + "─" * max(0, cols - visible_len(help_str) - 3)
-                + "┘"
-            )
-
-            # Draw
-            draw_buf = ["\033[H"]
-            for sl in screen_lines[:rows]:
-                draw_buf.append(pad_visible(sl, cols))
-            draw_buf.append("\033[J")
-            tty_out.write("\n".join(draw_buf))
-            tty_out.flush()
-
-            key = read_terminal_key(fd_in)
-            if key in ("UP", "k", "K"):
-                selected_idx = max(0, selected_idx - 1)
-            elif key in ("DOWN", "j", "J"):
-                selected_idx = min(len(tasks_info) - 1, selected_idx + 1)
-            elif key == "PAGE_UP":
-                selected_idx = max(0, selected_idx - list_height)
-            elif key == "PAGE_DOWN":
-                selected_idx = min(
-                    len(tasks_info) - 1, selected_idx + list_height
-                )
-            elif key in ("HOME", "g"):
-                selected_idx = 0
-            elif key in ("END", "G"):
-                selected_idx = len(tasks_info) - 1
-            elif key in ("ENTER", "SPACE"):
-                return tasks_info[selected_idx]
-            elif key in ("ESC", "q", "Q", "CTRL_C", "CTRL_D"):
-                return None
-            elif key.isdigit() and 1 <= int(key) <= len(tasks_info):
-                selected_idx = int(key) - 1
-
-    finally:
-        tty_out.write("\033[?1049l\033[?25h")
-        tty_out.flush()
-        termios.tcsetattr(fd_in, termios.TCSADRAIN, old_settings)
-        tty_in.close()
-        tty_out.close()
+    return excludes
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Command 1: last_3_tasks_my_prompts_and_its_end_message
-# ─────────────────────────────────────────────────────────────────────────────
+def execute_pull(project_id: str, paths: list[str] | None = None, cwd: Path | None = None) -> bool:
+    paths = paths or []
+    cwd = (cwd or Path.cwd()).resolve()
+    api_key = setup_auth(project_id)
 
-
-async def cmd_last_3_tasks(project_id: str):
-    project = await Project.from_id(project_id)
-    raw_tasks = await fetch_project_tasks(project, limit=3)
-    tasks_info = await fetch_tasks_info(raw_tasks)
-
-    print(
-        f"\n{BOLD}{MAGENTA}🚀 Aristotle Project:{RESET} {CYAN}{project_id}{RESET}"
-    )
-    print(f"{DIM}Cache: {CACHE_DIR}{RESET}\n")
-
-    labels = ["Latest", "Previous 1", "Previous 2"]
-    for i, t in enumerate(tasks_info):
-        tag = labels[i] if i < len(labels) else f"Previous {i}"
-        cache_badge = (
-            f"{DIM}[💾 cached]{RESET}" if t.from_cache else f"{CYAN}[🌐 live]{RESET}"
-        )
-
-        print(f"{BOLD}{MAGENTA}┌─ [{tag}] {t.task_id} {cache_badge}{RESET}")
-        print(f"{MAGENTA}│{RESET}  Status:      {status_badge(t.raw_status, t.percent)}")
-        print(f"{MAGENTA}│{RESET}  Created:     {DIM}{t.created_at}{RESET}")
-        print(f"{MAGENTA}│{RESET}")
-        print(f"{MAGENTA}│{RESET}  {BOLD}{CYAN}📥 My Prompt:{RESET}")
-        for line in t.prompt.strip().splitlines():
-            print(f"{MAGENTA}│{RESET}     {line}")
-
-        if t.end_msg:
-            print(f"{MAGENTA}│{RESET}")
-            print(f"{MAGENTA}│{RESET}  {BOLD}{GREEN}📤 Aristotle Response:{RESET}")
-            for line in t.end_msg.strip().splitlines():
-                print(f"{MAGENTA}│{RESET}     {line}")
-
-        print(
-            f"{BOLD}{MAGENTA}└──────────────────────────────────────────────────────────{RESET}\n"
-        )
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Command 2: pull_force & File Cleanup Helpers
-# ─────────────────────────────────────────────────────────────────────────────
-
-
-def is_empty_file(path: Path) -> bool:
-    try:
-        if not path.is_file() or path.is_symlink():
-            return False
-        stat = path.stat()
-        if stat.st_size == 0:
-            return True
-        if stat.st_size <= 4096:
-            with open(path, "rb") as f:
-                return f.read().strip() == b""
-    except OSError:
-        pass
-    return False
-
-
-def remove_empty_files_in_folder(folder: Path, cwd: Path) -> list[Path]:
-    if not folder.is_dir():
-        return []
-    removed = []
-    for item in sorted(folder.rglob("*")):
-        if ".git" in item.parts or item.name in {".gitkeep", ".keep", ".gitignore"}:
-            continue
-        if is_empty_file(item):
-            try:
-                item.unlink()
-                rel = item.relative_to(cwd) if item.is_relative_to(cwd) else item
-                print(f"{YELLOW}🗑️  Removed empty file: {rel}{RESET}")
-                removed.append(item)
-            except OSError as e:
-                print(f"{RED}⚠️  Failed to remove empty file {item}: {e}{RESET}")
-    return removed
-
-
-def execute_pull(project_id: str, paths: list[str]) -> bool:
-    print(
-        f"{BOLD}{BLUE}==> Downloading Aristotle project:{RESET} {CYAN}{project_id}{RESET} ..."
-    )
+    console.print(f"[bold blue]==> [{cwd.name}] Downloading Aristotle project:[/bold blue] [cyan]{project_id}[/cyan] ...")
 
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
@@ -865,409 +697,167 @@ def execute_pull(project_id: str, paths: list[str]) -> bool:
         extracted_path = tmp_path / "extracted"
         extracted_path.mkdir(parents=True, exist_ok=True)
 
-        cmd = [
-            "aristotle",
-            "download",
-            project_id,
-            "--destination",
-            str(archive_path),
-        ]
+        cmd = ["aristotle", "download", project_id, "--destination", str(archive_path)]
         if not shutil.which("aristotle"):
-            cmd = [
-                "uv",
-                "run",
-                "--with",
-                "aristotlelib",
-                "aristotle",
-                "download",
-                project_id,
-                "--destination",
-                str(archive_path),
-            ]
+            cmd = ["uv", "run", "--with", "aristotlelib", "aristotle", "download", project_id, "--destination", str(archive_path)]
 
-        res = subprocess.run(cmd, capture_output=True, text=True, env=os.environ)
+        env = dict(os.environ, ARISTOTLE_API_KEY=api_key)
+        res = subprocess.run(cmd, capture_output=True, text=True, env=env)
         if res.returncode != 0:
-            print(
-                f"{RED}Download failed:{RESET}\n{res.stderr or res.stdout}",
-                file=sys.stderr,
-            )
+            err_console.print(f"[red]Download failed:\n{res.stderr or res.stdout}[/red]")
             return False
 
-        print(
-            f"{BOLD}{BLUE}==> Extracting files to sync ({', '.join(paths)}) ...{RESET}"
-        )
-        extract_res = subprocess.run(
-            [
-                "tar",
-                "-xzf",
-                str(archive_path),
-                "-C",
-                str(extracted_path),
-            ],
-            capture_output=True,
-            text=True,
-        )
-        if extract_res.returncode != 0:
-            print(
-                f"{RED}Extraction failed:{RESET}\n{extract_res.stderr}",
-                file=sys.stderr,
-            )
-            return False
+        subprocess.run(["tar", "-xzf", str(archive_path), "-C", str(extracted_path)], check=True)
 
         root_path = extracted_path
-        first_clean = paths[0].strip("/")
-        if not (extracted_path / first_clean).exists():
-            subdirs = [
-                d
-                for d in extracted_path.iterdir()
-                if d.is_dir() and not d.name.startswith(".")
-            ]
-            for s in subdirs:
-                if (s / first_clean).exists():
-                    root_path = s
-                    break
+        subdirs = [d for d in extracted_path.iterdir() if d.is_dir() and not d.name.startswith(".")]
+        if paths:
+            first_clean = paths[0].strip("/")
+            if not (extracted_path / first_clean).exists():
+                for s in subdirs:
+                    if (s / first_clean).exists():
+                        root_path = s
+                        break
+        elif len(subdirs) == 1:
+            root_path = subdirs[0]
+
+        excludes = collect_rsync_excludes_for_git(cwd)
+        with tempfile.NamedTemporaryFile("w", encoding="utf-8", delete=False) as ef:
+            ef.write("\n".join(excludes))
+            exclude_file = Path(ef.name)
+
+        try:
+            if not paths:
+                rsync_cmd = ["rsync", "-av", "--delete", f"--exclude-from={exclude_file}", f"{root_path}/", f"{cwd}/"]
+                subprocess.run(rsync_cmd, check=True)
             else:
-                if len(subdirs) == 1:
-                    root_path = subdirs[0]
+                for p_str in paths:
+                    clean_p = p_str.strip("/")
+                    src, dst = root_path / clean_p, cwd / clean_p
+                    if not src.exists():
+                        continue
+                    if src.is_dir():
+                        dst.mkdir(parents=True, exist_ok=True)
+                        subprocess.run(["rsync", "-av", "--delete", f"--exclude-from={exclude_file}", f"{src}/", f"{dst}/"], check=True)
+                    else:
+                        dst.parent.mkdir(parents=True, exist_ok=True)
+                        subprocess.run(["rsync", "-av", str(src), str(dst)], check=True)
+        finally:
+            exclude_file.unlink(missing_ok=True)
 
-        cwd = Path.cwd()
-        synced_dirs = set()
-        for p_str in paths:
-            clean_p = p_str.strip("/")
-            src = root_path / clean_p
-            dst = cwd / clean_p
-
-            if not src.exists():
-                print(
-                    f"{YELLOW}⚠️  Warning: {clean_p} not found in extracted archive.{RESET}"
-                )
-                continue
-
-            if src.is_dir():
-                dst.mkdir(parents=True, exist_ok=True)
-                rsync_cmd = ["rsync", "-av", "--delete", f"{src}/", f"{dst}/"]
-                synced_dirs.add(dst.resolve())
-            else:
-                dst.parent.mkdir(parents=True, exist_ok=True)
-                rsync_cmd = ["rsync", "-av", str(src), str(dst)]
-
-            subprocess.run(rsync_cmd, check=True)
-
-        for folder in sorted(synced_dirs):
-            remove_empty_files_in_folder(folder, cwd)
-
-    print(f"{GREEN}==> Sync complete!{RESET}\n")
+    console.print(f"[green]==> [{cwd.name}] Sync complete![/green]\n")
     return True
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Command 3: watch_and_pull
+# Commands
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-async def cmd_watch_and_pull(
-    project_id: str, paths: list[str], interval: int, no_push: bool
-):
-    print(
-        f"\n{BOLD}{MAGENTA}👀 Watching Aristotle Project:{RESET} {CYAN}{project_id}{RESET}"
-    )
-    print(f"{BOLD}Configured sync paths:{RESET} {YELLOW}{', '.join(paths)}{RESET}")
-    print(f"{BOLD}Poll interval:{RESET} {interval}s\n")
+async def cmd_last_3_tasks(project_id: str):
+    setup_auth(project_id)
+    project = await Project.from_id(project_id)
+    raw_tasks = await fetch_project_tasks(project, limit=3)
+    tasks_info = await fetch_tasks_info(raw_tasks)
 
-    synced_task_ids = get_synced_tasks(project_id)
-
-    while True:
-        try:
-            project = await Project.from_id(project_id)
-            tasks = await fetch_project_tasks(project, limit=10)
-
-            if not tasks:
-                now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                print(
-                    f"[{DIM}{now_str}{RESET}] ⚠️  No tasks found for project. Waiting {interval}s..."
-                )
-                await asyncio.sleep(interval)
-                continue
-
-            now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-            # 1. Find the newest terminal task
-            latest_terminal_task = None
-            for t in tasks:
-                st = extract_status_str(getattr(t, "status", ""))
-                if st in TERMINAL_STATUSES:
-                    latest_terminal_task = t
-                    break
-
-            synced_something = False
-            if latest_terminal_task:
-                term_id = extract_task_id(latest_terminal_task)
-                is_synced = (term_id in synced_task_ids) or is_task_in_git(term_id)
-
-                if not is_synced:
-                    raw_status = getattr(latest_terminal_task, "status", "")
-                    pct = getattr(latest_terminal_task, "percent_complete", None)
-                    badge = status_badge(raw_status, pct)
-                    print(
-                        f"\n[{BOLD}{now_str}{RESET}] 🎉 Task {BOLD}{CYAN}{term_id}{RESET} finished with: {badge}"
-                    )
-
-                    task_info = await get_task_info(latest_terminal_task, term_id)
-                    if task_info:
-                        success = execute_pull(project_id, paths)
-                        if not success:
-                            print(
-                                f"{RED}Pull failed. Will retry in {interval}s...{RESET}",
-                                file=sys.stderr,
-                            )
-                            await asyncio.sleep(interval)
-                            continue
-
-                        commit_msg = build_git_commit_message(task_info)
-                        git_commit_changes(commit_msg, push=(not no_push))
-
-                        # Mark this and older tasks as synced
-                        for t in tasks:
-                            tid = extract_task_id(t)
-                            if tid:
-                                mark_task_synced(project_id, tid)
-                                synced_task_ids.add(tid)
-
-                        print(
-                            f"{GREEN}✔ Task {term_id} successfully processed.{RESET} Resuming watch in {interval}s...\n"
-                        )
-                        synced_something = True
-
-            # 2. If nothing was synced, report status
-            if not synced_something:
-                latest_task = tasks[0]
-                latest_task_id = extract_task_id(latest_task)
-                raw_status = getattr(latest_task, "status", "")
-                status_str = extract_status_str(raw_status)
-                pct = getattr(latest_task, "percent_complete", None)
-                badge = status_badge(raw_status, pct)
-
-                if status_str not in TERMINAL_STATUSES:
-                    print(
-                        f"[{DIM}{now_str}{RESET}] ⏳ Task {CYAN}{latest_task_id[:8] if latest_task_id else 'unknown'}{RESET}... {badge}. Waiting {interval}s..."
-                    )
-                else:
-                    print(
-                        f"[{DIM}{now_str}{RESET}] 💤 Latest task {CYAN}{latest_task_id[:8] if latest_task_id else 'unknown'}{RESET}... is {badge} (already synced). Waiting {interval}s..."
-                    )
-
-            await asyncio.sleep(interval)
-
-        except KeyboardInterrupt:
-            print(f"\n{YELLOW}Watcher stopped by user.{RESET}")
-            break
-        except Exception as e:
-            print(f"{RED}Unexpected error in watch loop: {e}{RESET}")
-            await asyncio.sleep(interval)
+    console.print(f"\n[bold magenta]🚀 Aristotle Project:[/bold magenta] [cyan]{project_id}[/cyan]\n")
+    for t in tasks_info:
+        badge = status_badge(t.raw_status, t.percent)
+        console.print(Panel(
+            Group(
+                Text(f"Status:  {t.status}", style="bold"),
+                Text(f"Created: {t.created_at}", style="dim"),
+                Text("\n📥 Prompt:\n" + (t.prompt.strip() or "(None)"), style="cyan"),
+                Text(f"\n📤 Aristotle Response:\n{t.end_msg.strip() if t.end_msg else '(None)'}", style="green"),
+            ),
+            title=f"Task {t.task_id}",
+            subtitle=badge.plain,
+            border_style="magenta",
+        ))
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Command 4: task_to_git_message
-# ─────────────────────────────────────────────────────────────────────────────
+async def cmd_watch_branches(targets: list[BranchTarget], interval: int = 60):
+    console.print("\n[bold magenta]👀 Aristotle Multi-Repository Watcher Started[/bold magenta]")
+    table = Table(show_header=True, header_style="bold dim")
+    table.add_column("Repository : Branch")
+    table.add_column("Aristotle Project ID")
+    table.add_column("Sync Paths")
+    table.add_column("Commit/Push")
 
+    for t in targets:
+        p_desc = ", ".join(t.paths) if t.paths else "(all non-gitignored)"
+        flags = [f"commit={'on' if t.commit else 'off'}", f"push={'on' if t.push else 'off'}"]
+        table.add_row(f"[cyan]{t.repo_name}:{t.branch}[/cyan]", t.project_id, p_desc, ", ".join(flags))
 
-async def cmd_task_to_git_message(
-    project_id: str,
-    limit: int = 15,
-    task_id: str | None = None,
-    latest: bool = False,
-    commit: bool = False,
-    no_push: bool = False,
-):
-    if task_id:
-        task_obj = await AgentTask.from_id(task_id)
-        chosen = await get_task_info(task_obj, task_id)
-        if not chosen:
-            print(
-                f"{RED}Error: Could not retrieve task {task_id}{RESET}",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+    console.print(table)
+    console.print(f"[bold]Poll interval:[/bold] {interval}s\n")
 
-        commit_msg = build_git_commit_message(chosen)
-        if commit:
-            git_commit_changes(commit_msg, push=(not no_push))
-        else:
-            print(commit_msg)
-        return
+    max_len = max(len(f"{t.repo_name}:{t.branch}") for t in targets) if targets else 15
 
     try:
-        tty_status = open("/dev/tty", "w")
-    except Exception:
-        tty_status = sys.stderr
-
-    tty_status.write(
-        f"{CYAN}⏳ Fetching recent Aristotle tasks for project {project_id[:8]}...{RESET}\n"
-    )
-    tty_status.flush()
-
-    project = await Project.from_id(project_id)
-    raw_tasks = await fetch_project_tasks(project, limit=limit)
-
-    if not raw_tasks:
-        print(
-            f"{RED}No tasks found for project {project_id}.{RESET}",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
-    tasks_info = await fetch_tasks_info(
-        raw_tasks,
-        on_progress=lambda done, total: (
-            tty_status.write(
-                f"\r{CYAN}⏳ Loading task details ({done}/{total})...{RESET}"
-            ),
-            tty_status.flush(),
-        ),
-    )
-
-    if not tasks_info:
-        print(f"{RED}No valid tasks found.{RESET}", file=sys.stderr)
-        sys.exit(1)
-
-    if latest:
-        chosen = tasks_info[0]
-    else:
-        chosen = select_task_interactive(tasks_info, project_id)
-
-    if not chosen:
-        print(
-            f"{YELLOW}Commit message generation cancelled.{RESET}",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
-    commit_msg = build_git_commit_message(chosen)
-
-    if commit:
-        git_commit_changes(commit_msg, push=(not no_push))
-    else:
-        print(commit_msg)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Command 5: watch_branches (Multi-branch / Multi-project watcher)
-# ─────────────────────────────────────────────────────────────────────────────
-
-
-async def cmd_watch_branches(
-    targets: list[BranchTarget],
-    paths: list[str],
-    interval: int = 60,
-    no_push: bool = False,
-):
-    print(f"\n{BOLD}{MAGENTA}👀 Multi-Branch Aristotle Watcher Started{RESET}")
-    print(f"{BOLD}Configured targets:{RESET}")
-    for t in targets:
-        print(f"  • {BOLD}{CYAN}{t.branch:<10}{RESET} -> {YELLOW}{t.project_id}{RESET}")
-    print(f"{BOLD}Sync paths:{RESET} {YELLOW}{', '.join(paths)}{RESET}")
-    print(f"{BOLD}Poll interval:{RESET} {interval}s\n")
-
-    while True:
-        try:
+        while True:
             now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             for t in targets:
                 setup_auth(t.project_id)
                 synced_task_ids = get_synced_tasks(t.project_id)
+                tag = f"{t.repo_name}:{t.branch}"
 
                 try:
                     project = await Project.from_id(t.project_id)
                     tasks = await fetch_project_tasks(project, limit=10)
                 except Exception as e:
-                    print(
-                        f"[{DIM}{now_str}{RESET}] [{CYAN}{t.branch}{RESET}] ⚠️  Error fetching tasks: {e}"
-                    )
+                    console.print(f"[{now_str}] [{tag}] [red]⚠️ Error fetching tasks: {e}[/red]")
                     continue
 
                 if not tasks:
                     continue
 
-                # 1. Find the newest terminal task
-                latest_terminal_task = None
-                for task_item in tasks:
-                    st = extract_status_str(getattr(task_item, "status", ""))
-                    if st in TERMINAL_STATUSES:
-                        latest_terminal_task = task_item
-                        break
+                latest_terminal = next(
+                    (task for task in tasks if extract_status_str(getattr(task, "status", "")) in TERMINAL_STATUSES),
+                    None,
+                )
 
                 synced_something = False
-                if latest_terminal_task:
-                    term_id = extract_task_id(latest_terminal_task)
-                    is_synced = (term_id in synced_task_ids) or is_task_in_git(term_id, t.branch)
+                if latest_terminal:
+                    term_id = extract_task_id(latest_terminal)
+                    is_synced = (term_id in synced_task_ids) or (
+                        t.commit and is_task_in_git(term_id, t.branch, cwd=t.repo_dir)
+                    )
 
                     if not is_synced:
-                        raw_status = getattr(latest_terminal_task, "status", "")
-                        pct = getattr(latest_terminal_task, "percent_complete", None)
-                        badge = status_badge(raw_status, pct)
-                        print(
-                            f"\n[{BOLD}{now_str}{RESET}] 🎉 [{BOLD}{CYAN}{t.branch}{RESET}] "
-                            f"New finished task {BOLD}{CYAN}{term_id}{RESET}: {badge}"
-                        )
-
-                        task_info = await get_task_info(latest_terminal_task, term_id)
+                        task_info = await get_task_info(latest_terminal, term_id)
                         if not task_info:
                             continue
 
-                        # Switch git branch
-                        print(f"{BOLD}Checking out {CYAN}{t.branch}{RESET}...{RESET}")
-                        if not git_checkout(t.branch):
-                            print(
-                                f"{RED}Skipping sync for {t.branch} due to uncommitted working tree changes.{RESET}"
-                            )
+                        console.print(f"\n[{now_str}] [bold cyan][{tag}][/bold cyan] Finished task [cyan]{term_id}[/cyan]")
+                        if not git_checkout(t.branch, cwd=t.repo_dir):
                             continue
 
-                        # Pull & sync files
-                        success = execute_pull(t.project_id, paths)
-                        if not success:
-                            print(
-                                f"{RED}Pull failed for {t.branch}. Will retry next cycle.{RESET}",
-                                file=sys.stderr,
-                            )
+                        if not execute_pull(t.project_id, t.paths, cwd=t.repo_dir):
                             continue
 
-                        # Commit with prompt + response message
-                        commit_msg = build_git_commit_message(task_info)
-                        git_commit_changes(commit_msg, push=(not no_push))
+                        if t.commit:
+                            commit_msg = build_git_commit_message(task_info)
+                            git_commit_changes(commit_msg, push=t.push, cwd=t.repo_dir)
+                        else:
+                            console.print(f"[dim]Commit skipped for [{tag}] (commit=off).[/dim]")
 
-                        # Mark this and older tasks as synced
-                        for task_item in tasks:
-                            tid = extract_task_id(task_item)
-                            if tid:
-                                mark_task_synced(t.project_id, tid)
-                                synced_task_ids.add(tid)
-
-                        print(
-                            f"{GREEN}✔ Successfully updated branch '{t.branch}' with task {term_id[:8]}.{RESET}\n"
-                        )
+                        mark_task_synced(t.project_id, term_id)
                         synced_something = True
 
-                # 2. If nothing was synced, report status if latest task is still active
                 if not synced_something:
-                    latest_task = tasks[0]
-                    latest_task_id = extract_task_id(latest_task)
-                    raw_status = getattr(latest_task, "status", "")
-                    status_str = extract_status_str(raw_status)
-                    pct = getattr(latest_task, "percent_complete", None)
+                    latest = tasks[0]
+                    t_id = extract_task_id(latest) or "unknown"
+                    st = extract_status_str(getattr(latest, "status", ""))
+                    if st not in TERMINAL_STATUSES:
+                        badge = status_badge(getattr(latest, "status", ""), getattr(latest, "percent_complete", None))
+                        console.print(f"[dim][{now_str}][/dim] [{tag:<{max_len}}] ⏳ Task [cyan]{t_id[:8]}[/cyan]... {badge}")
 
-                    if status_str not in TERMINAL_STATUSES:
-                        badge = status_badge(raw_status, pct)
-                        print(
-                            f"[{DIM}{now_str}{RESET}] [{CYAN}{t.branch:<6}{RESET}] ⏳ Task {CYAN}{latest_task_id[:8] if latest_task_id else 'unknown'}{RESET}... {badge}"
-                        )
+            await asyncio.sleep(interval)
 
-        except KeyboardInterrupt:
-            print(f"\n{YELLOW}Watcher stopped by user.{RESET}")
-            break
-        except Exception as e:
-            print(f"{RED}Unexpected error in watch loop: {e}{RESET}")
-
-        await asyncio.sleep(interval)
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        console.print("\n[yellow]Watcher stopped by user.[/yellow]")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1276,218 +866,129 @@ async def cmd_watch_branches(
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="myaristotle - Aristotle task viewer, force puller, and watcher"
-    )
+    parser = argparse.ArgumentParser(description="myaristotle - Aristotle task viewer, puller, and watcher")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # 1. last_3_tasks
-    p_last = subparsers.add_parser(
-        "last_3_tasks_my_prompts_and_its_end_message",
-        aliases=["last3", "status"],
-        help="Show status of last 3 tasks, user prompts, and Aristotle responses",
-    )
-    p_last.add_argument(
-        "project",
-        nargs="?",
-        default="6ad53d96-a66b-4f9b-9787-563ecc92c6fa",
-        help="Project ID or URL (default: 6ad53d96-a66b-4f9b-9787-563ecc92c6fa)",
-    )
+    # 1. status / last3
+    p_last = subparsers.add_parser("last_3_tasks_my_prompts_and_its_end_message", aliases=["last3", "status"])
+    p_last.add_argument("project", nargs="?", default=None)
 
     # 2. pull_force
-    p_pull = subparsers.add_parser(
-        "pull_force", help="Force pull and sync configured directories/files"
-    )
-    p_pull.add_argument("project", help="Project ID or URL")
-    p_pull.add_argument(
-        "paths",
-        nargs="+",
-        help="Paths to sync (e.g. LeanScript/ TyTests/ NonEmpty/ lakefile.toml)",
-    )
+    p_pull = subparsers.add_parser("pull_force")
+    p_pull.add_argument("project", nargs="?", default=None)
+    p_pull.add_argument("paths", nargs="*", default=[])
+    p_pull.add_argument("--paths", nargs="+", dest="opt_paths", default=None)
 
     # 3. watch_and_pull
-    p_watch = subparsers.add_parser(
-        "watch_and_pull",
-        help="Watch task, pull when finished, commit prompt & response, and push",
-    )
-    p_watch.add_argument("project", help="Project ID or URL")
-    p_watch.add_argument(
-        "paths",
-        nargs="*",
-        help="Paths to sync (positional or via --paths)",
-    )
-    p_watch.add_argument(
-        "--paths",
-        nargs="+",
-        dest="opt_paths",
-        help="Paths to sync (e.g. --paths LeanScript/ TyTests/ lakefile.toml)",
-    )
-    p_watch.add_argument(
-        "--interval",
-        "-i",
-        type=int,
-        default=60,
-        help="Poll interval in seconds (default: 60)",
-    )
-    p_watch.add_argument(
-        "--no-push",
-        action="store_true",
-        help="Do not git push after commit",
-    )
+    p_watch = subparsers.add_parser("watch_and_pull")
+    p_watch.add_argument("project", nargs="?", default=None)
+    p_watch.add_argument("paths", nargs="*", default=[])
+    p_watch.add_argument("--paths", nargs="+", dest="opt_paths", default=None)
+    p_watch.add_argument("--interval", "-i", type=int, default=None)
+    p_watch.add_argument("--no-push", action="store_true", default=None)
+    p_watch.add_argument("--no-commit", action="store_true", default=None)
 
-    # 4. task_to_git_message
-    p_msg = subparsers.add_parser(
-        "task_to_git_message",
-        aliases=["completed_task_to_git_message", "commit_msg", "msg"],
-        help="Interactive full-screen task selector to generate a git commit message",
-    )
-    p_msg.add_argument(
-        "project",
-        nargs="?",
-        default="6ad53d96-a66b-4f9b-9787-563ecc92c6fa",
-        help="Project ID or URL (default: 6ad53d96-a66b-4f9b-9787-563ecc92c6fa)",
-    )
-    p_msg.add_argument(
-        "--limit",
-        "-l",
-        type=int,
-        default=15,
-        help="Number of recent tasks to fetch for selection (default: 15)",
-    )
-    p_msg.add_argument(
-        "--task-id",
-        "-t",
-        default=None,
-        help="Directly output commit message for a specific task ID",
-    )
-    p_msg.add_argument(
-        "--latest",
-        action="store_true",
-        help="Directly use latest task without interactive selector",
-    )
-    p_msg.add_argument(
-        "--commit",
-        "-c",
-        action="store_true",
-        help="Stage changes and commit directly instead of printing to stdout",
-    )
-    p_msg.add_argument(
-        "--no-push",
-        action="store_true",
-        help="Do not git push after commit (used with --commit)",
-    )
+    # 4. commit_msg
+    p_msg = subparsers.add_parser("task_to_git_message", aliases=["commit_msg", "msg"])
+    p_msg.add_argument("project", nargs="?", default=None)
+    p_msg.add_argument("--limit", "-l", type=int, default=15)
+    p_msg.add_argument("--task-id", "-t", default=None)
+    p_msg.add_argument("--latest", action="store_true")
+    p_msg.add_argument("--commit", "-c", action="store_true")
+    p_msg.add_argument("--no-push", action="store_true")
 
     # 5. watch_branches
-    p_wb = subparsers.add_parser(
-        "watch_branches",
-        aliases=["wb"],
-        help="Watch multiple branch:project pairs, checkout branch, pull when completed, and commit",
-    )
-    p_wb.add_argument(
-        "--branch",
-        "-b",
-        action="append",
-        required=True,
-        dest="branch_specs",
-        metavar="BRANCH:TARGET",
-        help="Branch to project mapping, e.g. -b main:6ad53... -b wip:https://...",
-    )
-    p_wb.add_argument(
-        "paths",
-        nargs="*",
-        help="Paths to sync (positional or via --paths)",
-    )
-    p_wb.add_argument(
-        "--paths",
-        nargs="+",
-        dest="opt_paths",
-        help="Paths to sync (e.g. --paths LeanScript/ lakefile.toml)",
-    )
-    p_wb.add_argument(
-        "--interval",
-        "-i",
-        type=int,
-        default=60,
-        help="Poll interval in seconds (default: 60)",
-    )
-    p_wb.add_argument(
-        "--no-push",
-        action="store_true",
-        help="Do not git push after commit",
-    )
+    p_wb = subparsers.add_parser("watch_branches", aliases=["wb"])
+    p_wb.add_argument("--branch", "-b", action="append", dest="branch_specs")
+    p_wb.add_argument("--current", action="store_true", help="Only watch current repo")
+    p_wb.add_argument("paths", nargs="*", default=[])
+    p_wb.add_argument("--paths", nargs="+", dest="opt_paths", default=None)
+    p_wb.add_argument("--interval", "-i", type=int, default=None)
+    p_wb.add_argument("--no-push", action="store_true", default=None)
+    p_wb.add_argument("--no-commit", action="store_true", default=None)
 
     args = parser.parse_args()
+    cfg = load_config()
+    repo_root, _ = get_current_git_repo_and_branch()
+    repo_cfg = cfg.repos.get(repo_root) if repo_root else None
 
-    raw_project = getattr(args, "project", None)
-    project_id = parse_project_id(raw_project) if raw_project else None
-    if args.command != "watch_branches":
-        setup_auth(project_id)
-
-    if args.command in (
-        "last_3_tasks_my_prompts_and_its_end_message",
-        "last3",
-        "status",
-    ):
-        asyncio.run(cmd_last_3_tasks(project_id))
+    if args.command in ("last_3_tasks_my_prompts_and_its_end_message", "last3", "status"):
+        pid = resolve_project_id(args.project)
+        asyncio.run(cmd_last_3_tasks(pid))
 
     elif args.command == "pull_force":
-        execute_pull(project_id, args.paths)
+        pid = resolve_project_id(args.project)
+        sync_paths = args.opt_paths if args.opt_paths is not None else args.paths
+        if not sync_paths and repo_cfg:
+            sync_paths = repo_cfg.paths
+        execute_pull(pid, sync_paths, cwd=repo_root)
 
-    elif args.command == "watch_and_pull":
-        sync_paths = args.opt_paths or args.paths
-        if not sync_paths:
-            parser.error("At least one path to sync is required.")
-        asyncio.run(
-            cmd_watch_and_pull(
-                project_id, sync_paths, args.interval, args.no_push
-            )
-        )
+    elif args.command in ("task_to_git_message", "commit_msg", "msg"):
+        pid = resolve_project_id(args.project)
+        setup_auth(pid)
+        if args.task_id:
+            info = asyncio.run(get_task_info(None, args.task_id))
+            chosen = info
+        else:
+            proj = asyncio.run(Project.from_id(pid))
+            raw = asyncio.run(fetch_project_tasks(proj, limit=args.limit))
+            infos = asyncio.run(fetch_tasks_info(raw))
+            chosen = infos[0] if args.latest else select_task_interactive(infos, pid)
 
-    elif args.command in (
-        "task_to_git_message",
-        "completed_task_to_git_message",
-        "commit_msg",
-        "msg",
-    ):
-        asyncio.run(
-            cmd_task_to_git_message(
-                project_id,
-                limit=args.limit,
-                task_id=args.task_id,
-                latest=args.latest,
-                commit=args.commit,
-                no_push=args.no_push,
-            )
-        )
+        if not chosen:
+            console.print("[yellow]Cancelled.[/yellow]")
+            return
+
+        msg = build_git_commit_message(chosen)
+        if args.commit:
+            git_commit_changes(msg, push=(not args.no_push), cwd=repo_root)
+        else:
+            print(msg)
 
     elif args.command in ("watch_branches", "wb"):
-        sync_paths = args.opt_paths or args.paths
-        if not sync_paths:
-            parser.error("At least one path to sync is required.")
+        cli_paths = args.opt_paths if args.opt_paths is not None else (args.paths if args.paths else None)
+        targets: list[BranchTarget] = []
+        intervals = []
 
-        targets = []
-        for spec in args.branch_specs:
-            if ":" not in spec:
-                parser.error(
-                    f"Invalid format '{spec}'. Use --branch <branch_name>:<project_id_or_url>"
-                )
-            b_name, target_raw = spec.split(":", 1)
-            targets.append(
-                BranchTarget(
+        if args.branch_specs:
+            for spec in args.branch_specs:
+                b_name, target_raw = spec.split(":", 1) if ":" in spec else (spec, "")
+                proj = parse_project_id(target_raw) or (repo_cfg.branches[b_name].project_id if repo_cfg and b_name in repo_cfg.branches else "")
+                t_dir = repo_root or Path.cwd()
+                targets.append(BranchTarget(
                     branch=b_name.strip(),
-                    project_id=parse_project_id(target_raw.strip()),
-                    raw_target=target_raw.strip(),
-                )
-            )
+                    project_id=proj,
+                    raw_target=spec,
+                    repo_dir=t_dir,
+                    repo_name=t_dir.name,
+                    paths=cli_paths or (repo_cfg.paths if repo_cfg else []),
+                    push=False if args.no_push else (repo_cfg.push if repo_cfg else True),
+                    commit=False if args.no_commit else (repo_cfg.commit if repo_cfg else True),
+                ))
+        else:
+            search_repos = {repo_root: repo_cfg} if (args.current and repo_root and repo_cfg) else cfg.repos
+            for r_dir, r_conf in search_repos.items():
+                if not r_dir.is_dir():
+                    continue
+                intervals.append(r_conf.interval)
+                for b_name, b_conf in r_conf.branches.items():
+                    targets.append(BranchTarget(
+                        branch=b_name,
+                        project_id=b_conf.project_id,
+                        raw_target=f"{r_dir.name}:{b_name}",
+                        repo_dir=r_dir,
+                        repo_name=r_dir.name,
+                        paths=cli_paths if cli_paths is not None else (b_conf.paths if b_conf.paths is not None else r_conf.paths),
+                        push=False if args.no_push else (b_conf.push if b_conf.push is not None else r_conf.push),
+                        commit=False if args.no_commit else (b_conf.commit if b_conf.commit is not None else r_conf.commit),
+                    ))
 
-        asyncio.run(
-            cmd_watch_branches(
-                targets=targets,
-                paths=sync_paths,
-                interval=args.interval,
-                no_push=args.no_push,
-            )
-        )
+        if not targets:
+            err_console.print("[red]No configured targets found to watch in MYARISTOTLE_CONFIG.[/red]")
+            sys.exit(1)
+
+        poll_interval = args.interval if args.interval is not None else (min(intervals) if intervals else 60)
+        asyncio.run(cmd_watch_branches(targets, interval=poll_interval))
 
 
 if __name__ == "__main__":
