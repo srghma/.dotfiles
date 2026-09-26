@@ -501,10 +501,42 @@ def mark_task_synced(project_id: str, task_id: str):
 async def extract_prompt_from_task(task: Any) -> str:
     if not task:
         return ""
-    for attr in ("prompt", "initial_prompt", "user_prompt", "input", "description", "name"):
+
+    # 1. Fetch oldest events first so the initial user prompt is at index 0 of page 1
+    if hasattr(task, "get_events"):
+        try:
+            res = task.get_events(newest_first=False, limit=20)
+            if inspect.isawaitable(res):
+                res = await res
+            events = res[0] if isinstance(res, tuple) else res
+            if isinstance(events, list) and events:
+                user_events = [
+                    ev for ev in events
+                    if getattr(ev, "event_type", None) == 1
+                    or (
+                        getattr(ev, "event_type", None) is not None
+                        and getattr(ev, "event_type", None) not in NON_USER_EVENT_TYPES
+                    )
+                ]
+                if user_events:
+                    user_events.sort(key=lambda e: str(getattr(e, "created_at", "")))
+                    content = getattr(user_events[0], "content", None)
+                    if content and str(content).strip():
+                        return str(content).strip()
+        except Exception:
+            pass
+
+    # 2. Check direct prompt fields if present
+    for attr in ("prompt", "initial_prompt", "user_prompt", "input"):
         val = getattr(task, attr, None)
-        if isinstance(val, str) and val.strip() and not val.strip().endswith("..."):
+        if isinstance(val, str) and val.strip():
             return val.strip()
+
+    # 3. Fallback to description
+    desc = getattr(task, "description", None)
+    if isinstance(desc, str) and desc.strip():
+        return desc.strip()
+
     return ""
 
 
@@ -536,16 +568,14 @@ async def get_task_info(task_obj: Any, task_id: str | None = None) -> TaskInfo |
     end_msg = getattr(task_obj, "output_summary", None)
     prompt = await extract_prompt_from_task(task_obj)
 
-    if not prompt:
+    if not prompt or (status_str in TERMINAL_STATUSES and not end_msg):
         try:
             full_task = await AgentTask.from_id(t_id)
-            prompt = await extract_prompt_from_task(full_task)
+            if not prompt:
+                prompt = await extract_prompt_from_task(full_task)
             end_msg = end_msg or getattr(full_task, "output_summary", None)
         except Exception:
             pass
-
-    if status_str in TERMINAL_STATUSES:
-        save_task_cache(t_id, {"task_id": t_id, "status": status_str, "prompt": prompt, "output_summary": end_msg})
 
     return TaskInfo(
         task_id=t_id,
@@ -710,16 +740,21 @@ def execute_pull(project_id: str, paths: list[str] | None = None, cwd: Path | No
         subprocess.run(["tar", "-xzf", str(archive_path), "-C", str(extracted_path)], check=True)
 
         root_path = extracted_path
-        subdirs = [d for d in extracted_path.iterdir() if d.is_dir() and not d.name.startswith(".")]
+        all_entries = [p for p in extracted_path.iterdir() if not p.name.startswith(".")]
+
+        # Only unwrap if the tarball genuinely wrapped everything into a single enclosing folder
+        # (i.e. NO files at top-level, and exactly 1 folder)
+        if len(all_entries) == 1 and all_entries[0].is_dir():
+            root_path = all_entries[0]
+
+        subdirs = [d for d in root_path.iterdir() if d.is_dir() and not d.name.startswith(".")]
         if paths:
             first_clean = paths[0].strip("/")
-            if not (extracted_path / first_clean).exists():
+            if not (root_path / first_clean).exists():
                 for s in subdirs:
                     if (s / first_clean).exists():
                         root_path = s
                         break
-        elif len(subdirs) == 1:
-            root_path = subdirs[0]
 
         excludes = collect_rsync_excludes_for_git(cwd)
         with tempfile.NamedTemporaryFile("w", encoding="utf-8", delete=False) as ef:
