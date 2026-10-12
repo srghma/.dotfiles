@@ -40,6 +40,8 @@ inhome_indotfiles = [
   ['.config/kak',                             'kak'],
   ['.config/doom',                            'doom'],
   ['.config/rofi',                            'rofi'],
+  ['.config/nushell',               'nushell'],
+  ['.config/starship.toml',               'starship.toml'],
   ['.bunfig.toml',                            '.bunfig.toml'],
   # ['.config/lvim/config.lua',               'lvim/config.lua'],
 

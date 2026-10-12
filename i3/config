@@ -134,7 +134,7 @@ bindsym $mod+equal exec audacious --fwd
 # Autostart
 # -------------------------------------
 set $terminal kitty
-set $browser  google-chrome-stable --remote-debugging-port=4444
+set $browser  google-chrome-stable --remote-debugging-port=4444 --profile-directory=Default
 # set $browser  google-chrome-beta
 # set $browser  google-chrome-stable
 

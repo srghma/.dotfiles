@@ -178,8 +178,6 @@
         "markdown": false,
         "scminput": false
     },
-    "gitlens.ai.model": "vscode",
-    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
     "geminicodeassist.codeGenerationPaneViewEnabled": true,
     "chat.agent.enabled": false,
     "chat.disableAIFeatures": true,

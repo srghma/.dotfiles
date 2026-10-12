@@ -3,7 +3,7 @@
 {
   mutableUsers = false;
 
-  defaultUserShell = pkgs.zsh;
+  defaultUserShell = pkgs.nushell;
 
   extraUsers =
     let

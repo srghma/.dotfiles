@@ -19,3 +19,4 @@ kak/plugins/*
 nohup.out
 /bin/bito
 /bin/jsspush.rb
+nushell/history.txt

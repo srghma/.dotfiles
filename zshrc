@@ -160,3 +160,8 @@ source $HOME/.dotfiles/secrets/aristotle-lean-key.sh
 # uv tool install aristotlelib
 # + just aristotle
 alias antigravity='antigravity-ide'
+
+
+# export LAKE_ARTIFACT_CACHE=true
+# export LAKE_RESTORE_ARTIFACTS=true
+# export LAKE_CACHE_DIR="$HOME/.cache/lake"
