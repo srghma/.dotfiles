@@ -169,7 +169,7 @@
           "history-substring-search"
           "dircycle"
           "dirpersist"
-          "pj"
+          # "pj" # I use ~/.dotfiles/zsh/pj.sh bc this one doesnt tab-complete child dirs
           "zsh-navigation-tools"
 
           ## programs

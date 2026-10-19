@@ -35,9 +35,12 @@ export MAKEFLAGS="-j5"
 # from https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/common-aliases/common-aliases.plugin.zsh
 # unalias fd
 # unalias n
-alias l="lsd -la"
-alias ls="lsd -la --total-size"
-alias lt='lsd --tree --total-size'
+# alias l="lsd -la"
+# alias ls="lsd -la --total-size"
+# alias lt='lsd --tree --total-size'
+alias l="eza --long --all"
+alias lt='eza --tree --total-size --git-ignore --all'
+alias ltall='eza --tree --total-size --all'
 # alias ls="ls --hyperlink=auto --color=auto"
 
 # eval "$(direnv hook zsh)"

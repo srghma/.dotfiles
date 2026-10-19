@@ -183,4 +183,16 @@
     "chat.disableAIFeatures": true,
     "continue.enableConsole": true,
     "task.allowAutomaticTasks": "on",
+    "securecoder.enabled": true,
+    "python.languageServer": "Default",
+    "search.exclude": {
+        "**/.direnv": true,
+        "**/.lake": true
+    },
+    "search.useParentIgnoreFiles": true,
+    "rust-analyzer.showSyntaxTree": true,
+    "security.promptForLocalFileProtocolHandling": false,
+    "files.simpleDialog.enable": true,
+    "search.followSymlinks": false,
+    "haskell.manageHLS": "PATH",
 }

@@ -3,6 +3,26 @@
 
 require_relative './config'
 
+vscode_user_dirs = [
+  '.config/Code/User',
+  '.config/Code - Insiders/User',
+  '.config/Code - OSS/User',
+  '.config/VSCodium/User',
+  '.config/Cursor/User',
+  '.config/Windsurf/User',
+  '.antigravity-ide/User',
+  '.antigravity/User',
+  '.config/Antigravity IDE/User',
+]
+
+vscode_links = vscode_user_dirs.flat_map do |dir|
+  [
+    ["#{dir}/settings.json",   'Code/settings.json'],
+    ["#{dir}/extensions.json", 'Code/extensions.json'],
+    ["#{dir}/snippets",        'Code/snippets'],
+  ]
+end
+
 inhome_indotfiles = [
   ['.zshrc',                                  'zshrc'],
   ['.tmux.conf',                              'tmux.conf'],
@@ -25,10 +45,6 @@ inhome_indotfiles = [
   ['.local/share/applications/mimeapps.list', 'mimeapps.list'],
   ['.config/mimeapps.list',                   'mimeapps.list'],
 
-  ['.config/Code/User/settings.json',         'Code/settings.json'],
-  ['.config/Code/User/extensions.json',       'Code/extensions.json'],
-  ['.config/Code/User/snippets',              'Code/snippets'],
-
   ['.Xresources',                             'Xresources'],
   ['.Xresources.d',                           'Xresources.d'],
 
@@ -46,7 +62,7 @@ inhome_indotfiles = [
   # ['.config/lvim/config.lua',               'lvim/config.lua'],
 
   # ['.emacs', 'emacs'],
-]
+] + vscode_links
 
 inhome_indotfiles.each do |(inhome, indotfiles)|
   inhome_     = File.join $home, inhome
