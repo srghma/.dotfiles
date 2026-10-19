@@ -1,28 +1,52 @@
 {
-    "files.autoSave": "onFocusChange",
-    "editor.renderWhitespace": "all",
-    "editor.fontFamily": "\"JetBrains Mono\", monospace",
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "bitoAI.appearance.fontSize (Match with IDE Font)": false,
+    "bitoAI.codeCompletion.enableAutoCompletion": true,
+    "bitoAI.codeCompletion.enableCommentToCode": true,
+    "C_Cpp.formatting": "disabled",
+    "chat.agent.enabled": false,
+    "chat.disableAIFeatures": true,
+    "cloudcode.updateChannel": "Insiders",
+    "cmake.pinnedCommands": [
+        "workbench.action.tasks.configureTaskRunner",
+        "workbench.action.tasks.runTask"
+    ],
+    "codeium.detectProxy": false,
+    "codeium.enableConfig": {
+        "*": true,
+        "purescript": true
+    },
+    "codetogether.userName": "srghma",
+    "continue.enableConsole": true,
+    "continue.enableQuickActions": true,
+    "continue.enableTabAutocomplete": false,
+    "cSpell.userWords": [
+        "tinymce"
+    ],
+    "diffEditor.codeLens": true,
+    "diffEditor.ignoreTrimWhitespace": false,
     // "editor.accessibilitySupport": "off",
     // "editor.fontFamily": "FiraCode-VF.ttf",
+    "editor.fontFamily": "\"JetBrains Mono\", monospace",
     "editor.fontLigatures": true,
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": false,
-    "gitlens.advanced.messages": {
-        "suppressCommitHasNoPreviousCommitWarning": false,
-        "suppressCommitNotFoundWarning": false,
-        "suppressFileNotUnderSourceControlWarning": false,
-        "suppressGitVersionWarning": false,
-        "suppressLineUncommittedWarning": false,
-        "suppressNoRepositoryWarning": false,
-        "suppressResultsExplorerNotice": false,
-        "suppressShowKeyBindingsNotice": true,
-        "suppressUpdateNotice": true,
-        "suppressWelcomeNotice": false
-    },
+    "editor.fontSize": 12,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.inlineSuggest.showToolbar": "always",
+    "editor.mouseWheelZoom": true,
+    "editor.renderWhitespace": "all",
+    "editor.tabCompletion": "on",
+    "editor.tabSize": 2,
     "editor.wordWrap": "on",
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
     "extensions.ignoreRecommendations": true,
-    "gitlens.keymap": "alternate",
-    "gitlens.historyExplorer.enabled": true,
+    "files.associations": {
+        "*.bkp": "latex"
+    },
+    "files.autoSave": "onFocusChange",
     "files.exclude": {
         "**/__generated__": true,
         "**/.DS_Store": true,
@@ -38,76 +62,78 @@
         "**/*.xdv": true,
         "**/CVS": true
     },
-    "editor.formatOnSave": true,
-    "workbench.startupEditor": "welcomePage",
-    "languageServerHaskell.useCustomHieWrapper": true,
-    "languageServerHaskell.useCustomHieWrapperPath": "hie",
-    "explorer.confirmDragAndDrop": false,
-    "explorer.confirmDelete": false,
-    "gitlens.views.fileHistory.enabled": true,
-    "gitlens.views.lineHistory.enabled": true,
-    "editor.tabSize": 2,
-    "latex-workshop.view.pdf.viewer": "tab",
-    "workbench.colorTheme": "Visual Studio Dark",
-    "editor.mouseWheelZoom": true,
-    "security.workspace.trust.untrustedFiles": "open",
-    "npm.keybindingsChangedWarningShown": true,
-    "codetogether.userName": "srghma",
-    "[python]": {
-        "editor.formatOnType": true
-    },
-    "cSpell.userWords": [
-        "tinymce"
-    ],
-    "editor.formatOnPaste": true,
-    "tabby.api.endpoint": "http://47.103.63.15:50085/",
-    "tabby.keybindings": "tabby-style",
-    "tabby.codeCompletion": true,
-    "bitoAI.codeCompletion.enableAutoCompletion": true,
-    "bitoAI.codeCompletion.enableCommentToCode": true,
-    "editor.inlineSuggest.showToolbar": "always",
-    "bitoAI.appearance.fontSize (Match with IDE Font)": false,
-    "files.associations": {
-        "*.bkp": "latex"
-    },
-    "purescript.censorWarnings": [
-        "MissingTypeDeclaration",
-        "UserDefinedWarning",
-        "UnusedDeclaration"
-    ],
-    "workbench.editor.enablePreview": false,
-    "purescript.buildCommand": "spago build --purs-args --json-error",
-    "codeium.detectProxy": false,
-    "codeium.enableConfig": {
-        "*": true,
-        "purescript": true
-    },
-    "update.showReleaseNotes": false,
-    "purescript.trace.server": "verbose",
-    "Lua.codeLens.enable": true,
-    "Lua.typeFormat.config": {
-        "format_line": "true"
-    },
-    "idris2-lsp.loglevel": "info",
-    "idris2-lsp.path": "/nix/store/gny2kc7s487134y62252fywjb927zinc-idris2-lsp-2024-01-21/bin/idris2-lsp",
-    "idris2-lsp.trace.server": "messages",
-    "editor.tabCompletion": "on",
-    "diffEditor.codeLens": true,
-    "continue.enableQuickActions": true,
-    "continue.enableTabAutocomplete": false,
-    "search.useGlobalIgnoreFiles": true,
-    "cloudcode.updateChannel": "Insiders",
-    "cmake.pinnedCommands": [
-        "workbench.action.tasks.configureTaskRunner",
-        "workbench.action.tasks.runTask"
-    ],
-    "C_Cpp.formatting": "disabled",
+    "files.insertFinalNewline": false,
     "files.readonlyInclude": {
         "**/.cargo/git/checkouts/**/*.rs": true,
         "**/.cargo/registry/src/**/*.rs": true,
         "**/lib/rustlib/src/rust/library/**/*.rs": true
     },
-    "diffEditor.ignoreTrimWhitespace": false,
+    "files.simpleDialog.enable": true,
+    "files.trimTrailingWhitespace": true,
+    "geminicodeassist.codeGenerationPaneViewEnabled": true,
+    "geminicodeassist.project": "myproject-1704716005885",
+    "geminicodeassist.updateChannel": "Insiders",
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
+    "gitlens.advanced.messages": {
+        "suppressCommitHasNoPreviousCommitWarning": false,
+        "suppressCommitNotFoundWarning": false,
+        "suppressFileNotUnderSourceControlWarning": false,
+        "suppressGitVersionWarning": false,
+        "suppressLineUncommittedWarning": false,
+        "suppressNoRepositoryWarning": false,
+        "suppressResultsExplorerNotice": false,
+        "suppressShowKeyBindingsNotice": true,
+        "suppressUpdateNotice": true,
+        "suppressWelcomeNotice": false
+    },
+    "gitlens.historyExplorer.enabled": true,
+    "gitlens.keymap": "alternate",
+    "gitlens.views.commitDetails.files.layout": "tree",
+    "gitlens.views.fileHistory.enabled": true,
+    "gitlens.views.lineHistory.enabled": true,
+    "haskell.manageHLS": "PATH",
+    "idris2-lsp.loglevel": "info",
+    "idris2-lsp.path": "/nix/store/gny2kc7s487134y62252fywjb927zinc-idris2-lsp-2024-01-21/bin/idris2-lsp",
+    "idris2-lsp.trace.server": "messages",
+    "khmer-spellchecker.colorizingMode": "Segmenter",
+    "languageServerHaskell.useCustomHieWrapper": true,
+    "languageServerHaskell.useCustomHieWrapperPath": "hie",
+    "latex-workshop.view.pdf.viewer": "tab",
+    "Lua.codeLens.enable": true,
+    "Lua.typeFormat.config": {
+        "format_line": "true"
+    },
+    "metamath-zero.executablePath": "/home/srghma/projects/mm0/mm0-rs/target/release/mm0-rs",
+    "npm.keybindingsChangedWarningShown": true,
+    "purescript.buildCommand": "spago build --purs-args --json-error",
+    "purescript.censorWarnings": [
+        "MissingTypeDeclaration",
+        "UserDefinedWarning",
+        "UnusedDeclaration"
+    ],
+    "purescript.trace.server": "verbose",
+    "python.languageServer": "Default",
+    "rust-analyzer.showSyntaxTree": true,
+    "search.exclude": {
+        "**/.direnv": true,
+        "**/.lake": true
+    },
+    "search.followSymlinks": false,
+    "search.useGlobalIgnoreFiles": true,
+    "search.useParentIgnoreFiles": true,
+    "securecoder.enabled": true,
+    "security.promptForLocalFileProtocolHandling": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "tabby.api.endpoint": "http://47.103.63.15:50085/",
+    "tabby.codeCompletion": true,
+    "tabby.keybindings": "tabby-style",
+    "task.allowAutomaticTasks": "on",
+    "update.showReleaseNotes": false,
     "vscoq-language-server.trace.server": "verbose",
     "vscoq.args": [
         "-R src Hask",
@@ -161,38 +187,12 @@
         "-l src/Prelude.v",
         "-l src/Ssr.v",
     ],
-    "gitlens.views.commitDetails.files.layout": "tree",
-    "geminicodeassist.updateChannel": "Insiders",
-    "geminicodeassist.project": "myproject-1704716005885",
-    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.colorTheme": "Visual Studio Dark",
+    "workbench.editor.enablePreview": false,
     "workbench.editorAssociations": {
         "*.copilotmd": "vscode.markdown.preview.editor",
         "*.pdf": "default"
     },
-    "khmer-spellchecker.colorizingMode": "Segmenter",
-    "editor.fontSize": 12,
-    "metamath-zero.executablePath": "/home/srghma/projects/mm0/mm0-rs/target/release/mm0-rs",
-    "github.copilot.enable": {
-        "*": false,
-        "plaintext": false,
-        "markdown": false,
-        "scminput": false
-    },
-    "geminicodeassist.codeGenerationPaneViewEnabled": true,
-    "chat.agent.enabled": false,
-    "chat.disableAIFeatures": true,
-    "continue.enableConsole": true,
-    "task.allowAutomaticTasks": "on",
-    "securecoder.enabled": true,
-    "python.languageServer": "Default",
-    "search.exclude": {
-        "**/.direnv": true,
-        "**/.lake": true
-    },
-    "search.useParentIgnoreFiles": true,
-    "rust-analyzer.showSyntaxTree": true,
-    "security.promptForLocalFileProtocolHandling": false,
-    "files.simpleDialog.enable": true,
-    "search.followSymlinks": false,
-    "haskell.manageHLS": "PATH",
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.startupEditor": "welcomePage",
 }
