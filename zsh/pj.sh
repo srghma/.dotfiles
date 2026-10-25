@@ -10,8 +10,14 @@ function pj() {
     target="$*"
   fi
 
-  # Prevent jumping to project root if invoked without arguments
+  # If invoked without arguments, cd to the first path in PROJECT_PATHS
   if [[ -z "$target" ]]; then
+    if [[ "${cmd[1]}" == "cd" ]]; then
+      cd "${PROJECT_PATHS[1]:-$HOME/projects}"
+      return 0
+    fi
+
+    # If `pj open` was called with no target:
     echo "Usage: pj [open] <project-or-subfolder>" >&2
     return 1
   fi
@@ -27,7 +33,7 @@ function pj() {
   return 1
 }
 
-alias pjo="pj open"
+# alias pjo="pj open"
 
 function _pj() {
   if [[ $service == "pj" ]] && (( CURRENT == 2 )); then
@@ -40,4 +46,4 @@ function _pj() {
 }
 
 compdef _pj pj
-compdef _pj pjo
+# compdef _pj pjo
