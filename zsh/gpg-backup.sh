@@ -38,20 +38,26 @@ USER_EMAIL="srghma@gmail.com"
 # uid           [ultimate] Serhii Khoma (old email) <melgaardbjorn@gmail.com>
 # sub   cv25519 2024-02-14 [E] [expires: 2029-02-12]
 
-gpg-backup () {
-  mkdir -p $GPG_BACKUP_DIR
+gpg-backup() {
+  mkdir -p "$GPG_BACKUP_DIR" || return 1
 
-  # ownertrust
-  gpg --export-ownertrust > $GPG_BACKUP_DIR/ownertrust.txt
+  echo "[1/4] Exporting ownertrust..."
+  gpg --export-ownertrust \
+    > "$GPG_BACKUP_DIR/ownertrust.txt" || return 1
 
-  # public key
-  gpg --armor --export "$USER_EMAIL" > $GPG_BACKUP_DIR/public.gpg
+  echo "[2/4] Exporting public key..."
+  gpg --armor --export "$USER_EMAIL" \
+    > "$GPG_BACKUP_DIR/public.gpg" || return 1
 
-  # secret key
-  gpg --armor --export-secret-keys  > $GPG_BACKUP_DIR/secret.gpg
+  echo "[3/4] Exporting secret keys..."
+  gpg --armor --export-secret-keys \
+    > "$GPG_BACKUP_DIR/secret.gpg" || return 1
 
-  # all public keys
-  gpg --armor --export > $GPG_BACKUP_DIR/public-keys.gpg
+  echo "[4/4] Exporting all public keys..."
+  gpg --armor --export \
+    > "$GPG_BACKUP_DIR/public-keys.gpg" || return 1
+
+  echo "Backup completed."
 }
 
 gpg-restore () {
