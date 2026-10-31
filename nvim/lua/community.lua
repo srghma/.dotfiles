@@ -41,7 +41,7 @@ return {
   { import = "astrocommunity.bars-and-lines.vim-illuminate" },
   -- { import = "astrocommunity.pack.haskell" },
   { import = "astrocommunity.pack.rust" },
-  { import = "astrocommunity.pack.svelte" },
+  -- { import = "astrocommunity.pack.svelte" },
   { import = "astrocommunity.pack.just" },
   -- { import = "astrocommunity.pack.purescript" },
   { import = "astrocommunity.motion.nvim-spider" },

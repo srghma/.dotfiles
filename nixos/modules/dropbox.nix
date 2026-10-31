@@ -6,7 +6,7 @@
 }:
 {
   environment.systemPackages = with pkgs; [
-    dropbox # - we don't need this in the environment. systemd unit pulls it in
+    #dropbox # - we don't need this in the environment. systemd unit pulls it in
     dropbox-cli # or NIXPKGS_ALLOW_UNFREE=1 nix profile install nixpkgs#dropbox-cli --impure
   ];
 

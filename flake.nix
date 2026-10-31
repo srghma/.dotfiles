@@ -116,18 +116,18 @@
               # };
             in
             {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.srghma = import ./home.nix;
+              # home-manager.useGlobalPkgs = true;
+              # home-manager.useUserPackages = true;
+              # home-manager.users.srghma = import ./home.nix;
 
               environment.systemPackages = with nixpkgs.pkgs; [
                 # inputs.antigravity-nix.packages.x86_64-linux.default
                 # browseros
                 xsel # for nvim copy to clipboard
 
-                home-manager
+                # home-manager
 
-                pulseaudio # for /home/srghma/.dotfiles/bin/my-volume.sh
+                # pulseaudio # for /home/srghma/.dotfiles/bin/my-volume.sh
 
                 # nur.repos.mio.bifrost
                 # odin4
@@ -141,22 +141,25 @@
 
                 keepassxc
                 telegram-desktop
-                nixpkgsMaster.pkgs.google-chrome
+                google-chrome
+                eza
+                yazi
+                wezterm
                 # code-cursor
                 # chromium
                 # chromium
-                libreoffice
-                inkscape
+                #libreoffice
+                #inkscape
                 # inputs.zed.packages.${system}.default
                 # zed-editor
                 zip
                 unzip
                 htop
                 ripgrep
-                ntfs3g
-                alsa-utils
+                #ntfs3g
+                #alsa-utils
 
-                kdePackages.okular
+                #kdePackages.okular
 
                 pavucontrol
                 conky
@@ -186,10 +189,10 @@
                 # psmisc
                 # lxappearance
 
-                ranger
+                # ranger
                 # joshuto
                 # termite
-                kitty
+                # kitty
                 # nixpkgsMyNeovimNightly.pkgs.neovim
                 # nixpkgsLocal.pkgs.neovim
                 neovim
@@ -206,7 +209,8 @@
                 deadnix
                 nixd
 
-                # vscode
+                vscode
+                starship
                 # vscode.fhs
                 audacious
                 # nix
@@ -216,13 +220,14 @@
                 gh
                 delta
                 git-lfs
-                git-crypt
+                #git-crypt
 
-                meld
+                #meld
 
                 # mplayer
 
-                nodejs_latest # if run bun then "error: No such built-in module: node:sqlite"
+                # nodejs_latest # if run bun then "error: No such built-in module: node:sqlite"
+                bun
                 # nodejs_22
                 # pnpm
 
@@ -244,18 +249,18 @@
                 # inkscape
 
                 poppler-utils
-                docker-compose
+                #docker-compose
                 # mkpasswd
 
-                universal-ctags
+                #universal-ctags
                 # filezilla
                 # firefox
-                asciinema
-                tree
+                #asciinema
+                #tree
                 # youtube-dl
-                tigervnc
+                #tigervnc
 
-                simplescreenrecorder
+                #simplescreenrecorder
                 # screencast
                 # gtk-recordmydesktop
                 # kdenlive
@@ -267,12 +272,12 @@
 
                 # bfg-repo-cleaner # removes passwords from git repo
 
-                i3-battery-popup
-                nox
+                #i3-battery-popup
+                #nox
                 nix-prefetch-git
-                gimp
-                imagemagick
-                ffmpeg-full # ffmpeg_7-full
+                #gimp
+                #imagemagick
+                #ffmpeg-full # ffmpeg_7-full
 
                 # nixpkgsLocal.pkgs.safeeyes
                 # cmus
@@ -313,12 +318,12 @@
                 #   ];
                 # })
 
-                (writeShellScriptBin "tmuxx" "tmux attach || tmux new-session")
+                #(writeShellScriptBin "tmuxx" "tmux attach || tmux new-session")
 
                 (python3.withPackages (
                   ps: with ps; [
                     pynvim
-                    libtmux
+                    #libtmux
                     # pip
                   ]
                 ))
@@ -354,9 +359,9 @@
                 # pgmodeler
                 # obelisk.command
 
-                google-drive-ocamlfuse
+                #google-drive-ocamlfuse
 
-                dropbox-cli
+                #dropbox-cli
 
                 # ID kaart
                 # chrome-token-signing
@@ -379,14 +384,14 @@
                 #   }
                 # )
 
-                ruby
+                #ruby
 
                 # gnome3.evolution
 
                 # ib-tws
                 # ib-controller
-                solargraph
-                ruby-lsp
+                #solargraph
+                #ruby-lsp
                 # fontforge
                 # awscli2
                 # amazon-ecs-cli
@@ -406,9 +411,8 @@
                 libnotify
                 # goldendict
                 # go-ethereum
-                signal-desktop
-                niv
-                # signal-desktop
+                #signal-desktop
+                #niv
                 # vym
                 # FreeMind
 
@@ -433,11 +437,11 @@
                 # easy-purescript-nix-automatic.purs
                 # easy-purescript-nix-automatic.purty # find ./packages/client/src -name "*.purs" -exec purty --write {} \;
 
-                watchexec
+                #watchexec
                 vlc
                 # handbrake
                 # nixpkgsVlc4.pkgs.vlc4
-                nixpkgsMaster.pkgs.yt-dlp
+                #nixpkgsMaster.pkgs.yt-dlp
                 # plasma5Packages.kdeconnect-kde
 
                 # jsonls
@@ -448,7 +452,8 @@
 
                 fzf
                 zoxide
-                cachix
+                carapace # The best multi-shell completion engine for Nushell
+                #cachix
                 killall
                 i3-volume
               ];

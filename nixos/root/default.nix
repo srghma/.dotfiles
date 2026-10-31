@@ -5,18 +5,20 @@
 {
   imports = [
     ../modules/unifiedGtkQtTheme.nix
-    ../modules/access-tokens.nix
-    ../modules/hibernate-at-time.nix
+    ../modules/my-monitor-is-broken-cut-on-left.nix
+    #../modules/access-tokens.nix
+    #../modules/hibernate-at-time.nix
     # ../modules/disable-main-keyboard.nix
     # ../modules/direnv-from-lorri-repo.nix
-    ../modules/cachix.nix
+    #../modules/cachix.nix
     # ../modules/cast-from-android.nix
-    ../modules/qemu.nix
+    #../modules/qemu.nix
     # ../modules/obs.nix
     ../modules/dropbox.nix
+    ../modules/nushell/default.nix
     # ../modules/webcamoid.nix
     # ../modules/bluetooth-audio.nix
-    ../modules/tmux.nix
+    #../modules/tmux.nix
     # ../modules/miracast.nix
     # ../modules/vicuna.nix
 
@@ -35,9 +37,9 @@
     GTK_THEME = "Adwaita:dark";
   };
 
-  environment.etc."resolvconf.conf".text = ''
-    name_servers='8.8.8.8'
-  '';
+  #environment.etc."resolvconf.conf".text = ''
+  #  name_servers='8.8.8.8'
+  #'';
 
   qt = {
     enable = true;
@@ -57,10 +59,6 @@
   #   latitude = 47.517201;
   #   longitude = 35.859375;
   # };
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   hardware = {
     bluetooth.enable = false;
@@ -125,85 +123,85 @@
     #   cachixSigningKey = import ../../secrets-ignored/cachixSigningKey.nix;
     # };
 
-    bash = {
-      interactiveShellInit = ''
-        source ${./shells/docker-compose.sh}
-        source ${./shells/docker.sh}
-        source ${./shells/git.sh}
-      '';
-    };
+    # bash = {
+    #   interactiveShellInit = ''
+    #     source ${./shells/docker-compose.sh}
+    #     source ${./shells/docker.sh}
+    #     source ${./shells/git.sh}
+    #   '';
+    # };
 
-    zsh = {
-      enable = true;
-      enableCompletion = true;
-      autosuggestions.enable = true;
+    # zsh = {
+    #   enable = true;
+    #   enableCompletion = true;
+    #   autosuggestions.enable = true;
+    #
+    #   # source ${./zsh/movements.sh}
+    #   interactiveShellInit = ''
+    #     source ${./shells/docker-compose.sh}
+    #     source ${./shells/docker.sh}
+    #     source ${./shells/git.sh}
+    #     DEFAULT_USER="srghma"
+    #     autoload -U zmv
+    #     VI_MODE_DISABLE_CLIPBOARD=true
+    #   '';
+    #
+    #   ohMyZsh = {
+    #     enable = true;
+    #     theme = "agnoster";
+    #     preLoaded = ''
+    #       export FZF_ALT_C_COMMAND=""
+    #     '';
+    #     plugins = [
+    #       ## appearence
+    #       "colorize"
+    #       "compleat"
+    #       "common-aliases"
+    #       # zsh-autosuggestions
+    #       # zsh-completions
+    #
+    #       ## editing
+    #       "vi-mode"
+    #
+    #       ## navigation
+    #       "history-substring-search"
+    #       "dircycle"
+    #       "dirpersist"
+    #       # "pj" # I use ~/.dotfiles/zsh/pj.sh bc this one doesnt tab-complete child dirs
+    #       "zsh-navigation-tools"
+    #
+    #       ## programs
+    #       # "tmux"
+    #       # "git"
+    #
+    #       ## nixos
+    #       # NOTE: nix-zsh-completions already installed via `programs.zsh.enableCompletion = true`
+    #       "systemd"
+    #       "sudo"
+    #
+    #       ## ruby
+    #       # "bundler"
+    #       # "gem"
+    #       # rvm
+    #       # rake-fast
+    #
+    #       ## haskell
+    #       # stack
+    #
+    #       ## docker
+    #       "docker"
+    #       "docker-compose"
+    #
+    #       ## js
+    #       # yarn
+    #       "direnv"
+    #       "fzf"
+    #       "zoxide"
+    #     ];
+    #   };
+    # };
 
-      # source ${./zsh/movements.sh}
-      interactiveShellInit = ''
-        source ${./shells/docker-compose.sh}
-        source ${./shells/docker.sh}
-        source ${./shells/git.sh}
-        DEFAULT_USER="srghma"
-        autoload -U zmv
-        VI_MODE_DISABLE_CLIPBOARD=true
-      '';
-
-      ohMyZsh = {
-        enable = true;
-        theme = "agnoster";
-        preLoaded = ''
-          export FZF_ALT_C_COMMAND=""
-        '';
-        plugins = [
-          ## appearence
-          "colorize"
-          "compleat"
-          "common-aliases"
-          # zsh-autosuggestions
-          # zsh-completions
-
-          ## editing
-          "vi-mode"
-
-          ## navigation
-          "history-substring-search"
-          "dircycle"
-          "dirpersist"
-          # "pj" # I use ~/.dotfiles/zsh/pj.sh bc this one doesnt tab-complete child dirs
-          "zsh-navigation-tools"
-
-          ## programs
-          # "tmux"
-          # "git"
-
-          ## nixos
-          # NOTE: nix-zsh-completions already installed via `programs.zsh.enableCompletion = true`
-          "systemd"
-          "sudo"
-
-          ## ruby
-          # "bundler"
-          # "gem"
-          # rvm
-          # rake-fast
-
-          ## haskell
-          # stack
-
-          ## docker
-          "docker"
-          "docker-compose"
-
-          ## js
-          # yarn
-          "direnv"
-          "fzf"
-          "zoxide"
-        ];
-      };
-    };
-
-    command-not-found.enable = true;
+    #command-not-found.enable = true;
   };
 
   networking = {
@@ -220,30 +218,30 @@
       enable = false;
       # allowPing = true;
 
-      allowedTCPPortRanges = [
-        {
-          from = 1714;
-          to = 1764;
-        }
-      ]; # for nixpkgsMaster.pkgs.kdeconnect
-      allowedUDPPortRanges = [
-        {
-          from = 1714;
-          to = 1764;
-        }
-      ]; # for nixpkgsMaster.pkgs.kdeconnect
+      # allowedTCPPortRanges = [
+      #   {
+      #     from = 1714;
+      #     to = 1764;
+      #   }
+      # ]; # for nixpkgsMaster.pkgs.kdeconnect
+      # allowedUDPPortRanges = [
+      #   {
+      #     from = 1714;
+      #     to = 1764;
+      #   }
+      # ]; # for nixpkgsMaster.pkgs.kdeconnect
 
       allowedTCPPorts = [
-        3131 # deskreen
-        5900 # bVNC default port, also qemu `sudo lsof -i :5900`
-        5901 # bVNC port2
+        # 3131 # deskreen
+        # 5900 # bVNC default port, also qemu `sudo lsof -i :5900`
+        # 5901 # bVNC port2
         # 5432
         # 34567 # MY PORT FOR WIFI USE
         # 33927 # Error: connection refused: localtunnel.me:33927 (check your firewall settings) at Socket.<anonymous> (/home/srghma/.node_modules/lib/node_modules/localtunnel/lib/TunnelCluster.js:52:11)
       ];
 
       allowedUDPPorts = [
-        3131 # deskreen
+        # 3131 # deskreen
         # 40118 # https://github.com/rfc2822/GfxTablet
       ];
     };
@@ -346,7 +344,7 @@
       # "https://nix-tools.cachix.org"
       # "https://devenv.cachix.org"
       # "https://digitallyinduced.cachix.org"
-      "https://gh-nix-idris2-packages.cachix.org"
+      # "https://gh-nix-idris2-packages.cachix.org"
     ];
 
     trusted-public-keys = [
@@ -359,7 +357,7 @@
       # "nix-tools.cachix.org-1:ebBEBZLogLxcCvipq2MTvuHlP7ZRdkazFSQsbs0Px1A="
       # "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       # "digitallyinduced.cachix.org-1:y+wQvrnxQ+PdEsCt91rmvv39qRCYzEgGQaldK26hCKE="
-      "gh-nix-idris2-packages.cachix.org-1:iOqSB5DrESFT+3A1iNzErgB68IDG8BrHLbLkhztOXfo="
+      # "gh-nix-idris2-packages.cachix.org-1:iOqSB5DrESFT+3A1iNzErgB68IDG8BrHLbLkhztOXfo="
     ];
 
     trusted-users = [
@@ -392,7 +390,7 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.05"; # Did you read the comment?
+  #system.stateVersion = "23.05"; # Did you read the comment?
 
   # system.activationScripts.preventCurrentSystemPackagesIfdsFromCollecting = ''
   #   ln -sfn ${pkgs.collectIfdDepsToTextFile environment.systemPackages} /nix/var/nix/gcroots/ifd-deps

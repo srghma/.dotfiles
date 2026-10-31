@@ -201,6 +201,7 @@ return {
         ["]<space>"] = ":normal! o<ESC>cc<ESC>k",
         ["[<space>"] = ":normal! O<ESC>cc<ESC>j",
 
+        -- https://github.com/AstroNvim/AstroNvim/blob/main/lua/astronvim/plugins/smart-splits.lua
         ["<M-k>"] = { function() require("smart-splits").resize_up() end, desc = "Resize split up" },
         ["<M-j>"] = { function() require("smart-splits").resize_down() end, desc = "Resize split down" },
         ["<M-h>"] = { function() require("smart-splits").resize_left() end, desc = "Resize split left" },

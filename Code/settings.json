@@ -7,7 +7,6 @@
     // "bitoAI.codeCompletion.enableCommentToCode": true,
     "C_Cpp.formatting": "disabled",
     "chat.agent.enabled": false,
-    "chat.disableAIFeatures": true,
     "cmake.pinnedCommands": [
         "workbench.action.tasks.configureTaskRunner",
         "workbench.action.tasks.runTask"

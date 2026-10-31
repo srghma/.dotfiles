@@ -24,7 +24,7 @@ $else
   $endif
 $endif
   {"full_text": " ☇ [${battery_percent BAT0}%] ","color":"\#9933CC"${if_match ${battery_percent BAT0} <= 75}, "urgent": true $endif },
-  {"full_text": " ♪ [${exec amixer -c 0 get Master | grep -oe '[[:digit:]]*%'}] ", "color":"\#268BD2"},
+  {"full_text": " ♪ [${exec wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{if (/MUTED/) print "MUTED"; else print int($2*100)"%"}'}] ", "color":"\#268BD2"},
   {"full_text": " ${time %a %d %b} ${time %H:%M} "}
 ],
 

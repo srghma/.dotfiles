@@ -133,8 +133,8 @@ bindsym $mod+equal exec audacious --fwd
 # -------------------------------------
 # Autostart
 # -------------------------------------
-set $terminal kitty
-set $browser  google-chrome-stable --remote-debugging-port=4444 --profile-directory=Default
+set $terminal wezterm
+set $browser  google-chrome-stable --profile-directory=Default
 # set $browser  google-chrome-beta
 # set $browser  google-chrome-stable
 
@@ -148,7 +148,7 @@ exec --no-startup-id i3-battery-popup
 exec --no-startup-id flameshot
 exec --no-startup-id telegram-desktop
 # exec --no-startup-id /nix/store/jf46172vm091cmzfhqyjxsfdq9nbaw8z-signal-desktop-7.62.0/bin/signal-desktop
-exec --no-startup-id "sh -c 'sleep 10; exec audacious'"
+# exec --no-startup-id "sh -c 'sleep 10; exec audacious'"
 exec --no-startup-id ua
 
 # -------------------------------------
@@ -158,17 +158,18 @@ bindsym $mod+Return  exec $terminal
 # bindsym $mod+Shift+q exec $terminal
 # bindsym $mod+e       exec $terminal -e tmuxx
 # bindsym $mod+Shift+e exec $terminal -e tmux new
-bindsym $mod+e exec $terminal --single-instance
+bindsym $mod+e exec $terminal start --always-new-process
 bindsym $mod+Shift+e exec $terminal
 bindsym $mod+Ctrl+e  exec code
 
 # bindsym $mod+Shift+w exec qutebrowser
-bindsym $mod+w       exec "rm -rfd /home/srghma/.config/google-chrome-beta/Default/GPUCache && $browser"
+# bindsym $mod+w       exec "rm -rfd /home/srghma/.config/google-chrome-beta/Default/GPUCache && $browser"
+bindsym $mod+w       exec --no-startup-id $browser
 # bindsym $mod+Shift+s exec $terminal -e joshuto
 bindsym $mod+s       exec nautilus
 bindsym $mod+p       exec --no-startup-id "copyq show"
 # bindsym $mod+n       exec anki
-bindsym $mod+m       exec $terminal -e "zsh -c 'screen -q -r -D cmus || screen -S cmus cmus'"
+# bindsym $mod+m       exec $terminal -e "sh -c 'screen -q -r -D cmus || screen -S cmus cmus'"
 bindsym $mod+Shift+m exec pavucontrol
 
 bindsym $mod+a       focus parent

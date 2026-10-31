@@ -1,0 +1,16 @@
+[open]
+prepend_rules = [{ mime = "application/x-subrip", use = ["edit", "reveal"] }]
+
+# [manager]
+# show_hidden = true
+# sort_by = "natural"
+# sort_dir_first = true
+# linemode = "size"
+#
+# [preview]
+# tab_size = 2
+# max_width = 1000
+# max_height = 1000
+# image_delay = 30
+# image_filter = "triangle"
+# image_quality = 75

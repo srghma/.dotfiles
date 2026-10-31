@@ -2,33 +2,39 @@
 # GEM_PATH="$GEM_HOME"
 # export PATH="$GEM_HOME/bin:$PATH"
 
+export PATH="$HOME/.bun/bin:$PATH"
+
 # npm/yarn
 # export PATH="$HOME/.node_modules/bin:$PATH"
 
 # npm/yarn/pnpm local
-export PATH="./node_modules/.bin:$PATH"
+# export PATH="./node_modules/.bin:$PATH"
 
-export PATH="$HOME/.config/emacs/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/projects/spago-yaml-generate/bin:$PATH"
+# export PATH="$HOME/.config/emacs/bin:$PATH"
+# export PATH="$HOME/.cargo/bin:$PATH"
+# export PATH="$HOME/projects/spago-yaml-generate/bin:$PATH"
 # export PATH="/home/srghma/projects/purescript/.stack-work/install/x86_64-linux-nix/0758bbd929f42d4f66e05e01297cc69e13582002cc47d515e5cef6cbbf752f9d/9.6.6/bin:$PATH"
 
 # .bin
-export PATH="$HOME/.bin:$PATH"
-export PATH="$HOME/projects/nixpkgs/result/bin:$PATH"
+# export PATH="$HOME/.bin:$PATH"
+# export PATH="$HOME/projects/nixpkgs/result/bin:$PATH"
 
 # claude code was complaining in /doctor
-export PATH="$HOME/.local/bin:$PATH"
+# export PATH="$HOME/.local/bin:$PATH"
 
 # mm0
-export PATH="$HOME/projects/mm0/mm0-hs/.stack-work/dist/x86_64-linux-nix/ghc-9.10.3/build/mm0-hs:$PATH"
+# export PATH="$HOME/projects/mm0/mm0-hs/.stack-work/dist/x86_64-linux-nix/ghc-9.10.3/build/mm0-hs:$PATH"
 # export PATH="$HOME/projects/mm0/mm0-rs/target/release:$PATH"
-export PATH="$HOME/projects/mm0/result/bin/:$PATH"
-export PATH="$HOME/projects/mm0/mm0-c/:$PATH"
+# export PATH="$HOME/projects/mm0/result/bin/:$PATH"
+# export PATH="$HOME/projects/mm0/mm0-c/:$PATH"
 
 DOTFILES="$HOME/.dotfiles"
 
-PROJECT_PATHS=($HOME/projects $HOME/jss $HOME/trivial-rs)
+PROJECT_PATHS=(
+  $HOME/projects
+  # $HOME/jss
+  # $HOME/trivial-rs
+)
 
 export MAKEFLAGS="-j5"
 
@@ -93,37 +99,37 @@ function n {
 # }
 
 alias nii="nix profile add"
-alias p="pnpm"
+# alias p="pnpm"
 alias node="bun" # works in zsh for me and also works allows to execute pnpm that throws 'error: No such built-in module: node:sqlite' if node=bun in PATH
 # alias npm="pnpm"
 # alias npx="pnpx"
 
-path_array=(
-  "$HOME/.dotfiles/bin"
-  "$HOME/projects/spago-yaml-generate/bin"
-  "$HOME/projects/idris2-pack/result/bin"
-  "$HOME/projects/Idris2/result/bin"
-  # "/nix/store/sk1959yrzisz1qf4p4sgjf55mdngvdqh-idris2-lsp-2024-01-21/bin/"
-  "$HOME/projects/zed/result/bin"
-  "$HOME/projects/idris2-lsp/result/bin"
-  "$HOME/projects/rsorder/target/release/"
-  "$HOME/projects/rust-find-duplicates/target/release/"
-  # "$HOME/projects/idris2-lsp/result-newest-not-working/bin"
-  # "$HOME/projects/idris2-lsp/result-old-working/bin"
-)
+# path_array=(
+#   "$HOME/.dotfiles/bin"
+#   "$HOME/projects/spago-yaml-generate/bin"
+#   "$HOME/projects/idris2-pack/result/bin"
+#   "$HOME/projects/Idris2/result/bin"
+#   # "/nix/store/sk1959yrzisz1qf4p4sgjf55mdngvdqh-idris2-lsp-2024-01-21/bin/"
+#   "$HOME/projects/zed/result/bin"
+#   "$HOME/projects/idris2-lsp/result/bin"
+#   "$HOME/projects/rsorder/target/release/"
+#   "$HOME/projects/rust-find-duplicates/target/release/"
+#   # "$HOME/projects/idris2-lsp/result-newest-not-working/bin"
+#   # "$HOME/projects/idris2-lsp/result-old-working/bin"
+# )
+#
+# export PATH=$(IFS=:; echo "${path_array[*]}"):$PATH
 
-export PATH=$(IFS=:; echo "${path_array[*]}"):$PATH
-
-fpath=($HOME/.my-completions $fpath)
+# fpath=($HOME/.my-completions $fpath)
 
 # alias spago="$HOME/projects/spago/bin/index.dev.js"
 
 ## https://pnpm.io/completion
 # pnpm completion zsh > ~/.config/completion-for-pnpm.zsh
-source ~/.config/completion-for-pnpm.zsh
+# source ~/.config/completion-for-pnpm.zsh
 
 # bun completions zsh > ~/.config/completion-for-bun.zsh
-source ~/.config/completion-for-bun.zsh
+# source ~/.config/completion-for-bun.zsh
 
 # just --completions zsh > ~/.config/completion-for-just.zsh
 # source ~/.config/completion-for-just.zsh
@@ -132,13 +138,10 @@ source ~/.config/completion-for-bun.zsh
 # eval "$(zoxide init zsh)"
 
 # pnpm
-export PATH="$HOME/.local/share/pnpm/bin:$PATH"
+# export PATH="$HOME/.local/share/pnpm/bin:$PATH"
 # pnpm end
 
 # export LD_LIBRARY_PATH=$(pwd)/.lake/packages/LeanCopilot/.lake/build/lib:$LD_LIBRARY_PATH
-
-# export LANG=en_US.UTF-8
-# export LC_ALL=en_US.UTF-8
 
 ###############################
 # IMPORTANT: kitty-scrollback.nvim only supports zsh 5.9 or greater for command-line editing,
@@ -163,7 +166,6 @@ source $HOME/.dotfiles/secrets/aristotle-lean-key.sh
 # uv tool install aristotlelib
 # + just aristotle
 alias antigravity='antigravity-ide'
-
 
 # export LAKE_ARTIFACT_CACHE=true
 # export LAKE_RESTORE_ARTIFACTS=true
