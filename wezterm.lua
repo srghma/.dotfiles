@@ -120,6 +120,12 @@ smart_splits.apply_to_config(config, {
 -- ============================================================================
 
 for _, key in ipairs({
+	{
+		key = "]",
+		mods = "LEADER|CTRL",
+		action = act.ActivateCopyMode,
+	},
+
 	-- --------------------------------------------------------------------------
 	-- PANE MANAGEMENT
 	-- --------------------------------------------------------------------------
@@ -395,11 +401,40 @@ for _, key in ipairs({
 		key = "d",
 		mods = "LEADER",
 		action = act.SpawnCommandInNewTab({
-			args = { "nvim", "~/.dotfiles/" },
+			args = { "nvim" },
+			cwd = wezterm.home_dir .. "/.dotfiles",
 		}),
 	},
 }) do
 	table.insert(config.keys, key)
 end
+
+-- ============================================================================
+-- COPY MODE
+-- ============================================================================
+
+-- extend defualt, bc G would not work without it
+local copy_mode = config.key_tables.copy_mode or wezterm.gui.default_key_tables().copy_mode
+
+for _, key in ipairs({
+	-- Word navigation
+	{ key = "w", mods = "NONE", action = act.CopyMode("MoveForwardWord") },
+	{ key = "b", mods = "NONE", action = act.CopyMode("MoveBackwardWord") },
+	{ key = "e", mods = "NONE", action = act.CopyMode("MoveForwardWordEnd") },
+
+	-- -- BIG word navigation (whitespace-delimited)
+	-- Jump forward/backward by semantic zone
+	{ key = "W", mods = "NONE", action = act.CopyMode("MoveForwardSemanticZone") },
+	{ key = "B", mods = "NONE", action = act.CopyMode("MoveBackwardSemanticZone") },
+
+	-- Line navigation
+	{ key = "0", mods = "NONE", action = act.CopyMode("MoveToStartOfLine") },
+	{ key = "^", mods = "NONE", action = act.CopyMode("MoveToStartOfLineContent") },
+	{ key = "$", mods = "NONE", action = act.CopyMode("MoveToEndOfLineContent") },
+}) do
+	table.insert(copy_mode, key)
+end
+
+config.key_tables.copy_mode = copy_mode
 
 return config

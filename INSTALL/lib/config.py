@@ -3,5 +3,5 @@
 from pathlib import Path
 import os
 
-DOTFILES: Path = Path(__file__).resolve().parent.parent
+DOTFILES: Path = Path(__file__).resolve().parent.parent.parent
 HOME: Path = Path(os.environ["HOME"])
