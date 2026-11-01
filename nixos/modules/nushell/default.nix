@@ -16,8 +16,11 @@
     # use ${pkgs.nu_scripts}/share/nu_scripts/custom-completions/nix/nix-completions.nu *
 
     interactiveShellInit = ''
-      # Git Abbreviations (auto-expands shortcuts on Space)
+      # Abbreviations (auto-expands shortcuts on Space)
       use ${pkgs.nu_scripts}/share/nu_scripts/abbreviations/git/git-abbreviations.nu *
+
+      # Aliases
+      use ${pkgs.nu_scripts}/share/nu_scripts/aliases/git/git-aliases.nu *
     '';
   };
 

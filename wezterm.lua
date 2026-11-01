@@ -422,10 +422,15 @@ for _, key in ipairs({
 	{ key = "b", mods = "NONE", action = act.CopyMode("MoveBackwardWord") },
 	{ key = "e", mods = "NONE", action = act.CopyMode("MoveForwardWordEnd") },
 
+	-- TODO
+	-- W = move right until whitespace, then skip whitespace
+	-- B = move left across whitespace, then to start of previous non-whitespace sequence
+	-- E = skip whitespace, then move to end of current/next non-whitespace sequence
+
 	-- -- BIG word navigation (whitespace-delimited)
 	-- Jump forward/backward by semantic zone
-	{ key = "W", mods = "NONE", action = act.CopyMode("MoveForwardSemanticZone") },
-	{ key = "B", mods = "NONE", action = act.CopyMode("MoveBackwardSemanticZone") },
+	{ key = "}", mods = "SHIFT", action = act.CopyMode("MoveForwardSemanticZone") },
+	{ key = "{", mods = "SHIFT", action = act.CopyMode("MoveBackwardSemanticZone") },
 
 	-- Line navigation
 	{ key = "0", mods = "NONE", action = act.CopyMode("MoveToStartOfLine") },

@@ -43,8 +43,20 @@ style = "fg:#000000 bg:#ffff93"
 format = '[ $symbol $branch ]($style)'
 
 [git_status]
-style = "fg:#000000 bg:#ffff93"
-format = '[$all_status$ahead_behind ]($style)'
+# style = "fg:#000000 bg:#ffff93"
+# format = '[$all_status$ahead_behind ]($style)'
+
+conflicted = '🏳'
+ahead = '🏎💨'
+behind = '😰'
+diverged = '😵'
+up_to_date = '✓'
+untracked = '🤷'
+stashed = '📦'
+modified = '📝'
+staged = '[++\($count\)](green)'
+renamed = '👅'
+deleted = '🗑'
 
 [docker_context]
 symbol = " "

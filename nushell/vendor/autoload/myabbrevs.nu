@@ -1,6 +1,10 @@
 const my_abbreviations = {
     # Custom Git
     gs: "git status"
+    grH: "git reset HEAD"
+    # "grH~": "git reset HEAD~"
+    # "grH~~": "git reset HEAD~~"
+    # "grH~~~": "git reset HEAD~~~"
 
     # From zshrc
     l: "eza --long --all"

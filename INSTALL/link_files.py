@@ -236,6 +236,7 @@ INHOME_INDOTFILES: Tuple[Tuple[str, str], ...] = (
     (".config/wezterm/wezterm.lua", "wezterm.lua"),
     (".config/flameshot/flameshot.ini", "flameshot.ini"),
     ("❌.bunfig.toml", ".bunfig.toml"),
+    (".config/carapace/specs", "carapace/specs"),
 ) + VSCODE_LINKS
 
 

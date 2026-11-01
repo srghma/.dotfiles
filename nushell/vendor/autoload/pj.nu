@@ -1,10 +1,72 @@
-# Configure your project directories
-# Example:
+# Project directories
 # $env.PROJECT_PATHS = ["~/projects", "~/work"]
 
-def --env pj [
-    ...args: string@"nu-complete pj"
-] {
+# Completion
+def "nu-complete pj" [token: record, place: record] {
+    let projects = (
+        $env.PROJECT_PATHS?
+        | default [($env.HOME | path join "projects")]
+        | each {|p| $p | path expand}
+    )
+
+    let prefix = $token.text
+    let args = $place.command | skip 1
+    let open_mode = ($place.index > 0) and (($args | first | default "") == "open")
+
+    # Find directories matching the current relative path
+    let dirs = (
+        $projects
+        | each {|project|
+            let parts = ($prefix | split row "/")
+            let has_slash = ($prefix | str contains "/")
+
+            let parent = if $has_slash {
+                $parts | drop | str join "/"
+            } else {
+                ""
+            }
+
+            let name = if $has_slash {
+                $parts | last
+            } else {
+                $prefix
+            }
+
+            let search = if ($parent | is-empty) {
+                $project
+            } else {
+                $project | path join $parent
+            }
+
+            glob ($search | path join $"($name)*")
+            | where {|path| ($path | path type) == "dir"}
+            | where {|path| not (($path | path basename) | str starts-with ".")}
+            | each {|path| $path | path relative-to $project}
+        }
+        | flatten
+        | uniq
+        | where {|dir| $dir | str starts-with $prefix}
+    )
+
+    if $open_mode {
+        $dirs
+    } else {
+        let action = if ($prefix != "open") and ("open" | str starts-with $prefix) {
+            [{
+                value: "open"
+                style: {fg: yellow attr: b}
+            }]
+        } else {
+            []
+        }
+
+        $action | append $dirs
+    }
+}
+
+# Main command
+@complete "nu-complete pj"
+def --env pj [...args: string] {
     let open_mode = ($args | first | default "") == "open"
 
     let target = if $open_mode {
@@ -19,7 +81,6 @@ def --env pj [
         | each {|p| $p | path expand}
     )
 
-    # No arguments: cd to first project directory
     if ($target | is-empty) {
         if $open_mode {
             print -e "Usage: pj [open] <project-or-subfolder>"
@@ -30,12 +91,9 @@ def --env pj [
         return
     }
 
-    # Find matching project or subdirectory
     let matches = (
         $projects
-        | each {|project|
-            $project | path join $target
-        }
+        | each {|project| $project | path join $target}
         | where {|path|
             ($path | path exists) and (($path | path type) == "dir")
         }
@@ -56,28 +114,4 @@ def --env pj [
     } else {
         cd $path
     }
-}
-
-# Tab completion
-def "nu-complete pj" [] {
-    let projects = (
-        $env.PROJECT_PATHS?
-        | default [($env.HOME | path join "projects")]
-        | each {|p| $p | path expand}
-    )
-
-    let dirs = (
-        $projects
-        | each {|project|
-            glob ($project | path join "**" | path join "*")
-            | each {|path|
-                $path
-                | path relative-to $project
-            }
-        }
-        | flatten
-        | uniq
-    )
-
-    ["open"] | append $dirs
 }
