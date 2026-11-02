@@ -67,6 +67,13 @@ $env.config.keybindings ++= [
             ]
         }
     }
+    {
+        name: ctrl_u_delete_to_line_start
+        modifier: control
+        keycode: char_u
+        mode: [vi_insert]
+        event: { edit: CutFromLineStart }
+    }
 ]
 
 # Use Neovim to edit the current command line (CTRL+o)

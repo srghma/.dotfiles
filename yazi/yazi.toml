@@ -1,3 +1,15 @@
+# ya pkg add CColombus/bat
+# ya pkg add dedukun/relative-motions
+
+[plugin]
+prepend_previewers = [
+  # Broad: any text-mimed file
+  { mime = "text/*", run = "bat" },
+  { mime = "application/json", run = "bat" },
+  { mime = "application/x-yaml", run = "bat" },
+  { mime = "application/toml", run = "bat" },
+]
+
 [open]
 prepend_rules = [{ mime = "application/x-subrip", use = ["edit", "reveal"] }]
 

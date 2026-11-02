@@ -1,0 +1,5 @@
+[icon]
+append_exts = [{ name = "lean", text = "λ", fg = "#f5a623" }]
+
+[filetype]
+rules = [{ url = "*/", fg = "#f5a623" }]

@@ -139,12 +139,10 @@
                 # nix-alien-pkgs.nix-alien
                 brightnessctl
 
-                keepassxc
                 telegram-desktop
                 google-chrome
                 eza
                 yazi
-                wezterm
                 # code-cursor
                 # chromium
                 # chromium
@@ -456,6 +454,17 @@
                 #cachix
                 killall
                 i3-volume
+
+                dropbox
+                elan
+                just
+                keepassxc
+                typst
+                typstyle
+                uv
+                wezterm
+                # xmodmap
+                # xxd
               ];
             }
           )

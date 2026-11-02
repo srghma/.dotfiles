@@ -1,0 +1,12 @@
+[[plugin.deps]]
+use = "CColombus/bat"
+rev = "f45ad7d"
+hash = "15328554de94d674330a6d164ed2085d"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:jump-to-char"
+rev = "25d992d"
+hash = "7a4b4237223aaa94e589d1c01a23542a"
+
+[flavor]
+deps = []

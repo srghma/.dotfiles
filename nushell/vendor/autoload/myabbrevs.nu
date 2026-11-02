@@ -1,10 +1,12 @@
 const my_abbreviations = {
     # Custom Git
     gs: "git status"
+    ghcr: "gh repo create ($env.PWD | path basename) --source=. --public --remote=origin --push"
+    gpo: "git po"
     grH: "git reset HEAD"
-    # "grH~": "git reset HEAD~"
-    # "grH~~": "git reset HEAD~~"
-    # "grH~~~": "git reset HEAD~~~"
+    "grH~": "git reset HEAD~"
+    "grH~~": "git reset HEAD~~"
+    "grH~~~": "git reset HEAD~~~"
 
     # From zshrc
     l: "eza --long --all"
@@ -24,7 +26,7 @@ const my_abbreviations = {
     top: "htop"
     wifi: "nmtui"
     sctl: "systemctl"
-    "share-wifi": "sudo create_ap wlp3s0 enp2s0 SrghmaWifi suckmydick666"
+    "share-wifi": "sudo create_ap wlp3s0 enp2s0 SrghmaWifi 88889999"
     pjdot: "cd ~/.dotfiles"
     pjodot: "cd ~/.dotfiles; nvim"
     # nh: "n-history"
