@@ -1,0 +1,57 @@
+# -----------------------------------------------------------------------------
+# TMUX-LIKE EXPERIENCE CONFIGURATION
+# -----------------------------------------------------------------------------
+
+# 1. LAYOUTS
+# Use the 'splits' layout by default. This allows you to split windows
+# arbitrarily (horizontal or vertical) just like Tmux.
+enabled_layouts splits
+
+# 2. WINDOW SPLITTING (Preserving current directory)
+# Create a new "pane" (window) by splitting.
+# We use --cwd=current so it opens in the same folder (essential for tmux feel).
+# You can change these to whatever keys you prefer (e.g., cmd+d, ctrl+a>...)
+map ctrl+minus       launch --location=hsplit --cwd=current
+map ctrl+backslash   launch --location=vsplit --cwd=current
+
+# 3. PANE NAVIGATION (As requested)
+# Move focus between panes using Ctrl + hjkl
+map ctrl+j neighbor_window down
+map ctrl+k neighbor_window up
+map ctrl+h neighbor_window left
+map ctrl+l neighbor_window right
+
+# NOTE: standard Ctrl+j sends "Enter" and Ctrl+k sends "Kill line" in many shells.
+# If you find this conflicts with your shell (e.g., in Vim or Zsh),
+# change the mappings above to use Alt (opt) instead:
+# map alt+j neighbor_window down
+# map alt+k neighbor_window up
+# ... etc
+
+# 4. PANE RESIZING
+# Resize the active pane using Alt + hjkl
+map alt+h resize_window narrower
+map alt+l resize_window wider
+map alt+k resize_window taller
+map alt+j resize_window shorter
+
+# 5. TAB MANAGEMENT (Like Tmux Windows)
+# Make the tab bar look more like a status bar
+tab_bar_style powerline
+tab_powerline_style slanted
+tab_bar_edge bottom
+
+# Quick tab navigation
+map ctrl+1 goto_tab 1
+map ctrl+2 goto_tab 2
+map ctrl+3 goto_tab 3
+map ctrl+4 goto_tab 4
+
+# 6. OPTIONAL: LEADER KEY (Ctrl+a style)
+# If you miss the "Ctrl+a" prefix from Screen/Tmux, you can use combinations.
+# Uncomment the lines below to use Ctrl+a > ...
+
+map ctrl+a>c new_tab
+map ctrl+a>n next_tab
+map ctrl+a>p previous_tab
+map ctrl+a>x close_window

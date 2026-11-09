@@ -1,0 +1,395 @@
+# vim: ft=toml
+
+set $mod Mod4
+floating_modifier $mod
+focus_follows_mouse  no
+workspace_auto_back_and_forth yes
+force_focus_wrapping yes
+
+font xft:Cousine bold 9
+new_window pixel 3
+
+set $blue  #005588
+set $gray1 #484848
+set $gray2 #333333
+
+client.focused          $gray1 $gray1 #FFFFFF #333333
+client.focused_inactive $gray2 $gray2 #FFFFFF #000000
+client.unfocused        $gray2 $gray2 #FFFFFF #000000
+
+# -------------------------------------
+# Workspaces names
+# -------------------------------------
+
+# my laptop's internal screen
+set $monitor eDP-1
+# external screen, they are set here to make it easier to move to new setups
+set $monitor2 HDMI-1
+
+workspace 1:1 output $monitor
+workspace 2:2 output $monitor
+workspace 3:3 output $monitor
+workspace 4:4 output $monitor
+workspace 5:5 output $monitor
+workspace 6:6 output $monitor
+workspace 7:7 output $monitor
+workspace 8:8 output $monitor
+workspace 9:9 output $monitor
+workspace 10:10 output $monitor
+
+workspace 11:11 output $monitor2
+workspace 12:12 output $monitor2
+workspace 13:13 output $monitor2
+workspace 14:14 output $monitor2
+workspace 15:15 output $monitor2
+workspace 16:16 output $monitor2
+workspace 17:17 output $monitor2
+workspace 18:18 output $monitor2
+workspace 19:19 output $monitor2
+workspace 20:20 output $monitor2
+
+# Existing Workspaces for eDP-1 (Laptop Screen)
+set $WS0 "1:1"
+set $WS1 "2:2"
+set $WS2 "3:3"
+set $WS3 "4:4"
+set $WS4 "5:5"
+set $WS5 "6:6"
+set $WS6 "7:7"
+set $WS7 "8:8"
+set $WS8 "9:9"
+set $WS9 "10:10"
+
+# switch to workspace
+bindsym $mod+1 workspace $WS0
+bindsym $mod+2 workspace $WS1
+bindsym $mod+3 workspace $WS2
+bindsym $mod+4 workspace $WS3
+bindsym $mod+5 workspace $WS4
+bindsym $mod+6 workspace $WS5
+bindsym $mod+7 workspace $WS6
+bindsym $mod+8 workspace $WS7
+bindsym $mod+9 workspace $WS8
+bindsym $mod+0 workspace $WS9
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move workspace $WS0
+bindsym $mod+Shift+2 move workspace $WS1
+bindsym $mod+Shift+3 move workspace $WS2
+bindsym $mod+Shift+4 move workspace $WS3
+bindsym $mod+Shift+5 move workspace $WS4
+bindsym $mod+Shift+6 move workspace $WS5
+bindsym $mod+Shift+7 move workspace $WS6
+bindsym $mod+Shift+8 move workspace $WS7
+bindsym $mod+Shift+9 move workspace $WS8
+bindsym $mod+Shift+0 move workspace $WS9
+
+#-----------------
+
+# New Workspaces for HDMI-1 (Secondary Screen)
+set $WS10 "11:11"
+set $WS11 "12:12"
+set $WS12 "13:13"
+set $WS13 "14:14"
+set $WS14 "15:15"
+set $WS15 "16:16"
+set $WS16 "17:17"
+set $WS17 "18:18"
+set $WS18 "19:19"
+set $WS19 "20:20"
+
+# switch to workspace
+bindsym $mod+Ctrl+1 workspace $WS10
+bindsym $mod+Ctrl+2 workspace $WS11
+bindsym $mod+Ctrl+3 workspace $WS12
+bindsym $mod+Ctrl+4 workspace $WS13
+bindsym $mod+Ctrl+5 workspace $WS14
+bindsym $mod+Ctrl+6 workspace $WS15
+bindsym $mod+Ctrl+7 workspace $WS16
+bindsym $mod+Ctrl+8 workspace $WS17
+bindsym $mod+Ctrl+9 workspace $WS18
+bindsym $mod+Ctrl+0 workspace $WS19
+
+# move focused container to workspace
+bindsym $mod+Ctrl+Shift+1 move workspace $WS10
+bindsym $mod+Ctrl+Shift+2 move workspace $WS11
+bindsym $mod+Ctrl+Shift+3 move workspace $WS12
+bindsym $mod+Ctrl+Shift+4 move workspace $WS13
+bindsym $mod+Ctrl+Shift+5 move workspace $WS14
+bindsym $mod+Ctrl+Shift+6 move workspace $WS15
+bindsym $mod+Ctrl+Shift+7 move workspace $WS16
+bindsym $mod+Ctrl+Shift+8 move workspace $WS17
+bindsym $mod+Ctrl+Shift+9 move workspace $WS18
+bindsym $mod+Ctrl+Shift+0 move workspace $WS19
+
+#-----------------
+
+# Rewind Audacious (Win + +)
+bindsym $mod+Shift+Equal exec audacious --rew
+
+# Forward Audacious (Win + =)
+bindsym $mod+equal exec audacious --fwd
+
+# -------------------------------------
+# Autostart
+# -------------------------------------
+set $terminal wezterm
+set $browser  google-chrome-stable --profile-directory=Default
+# set $browser  google-chrome-beta
+# set $browser  google-chrome-stable
+
+# exec --no-startup-id randomize_background $HOME/.dotfiles/i3/wallpallers/*
+exec --no-startup-id $browser
+exec --no-startup-id sh -c "QT_QPA_PLATFORM=xcb copyq"
+exec --no-startup-id pasystray
+exec --no-startup-id keepassxc
+# exec --no-startup-id dropbox start
+exec --no-startup-id i3-battery-popup
+exec --no-startup-id flameshot
+exec --no-startup-id telegram-desktop
+# exec --no-startup-id /nix/store/jf46172vm091cmzfhqyjxsfdq9nbaw8z-signal-desktop-7.62.0/bin/signal-desktop
+# exec --no-startup-id "sh -c 'sleep 10; exec audacious'"
+# exec --no-startup-id ua
+
+# -------------------------------------
+# Shortcuts
+# -------------------------------------
+bindsym $mod+Return  exec $terminal
+# bindsym $mod+Shift+q exec $terminal
+# bindsym $mod+e       exec $terminal -e tmuxx
+# bindsym $mod+Shift+e exec $terminal -e tmux new
+bindsym $mod+e exec $terminal start --always-new-process
+bindsym $mod+Shift+e exec $terminal
+bindsym $mod+Ctrl+e  exec code
+
+# bindsym $mod+Shift+w exec qutebrowser
+# bindsym $mod+w       exec "rm -rfd $HOME/.config/google-chrome-beta/Default/GPUCache && $browser"
+bindsym $mod+w       exec --no-startup-id $browser
+# bindsym $mod+Shift+s exec $terminal -e joshuto
+bindsym $mod+s       exec nautilus
+bindsym $mod+p       exec --no-startup-id "copyq show"
+# bindsym $mod+n       exec anki
+# bindsym $mod+m       exec $terminal -e "sh -c 'screen -q -r -D cmus || screen -S cmus cmus'"
+bindsym $mod+Shift+m exec pavucontrol
+
+bindsym $mod+a       focus parent
+bindsym $mod+Shift+a focus child
+bindsym $mod+f       fullscreen
+bindsym $mod+r       mode "resize"
+
+# bindsym $mod+BackSpace exec --no-startup-id "$HOME/.dotfiles/bin/i3-skip.sh"
+bindsym $mod+z       layout tabbed
+bindsym $mod+x       layout default
+bindsym $mod+v       split h
+bindsym $mod+c       split v
+bindsym $mod+b       layout toggle split
+
+bindsym $mod+q       kill
+bindsym $mod+d       exec --no-startup-id "rofi -show run"
+bindsym $mod+Shift+d exec --no-startup-id "rofi -show window"
+
+bindsym $mod+Shift+space focus mode_toggle
+bindsym $mod+space       floating toggle
+
+# multimedia keys
+bindsym XF86KbdBrightnessUp   exec "brightnessctl -d '*kbd*' s +10%"
+bindsym XF86KbdBrightnessDown exec "brightnessctl -d '*kbd*' s 10%-"
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id "srghma-i3-volume up"
+bindsym XF86AudioLowerVolume exec --no-startup-id "srghma-i3-volume down"
+bindsym XF86AudioMute        exec --no-startup-id "srghma-i3-volume mute"
+
+bindsym XF86MonBrightnessDown exec --no-startup-id "srghma-i3-brightness down"
+bindsym XF86MonBrightnessUp   exec --no-startup-id "srghma-i3-brightness up"
+
+bindsym XF86TouchpadToggle    exec switch_touchpad
+# lenovo :(
+bindsym XF86Calculator    exec switch_touchpad
+
+# Screenshots with notification
+bindsym Print exec --no-startup-id srghma-i3-screenshot
+
+bindsym $mod+Print exec "flameshot gui"
+
+# bindsym XF86Display         exec "arandr"
+# bindsym $mod+e              exec $terminal -e "alsamixer"
+
+bindsym $mod+Tab                 workspace back_and_forth
+bindsym $mod+Shift+R             reload; exec "i3-msg restart"
+
+# cut and paste windows
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+bindsym --release button3 kill
+
+# -------------------------------------
+# Moving
+# -------------------------------------
+
+set $left  h
+set $down  j
+set $up    k
+set $right l
+
+# change focus
+bindsym $mod+$left        focus left
+bindsym $mod+$down        focus down
+bindsym $mod+$up          focus up
+bindsym $mod+$right       focus right
+
+# change monitor
+bindsym $mod+Ctrl+$left        focus output left
+bindsym $mod+Ctrl+$right       focus output right
+
+bindsym $mod+Left         focus left
+bindsym $mod+Down         focus down
+bindsym $mod+Up           focus up
+bindsym $mod+Right        focus right
+
+# move focused window
+bindsym $mod+Shift+$left  move left
+bindsym $mod+Shift+$down  move down
+bindsym $mod+Shift+$up    move up
+bindsym $mod+Shift+$right move right
+
+# change monitor
+# bindsym $mod+Ctrl+Shift+$left move output left
+# bindsym $mod+Ctrl+Shift+$right move output right
+
+bindsym $mod+Shift+Left   move left
+bindsym $mod+Shift+Down   move down
+bindsym $mod+Shift+Up     move up
+bindsym $mod+Shift+Right  move right
+
+# move focused window with tabbed layout
+bindsym $mod+Control+Shift+$left  focus left;  split v; layout tabbed; focus right; move left
+bindsym $mod+Control+Shift+$down  focus down;  split v; layout tabbed; focus up;    move down
+bindsym $mod+Control+Shift+$up    focus up;    split v; layout tabbed; focus down;  move up
+bindsym $mod+Control+Shift+$right focus right; split v; layout tabbed; focus left;  move right
+
+bindsym $mod+Control+Shift+Left   focus left;  split v; layout tabbed; focus right; move left
+bindsym $mod+Control+Shift+Down   focus down;  split v; layout tabbed; focus up;    move down
+bindsym $mod+Control+Shift+Up     focus up;    split v; layout tabbed; focus down;  move up
+bindsym $mod+Control+Shift+Right  focus right; split v; layout tabbed; focus left;  move right
+
+# -------------------------------------
+
+# use nix run nixpkgs#xorg.xev or nix run nixpkgs#xorg.xmodmap
+#
+# bindsym $mod+Shift+BackSpace exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js rofi
+# bindsym $mod+Shift+Control+BackSpace exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js stop
+# bindsym $mod+Shift+Alt+BackSpace exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js next
+# bindsym $mod+mod2+KP_Enter exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js next
+# bindsym $mod+mod2+KP_minus exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js stop
+
+# press numlock button and then 1 button
+# bindsym mod2+KP_1 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 1
+# bindsym mod2+KP_2 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 2
+# bindsym mod2+KP_3 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 3
+# bindsym mod2+KP_4 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 4
+# bindsym mod2+KP_5 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 5
+# bindsym mod2+KP_6 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 6
+# bindsym mod2+KP_7 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 7
+# bindsym mod2+KP_8 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 8
+# bindsym mod2+KP_9 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 9
+# bindsym mod2+KP_0 exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js choose 10
+# bindsym mod2+XF86AudioPlay exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js rofi
+# bindsym mod2+XF86AudioPrev exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js prev
+# bindsym mod2+XF86AudioNext exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js next
+# bindsym mod2+XF86AudioStop exec --no-startup-id $HOME/projects/videochatru-extension/server/cli.js stop
+
+# -------------------------------------
+# - Modes
+# -------------------------------------
+
+mode "resize" {
+  set $small_pace 2
+  set $big_pace 5
+
+  bindsym $mod+$down         resize grow   down  $big_pace px or $big_pace ppt
+  bindsym $mod+Shift+$down   resize shrink down  $big_pace px or $big_pace ppt
+
+  bindsym $mod+$up           resize grow   up    $big_pace px or $big_pace ppt
+  bindsym $mod+Shift+$up     resize shrink up    $big_pace px or $big_pace ppt
+
+  bindsym $mod+$left         resize grow   left  $small_pace px or $small_pace ppt
+  bindsym $mod+Shift+$left   resize shrink left  $small_pace px or $small_pace ppt
+
+  bindsym $mod+$right        resize grow   right $small_pace px or $small_pace ppt
+  bindsym $mod+Shift+$right  resize shrink right $small_pace px or $small_pace ppt
+
+  # same bindings, but for the arrow keys
+  bindsym $mod+Down          resize shrink down  $big_pace px or $big_pace ppt
+  bindsym $mod+Shift+Down    resize grow   down  $big_pace px or $big_pace ppt
+
+  bindsym $mod+Up            resize shrink up    $big_pace px or $big_pace ppt
+  bindsym $mod+Shift+Up      resize grow   up    $big_pace px or $big_pace ppt
+
+  bindsym $mod+Left          resize shrink left  $small_pace px or $small_pace ppt
+  bindsym $mod+Shift+Left    resize grow   left  $small_pace px or $small_pace ppt
+
+  bindsym $mod+Right         resize shrink right $small_pace px or $small_pace ppt
+  bindsym $mod+Shift+Right   resize grow   right $small_pace px or $small_pace ppt
+
+  # back to normal: Enter or Escape or q or ^[
+  bindsym Return      mode "default"
+  bindsym q           mode "default"
+  bindsym Escape      mode "default"
+  bindcode Control+34 mode "default"
+}
+
+set $mode_system System (s) shutdown, (r) reboot, (h) hibernate
+mode "$mode_system" {
+  bindsym s exec --no-startup-id shutdown now, mode "default"
+  bindsym r exec --no-startup-id reboot, mode "default"
+  bindsym h exec --no-startup-id systemctl hibernate, mode "default"
+
+  # back to normal: Enter or Escape
+  bindsym Return    mode "default"
+  bindsym Escape    mode "default"
+}
+
+bindsym $mod+Caps_Lock mode "$mode_system"
+
+bar {
+  output HDMI-1
+  strip_workspace_numbers no
+  position top
+  status_command i3status-rs
+  colors {
+    statusline #AAAAAA
+    background #333333
+    focused_workspace  $gray2 $gray2 #FFFFFF
+    inactive_workspace $gray1 $gray1 #AAAAAA
+  }
+}
+
+bar {
+  output eDP-1
+  strip_workspace_numbers yes
+  position top
+  status_command i3status-rs
+  colors {
+    statusline #AAAAAA
+    background #333333
+    focused_workspace  $gray2 $gray2 #FFFFFF
+    inactive_workspace $gray1 $gray1 #AAAAAA
+  }
+}
+
+# -------------------------------------
+# - Behavior
+# -------------------------------------
+
+# floating_minimum_size 600 x 500
+# bindsym $mod+p title_window_icon on
+
+for_window [window_role="pop-up"]      floating enable title_window_icon on
+for_window [window_role="task_dialog"] floating enable
+for_window [title="Preferences$"]      floating enable
+for_window [title="Edit Current$"]     floating enable
+for_window [class="(?i)nautilus"]      floating enable
+for_window [class="(?i)copyq"]         floating enable
+for_window [class="(?i)hubstaff"]      floating enable
+for_window [title="Battery Warning"]   sticky enable

@@ -1,0 +1,114 @@
+#!/bin/sh -eu
+[ -d /home/testuser ] || { echo "Run sync-testuser first." >&2; exit 1; }
+command -v Xephyr >/dev/null || { echo "Xephyr not found." >&2; exit 1; }
+
+DEBUG=0
+for arg do
+  if [ "$arg" = "--debug" ]; then
+    DEBUG=1
+  else
+    set -- "$@" "$arg"
+  fi
+  shift
+done
+
+cd /
+
+RT="${XDG_RUNTIME_DIR:-/tmp}"
+LOG_XEPHYR="$RT/tu-xephyr.log"
+LOG_WEZTERM="$RT/tu-wezterm.log"
+
+sudo pkill -KILL -u testuser 2>/dev/null || true
+
+# Find next display
+N=7
+while [ -e "/tmp/.X11-unix/X$N" ] || [ -e "/tmp/.X$N-lock" ]; do
+  N=$((N+1))
+done
+D=":$N"
+
+COOKIE="$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')"
+XA=$(mktemp "$RT/xauth-tu.XXXXXX")
+xauth -f "$XA" add "$D" . "$COOKIE"
+
+# Launch Xephyr (-screen with no fixed resolution allows dynamic resize via RandR)
+Xephyr "$D" -auth "$XA" -nolisten tcp -dpi 140 -screen 1920x1080 -resizeable \
+  -title "testuser sandbox" >"$LOG_XEPHYR" 2>&1 &
+XPID=$!
+
+cleanup() {
+  sudo pkill -KILL -u testuser 2>/dev/null || true
+  kill "$XPID" 2>/dev/null || true
+  rm -f "$XA"
+}
+trap cleanup EXIT
+trap 'exit 1' INT TERM HUP
+
+# Wait for Xephyr socket
+i=0
+while [ ! -S "/tmp/.X11-unix/X$N" ]; do
+  if ! kill -0 "$XPID" 2>/dev/null; then
+    [ "$DEBUG" -eq 1 ] && { echo "Xephyr failed to start:" >&2; cat "$LOG_XEPHYR" >&2; }
+    exit 1
+  fi
+  i=$((i+1))
+  [ "$i" -gt 60 ] && { [ "$DEBUG" -eq 1 ] && echo "Xephyr socket timeout" >&2; exit 1; }
+  sleep 0.1
+done
+
+# Deliver auth cookie and runtime dir
+sudo -u testuser -H sh -c 'umask 077; cat > "$HOME/.Xauthority"' < "$XA"
+sudo -u testuser -H sh -c 'umask 077; mkdir -p /tmp/runtime-testuser "$HOME/.local/share/wezterm" "$HOME/.config/i3"; chmod 700 /tmp/runtime-testuser'
+
+# Create a clean, dedicated sandbox i3 config (NO autostart, NO hardcoded monitors)
+cat << 'EOF' | sudo -u testuser -H tee /home/testuser/.config/i3/config.sandbox >/dev/null
+set $mod Mod4
+font xft:Cousine bold 9
+floating_modifier $mod
+new_window pixel 2
+
+# Basic window control inside sandbox
+bindsym $mod+Return exec wezterm start --always-new-process
+bindsym $mod+q kill
+bindsym $mod+f fullscreen
+bindsym $mod+v split h
+bindsym $mod+c split v
+
+# Navigation
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+EOF
+
+# Start sandbox i3 with the clean config
+sudo -u testuser -H env -i \
+  DISPLAY="$D" \
+  XAUTHORITY=/home/testuser/.Xauthority \
+  XDG_RUNTIME_DIR=/tmp/runtime-testuser \
+  XDG_DATA_DIRS=/run/current-system/sw/share \
+  HOME=/home/testuser USER=testuser \
+  PATH=/run/current-system/sw/bin \
+  i3 -c /home/testuser/.config/i3/config.sandbox >/dev/null 2>&1 &
+
+sleep 0.2
+
+# Launch WezTerm (which inner i3 will now tile cleanly to 100% of the screen)
+if ! sudo -u testuser -H env -i \
+  DISPLAY="$D" \
+  XAUTHORITY=/home/testuser/.Xauthority \
+  XDG_RUNTIME_DIR=/tmp/runtime-testuser \
+  XDG_DATA_DIRS=/run/current-system/sw/share \
+  LOCALE_ARCHIVE=/run/current-system/sw/lib/locale/locale-archive \
+  LIBGL_ALWAYS_SOFTWARE=1 \
+  HOME=/home/testuser USER=testuser LOGNAME=testuser \
+  PATH=/run/current-system/sw/bin SHELL=/run/current-system/sw/bin/nu \
+  TERM=xterm-256color \
+  wezterm --config 'front_end="Software"' start --cwd /home/testuser --always-new-process "$@" \
+  </dev/null >/dev/null 2>"$LOG_WEZTERM"; then
+    if [ "$DEBUG" -eq 1 ]; then
+      echo "WezTerm failed. Log output:" >&2
+      cat "$LOG_WEZTERM" >&2
+    fi
+    exit 1
+fi

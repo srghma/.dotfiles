@@ -1,0 +1,151 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i python3 -p "python3.withPackages (ps: [ ps.colorama ])"
+
+#####/usr/bin/env nix
+#####"nix shell nixpkgs#python3\.withPackages\(ps\:\[ps\.colorama\]\) --command python"
+
+######/usr/bin/env python3
+
+# reads lines of file
+# skip empty lines or lines starting with a comment "-- "
+# first line should be "module My.Module"
+# checks that module name is equal to path to file from the root
+
+import sys
+import os
+import re
+import argparse
+from colorama import init, Fore, Back, Style
+
+init(autoreset=True)
+
+def print_success(msg):
+    print(Fore.GREEN + "✅ " + msg)
+
+def print_error(msg):
+    print(Fore.RED + "❌ " + msg)
+
+def print_fix(msg):
+    print(Fore.YELLOW + "🛠️ " + msg)
+
+def print_info(msg):
+    print(Fore.CYAN + "🎯 " + msg)
+
+def return_first_line_of_code(path_to_file):
+    with open(path_to_file, "r") as f:
+        for line in f:
+            stripped_line = line.strip()
+            if stripped_line and not stripped_line.startswith("--"):
+                return stripped_line
+
+def lint_module_names_eq_to_path(root, path_to_file_relative_to_root):
+    path_to_file = os.path.join(root, path_to_file_relative_to_root)
+    try:
+        line_with_a_module_name = return_first_line_of_code(path_to_file)
+    except FileNotFoundError:
+        print_error(f"File '{path_to_file}' not found.")
+        return False
+
+    expected_module_name_from_path = path_to_file_relative_to_root.replace(".purs", "").replace("/", ".")
+    if not line_with_a_module_name or not line_with_a_module_name.startswith("module "):
+        with open(path_to_file, "r") as f:
+            content = f.read()
+        new_content = f"module {expected_module_name_from_path} where\n\nimport Prelude\n\n{content}"
+        with open(path_to_file, "w") as f:
+            f.write(new_content)
+        print_fix(f"Added missing module declaration to {path_to_file}")
+        return True
+
+    module_name = re.split(r'\s+', line_with_a_module_name, maxsplit=2)[1]
+
+    if module_name == expected_module_name_from_path:
+        # print_success(f"{path_to_file_relative_to_root} ✅")
+        return True
+    else:
+        print_error(f"Module name mismatch in {path_to_file_relative_to_root}")
+        with open(path_to_file, "r") as f:
+            content = f.read()
+        new_content = re.sub(f"module {re.escape(module_name)}", f"module {expected_module_name_from_path}", content)
+        with open(path_to_file, "w") as f:
+            f.write(new_content)
+        print_fix(f"Fixed module declaration in {path_to_file}")
+        return True
+
+def find_purs_files(root):
+    purs_files = []
+    for dirpath, _, filenames in os.walk(root):
+        for f in filenames:
+            if f.endswith(".purs"):
+                full_path = os.path.join(dirpath, f)
+                relative_path = os.path.relpath(full_path, root)
+                purs_files.append(relative_path)
+    return purs_files
+
+def filter_out_matching(array, array_of_regexps):
+    return [x for x in array if not any(re.match(r, x) for r in array_of_regexps)]
+
+def filepaths_to_dict_of_root_and_relative_paths(list_of_known_root_dirs, filepaths):
+    def find_root_or_this_file(list_of_known_root_dirs, filepath):
+        for root in list_of_known_root_dirs:
+            if filepath.startswith(root + "/") or filepath == root:
+                return root
+        return False
+
+    known_files_dict = {}
+    unknown_files_list = []
+    for filepath in filepaths:
+        root = find_root_or_this_file(list_of_known_root_dirs, filepath)
+        if root is False:
+            unknown_files_list.append(filepath)
+        else:
+            relpath = filepath[len(root) + 1:] if filepath != root else os.path.basename(filepath)
+            known_files_dict.setdefault(root, []).append(relpath)
+
+    return known_files_dict, unknown_files_list
+
+def lint_module_names_eq_to_path_root(root, purs_files):
+    n_total = len(purs_files)
+    n_ok = 0
+    n_fail = 0
+    ok = True
+    for purs_file in purs_files:
+        result = lint_module_names_eq_to_path(root, purs_file)
+        if result:
+            n_ok += 1
+        else:
+            n_fail += 1
+            ok = False
+    return ok, n_total, n_ok, n_fail
+
+def main(extension, list_of_known_root_dirs, list_of_regexes_to_exclude_files):
+    all_files = []
+    for root in list_of_known_root_dirs:
+        all_files.extend([os.path.join(root, f) for f in find_purs_files(root)])
+
+    files_non_excluded = filter_out_matching(all_files, list_of_regexes_to_exclude_files)
+    known_files_dict, unknown_files_list = filepaths_to_dict_of_root_and_relative_paths(list_of_known_root_dirs, files_non_excluded)
+
+    if unknown_files_list:
+        print_error(f"Unknown files found. Add their directories to args or use --exclude:\n{unknown_files_list}")
+        sys.exit(1)
+
+    ok = True
+    for root, files in known_files_dict.items():
+        print_info(f"Checking {len(files)} files in {root}")
+        root_ok, n_total, n_ok, n_fail = lint_module_names_eq_to_path_root(root, files)
+        if root_ok:
+            print(Style.BRIGHT + "✅ " + Back.GREEN + Fore.BLACK + f"All {n_ok}/{n_total} files OK in {root}")
+        else:
+            print(Style.BRIGHT + "❌ " + Back.RED + Fore.BLACK + f"{n_fail}/{n_total} files failed in {root}" + Style.RESET_ALL)
+            ok = False
+
+    if not ok:
+        sys.exit(1)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="🔍 Check PureScript module names match file paths")
+    parser.add_argument("dirs", nargs="*", default=["src", "test"], help="Directories to check")
+    parser.add_argument("--exclude", nargs="*", default=[], help="Regex patterns to exclude")
+    args = parser.parse_args()
+
+    main("purs", args.dirs, args.exclude)

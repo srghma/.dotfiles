@@ -1,0 +1,24 @@
+#!/bin/sh -eu
+
+# Directory to save screenshots (respects XDG or falls back to ~/Pictures)
+SAVE_DIR="${XDG_PICTURES_DIR:-$HOME/Pictures}"
+
+# Avoid spawning mkdir if directory already exists
+[ -d "$SAVE_DIR" ] || mkdir -p "$SAVE_DIR"
+
+# Generate filename based on timestamp
+TIMESTAMP=$(date +'%Y-%m-%d-%I%p-%M-%S')
+FILEPATH="$SAVE_DIR/${TIMESTAMP}-screenshot.png"
+
+# Take the screenshot (--monitor 0 captures the primary monitor)
+if scrot --monitor 0 "$FILEPATH"; then
+  notify-send "Screenshot Captured" "Saved to $FILEPATH" \
+    -i camera-photo \
+    -a "System" \
+    --transient
+else
+  notify-send "Screenshot Failed" "An error occurred while saving the file." \
+    -u critical \
+    -a "System"
+  exit 1
+fi

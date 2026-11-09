@@ -1,0 +1,36 @@
+---@type LazySpec
+return {
+  "AstroNvim/astrocore",
+  ---@type AstroCoreOpts
+  opts = {
+    mappings = {
+      n = {
+        ["<leader>oc"] = {
+          function()
+            local function get_copyq_content()
+              local output = vim.fn.system({ "copyq", "read" }):gsub("\n$", "")
+              return output ~= "" and output or nil
+            end
+
+            local function open_file_from_path(file_path)
+              local expanded_path = vim.fn.fnamemodify(file_path, ":p")
+              if vim.fn.filereadable(expanded_path) == 1 then
+                vim.cmd("edit " .. vim.fn.fnameescape(expanded_path))
+              else
+                vim.notify("File not found: " .. file_path, vim.log.levels.ERROR)
+              end
+            end
+
+            local file_path = get_copyq_content()
+            if file_path then
+              open_file_from_path(file_path)
+            else
+              vim.notify("No content found in CopyQ", vim.log.levels.WARN)
+            end
+          end,
+          desc = "Open file path from CopyQ",
+        },
+      },
+    },
+  },
+}

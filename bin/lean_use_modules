@@ -1,0 +1,116 @@
+#!/usr/bin/env -S bun run
+
+// vim: set filetype=typescript :
+
+import { readFileSync, writeFileSync } from "node:fs";
+import { execSync } from "node:child_process";
+
+// 1. Get arguments
+const globPattern = Bun.argv[2] || "**/*.lean";
+
+/**
+ * Get all files tracked by git or untracked but not ignored,
+ * matching the provided glob.
+ */
+function getFiles(pattern: string): string[] {
+  try {
+    const stdout = execSync(`git ls-files --cached --others --exclude-standard -- "${pattern}"`, {
+      encoding: "utf8"
+    });
+    return stdout.split("\n").filter(f => f.trim().length > 0 && f.endsWith(".lean"));
+  } catch (e) {
+    console.error("Error: This script must be run inside a git repository.");
+    process.exit(1);
+  }
+}
+
+/**
+ * Strips Lean comments (single line -- and multi-line /- -/)
+ */
+function stripComments(content: string): string {
+  // Removes multi-line /- ... -/ and single line -- ...
+  return content.replace(/\/-[\s\S]*?-\/|--.*$/gm, "");
+}
+
+/**
+ * Checks if the file contains anything other than imports, prelude, or comments.
+ */
+function hasCodeContent(content: string): boolean {
+  const clean = stripComments(content);
+  const lines = clean.split('\n');
+  const nonImportLines = lines.filter(line => {
+    const t = line.trim();
+    return t.length > 0 && !t.startsWith('import ') && !t.startsWith('prelude');
+  });
+  return nonImportLines.length > 0;
+}
+
+/**
+ * Checks if the first real command in the file is already 'module'
+ */
+function isAlreadyProcessed(content: string): boolean {
+  const clean = stripComments(content).trim();
+  return clean.startsWith("module");
+}
+
+const files = getFiles(globPattern);
+
+if (files.length === 0) {
+  console.log("No matching lean files found.");
+  process.exit(0);
+}
+
+for (const file of files) {
+  const content = readFileSync(file, "utf8");
+
+  if (content.trim() === "" || isAlreadyProcessed(content)) {
+    continue;
+  }
+
+  const lines = content.split('\n');
+  const hasContent = hasCodeContent(content);
+
+  // Find last import
+  let lastImportIndex = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].match(/^\s*import\s+/)) {
+      lastImportIndex = i;
+    }
+  }
+
+  let result = "";
+
+  if (!hasContent) {
+    // CASE: Only imports or comments (Pure import file)
+    result = "module\nprelude\n" + content;
+  } else {
+    // CASE: Has definitions/axioms/etc.
+    result = "module\n\n";
+
+    if (lastImportIndex !== -1) {
+      // Logic for files with imports
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+        if (line.match(/^\s*import\s+/)) {
+          line = line.replace(/^(\s*)import/, '$1public import');
+        }
+        result += line + "\n";
+
+        // Insert section exactly after the last import
+        if (i === lastImportIndex) {
+          result += "\n@[expose] public section\n";
+        }
+      }
+    } else {
+      // Logic for files with NO imports but HAS code content
+      // Place section at the top, right after the module header
+      result += "@[expose] public section\n\n";
+      result += content;
+    }
+  }
+
+  writeFileSync(file, result.trimEnd() + "\n");
+  console.log(`Updated: ${file}`);
+}
+
+console.log(`\nProcessed ${files.length} files.`);

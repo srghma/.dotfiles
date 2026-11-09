@@ -1,0 +1,8 @@
+#! /bin/sh
+
+# Dynamically resolve directory where this script lives
+DIR="$(dirname "$(readlink -f "$0")")"
+
+echo "{\"version\":1}"
+echo "[[],"
+exec conky -q -c "$DIR/conkyrc"

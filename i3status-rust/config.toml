@@ -1,0 +1,96 @@
+icons_format = "{icon}"
+
+[theme]
+theme = "solarized-dark"
+[theme.overrides]
+idle_bg = "#002B36"
+idle_fg = "#93A1A1"
+alternating_tint_bg = "#073642"
+alternating_tint_fg = "#EEE8D5"
+
+[icons]
+icons = "material-nf"
+# icons = "nerd"
+
+# 1. CPU
+[[block]]
+block = "cpu"
+interval = 2
+format = " $icon $barchart $utilization "
+info_cpu = 20
+warning_cpu = 50
+critical_cpu = 90
+[block.theme_overrides]
+idle_fg = "#DC322F"
+
+# 2. Temperature
+[[block]]
+block = "temperature"
+interval = 2
+format = " $icon $average "
+good = 50
+idle = 60
+info = 70
+warning = 80
+[block.theme_overrides]
+idle_fg = "#DC322F"
+
+# 3. Disk Space (Root)
+[[block]]
+block = "disk_space"
+path = "/"
+info_type = "available"
+alert_unit = "GB"
+interval = 20
+warning = 20.0
+alert = 10.0
+format = " $icon root: $available.eng(w:2) "
+
+# 4. Memory & Swap
+[[block]]
+block = "memory"
+interval = 2
+format = " $icon $mem_used_percents.eng(w:2) "
+format_alt = " $icon_swap $swap_used_percents.eng(w:2) "
+warning_mem = 80
+critical_mem = 95
+[block.theme_overrides]
+idle_fg = "#B58900"
+
+# 5. Network
+[[block]]
+block = "net"
+interval = 5
+format = " $icon {$ssid $signal_strength|Wired} "
+inactive_format = " $icon no connection "
+missing_format = " $icon no connection "
+[block.theme_overrides]
+idle_fg = "#33CC99"
+
+# 6. Battery (Uses native FontAwesome battery icons now)
+[[block]]
+block = "battery"
+interval = 10
+format = " $icon $percentage "
+full_format = " $icon $percentage "
+not_charging_format = " $icon $percentage "
+warning = 75
+critical = 15
+[block.theme_overrides]
+idle_fg = "#9933CC"
+
+# 7. Sound
+[[block]]
+block = "sound"
+format = " $icon $volume "
+[block.theme_overrides]
+idle_fg = "#268BD2"
+[[block.click]]
+button = "left"
+cmd = "pavucontrol"
+
+# 8. Time
+[[block]]
+block = "time"
+interval = 5
+format = " $icon $timestamp.datetime(f:'%a %d/%m %R') "

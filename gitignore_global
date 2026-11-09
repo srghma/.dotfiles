@@ -1,0 +1,84 @@
+# vim: set filetype=gitignore :
+
+.projectile-cache.eld
+.rake_tasks
+.DS_Store
+tags
+nohup.*
+.stfolder
+.stversions
+.bash_hist
+.envrc
+# spago.dhall
+# packages.dhall
+
+# https://github.com/scalameta/metals-vscode
+.metals/
+.bloop/
+.ammonite/
+metals.sbt
+
+brainflow_svm.model
+libBoardController.so
+libDataHandler.so
+libGanglionLib.so
+libMLModule.so
+libunicorn.so
+
+myDataDir/
+myGenesis.json
+.gcroots/
+
+spago-original-backup.yaml
+spago-myglobal.yaml
+.spec-results
+.spago/
+output/
+.psc-ide-port
+nohup.out
+.direnv
+result
+result-*
+.null-ls_*
+
+# bootstrap/idris2_app/*.rkt
+# bootstrap/idris2_app/*.ss
+# bootstrap/
+# benchmark/benchmarks/*
+.zed/
+.ckb/
+.direnv/
+.mimo-home/
+.mimocode/
+# src/lib/ui-library
+
+# docker/dev.yml
+# config/initializers/constants.rb
+
+
+# CMakeCache.txt
+# CMakeFiles/
+# Makefile
+# Testing/
+# cadical/
+# cmake_install.cmake
+# mimalloc/
+# stage0-prefix/
+# # stage0/
+# stage1-prefix/
+# stage1/
+# stage2-prefix/
+# stage3-prefix/
+
+# tests/lake/tests/manifest/lake-packages/bar
+#
+# /dumps/dump.sql
+# /dumps/file_url_to_data.json
+# /dumps/sustainable_products_all_v3.xlsx
+# /dumps/sustainable_products_all_v3_old.xlsx
+# /dumps/my_sustainable_products_all.xlsx
+# /docker-entrypoint.sh
+#
+# .~lock.*.xlsx#
+#
+# **/.claude/settings.local.json

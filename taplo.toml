@@ -1,0 +1,4 @@
+[formatting]
+column_width = 220
+array_auto_expand = false
+array_auto_collapse = true

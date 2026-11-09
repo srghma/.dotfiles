@@ -1,0 +1,31 @@
+return {
+  "kiyoon/treesitter-indent-object.nvim",
+  init = function()
+      local map = vim.keymap.set
+      map(
+          { "x", "o" },
+          "ai",
+          "<Cmd>lua require'treesitter_indent_object.textobj'.select_indent_outer()<CR>",
+          { noremap = true, silent = true, desc = "context-aware indent" }
+      )
+      map(
+          { "x", "o" },
+          "aI",
+          "<Cmd>lua require'treesitter_indent_object.textobj'.select_indent_outer(true)<CR>",
+          { noremap = true, silent = true, desc = "entire-line indent" }
+      )
+      map(
+          { "x", "o" },
+          "ii",
+          "<Cmd>lua require'treesitter_indent_object.textobj'.select_indent_inner()<CR>",
+          { noremap = true, silent = true, desc = "inner block" }
+      )
+
+      map(
+          { "x", "o" },
+          "iI",
+          "<Cmd>lua require'treesitter_indent_object.textobj'.select_indent_inner(true)<CR>",
+          { noremap = true, silent = true, desc = "entire inner range" }
+      )
+  end,
+}

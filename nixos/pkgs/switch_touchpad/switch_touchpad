@@ -1,0 +1,43 @@
+#!/bin/sh -eu
+# switch_touchpad - Toggles touchpad enabled/disabled state with notification
+
+# Device search keyword (case-insensitive, default: "touchpad")
+TOUCHPAD_KEYWORD="${1:-touchpad}"
+NOTIFY_ID="1234"
+TIMEOUT="2000"
+DEBUG="${DEBUG:-0}" # Set DEBUG=1 to print messages to stdout
+
+notify() {
+  notify-send -r "$NOTIFY_ID" -t "$TIMEOUT" "$1"
+  [ "$DEBUG" = "1" ] && echo "$1"
+}
+
+# Fetch device list
+LIST=$(xinput list)
+
+# Find matching touchpad line (case-insensitive)
+TOUCHPAD_LINE=$(echo "$LIST" | grep -i "$TOUCHPAD_KEYWORD" | head -n 1 || true)
+
+if [ -z "$TOUCHPAD_LINE" ]; then
+  notify "Touchpad matching '$TOUCHPAD_KEYWORD' not found"
+  echo "Error: No device matching '$TOUCHPAD_KEYWORD'." >&2
+  echo "Available devices:" >&2
+  echo "$LIST" >&2
+  exit 1
+fi
+
+# Extract ID and clean device name
+TOUCHPAD_ID=$(echo "$TOUCHPAD_LINE" | sed -n 's/.*id=\([0-9]\+\).*/\1/p')
+TOUCHPAD_NAME=$(echo "$TOUCHPAD_LINE" | sed -E 's/^[^a-zA-Z0-9]*//; s/[[:space:]]+id=.*$//')
+
+# Get current state: 1 = enabled, 0 = disabled (single awk process)
+STATE=$(xinput list-props "$TOUCHPAD_ID" | awk '/Device Enabled/ {print $4}')
+
+# Toggle state
+if [ "$STATE" = "1" ]; then
+  xinput --disable "$TOUCHPAD_ID"
+  notify "Touchpad disabled: $TOUCHPAD_NAME (ID: $TOUCHPAD_ID)"
+else
+  xinput --enable "$TOUCHPAD_ID"
+  notify "Touchpad enabled: $TOUCHPAD_NAME (ID: $TOUCHPAD_ID)"
+fi

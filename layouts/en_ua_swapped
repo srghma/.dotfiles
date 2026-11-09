@@ -1,0 +1,52 @@
+xkb_keymap {
+  xkb_keycodes      { include "evdev+aliases(qwerty)" };
+  xkb_geometry      { include "pc(pc104)" };
+  xkb_types         { include "complete" };
+  xkb_compat        { include "complete" };
+
+  xkb_symbols {
+    include "pc+us+ua:2+inet(evdev)"
+    include "group(rctrl_rshift_toggle)"
+    include "capslock(swapescape)"
+
+    // SWAP ONLY LEFT ALT AND LEFT CONTROL
+    replace key <LALT> { [ Control_L, Control_L ] };
+    replace key <LCTL> { [ Alt_L, Meta_L ] };
+    modifier_map Control { <LALT> };
+    modifier_map Mod1 { <LCTL> };
+
+    // swap ; and : only in us layout
+    replace key <AC10> { [ colon, semicolon ], [ Cyrillic_zhe, Cyrillic_ZHE ] };
+
+    // swap " and ' only in us layout
+    // replace key <AC11> { [ quotedbl, apostrophe ], [ Cyrillic_e, Cyrillic_E ] };
+
+    // Делаем правый Alt обычной клавишей Alt_R (отключаем AltGr / 3-й уровень)
+    replace key <RALT> { [ Alt_R, Meta_R ] };
+    modifier_map Mod1 { <RALT> };
+
+    // Примусово повертаємо правому Ctrl його стандартне значення Control_R
+    // replace key <RCTL> { [ Control_R ] };
+    // modifier_map Control { <RCTL> };
+
+    // helpers //
+    // xinput list | grep 'AT Translated Set 2 keyboard'
+    // xinput test NUM
+    // xkbcomp $HOME/.dotfiles/layouts/en_ua_swapped $DISPLAY
+    // vim $(nix-build --no-out-link '<nixpkgs>' -A xorg.xkeyboardconfig)/etc/X11/xkb/rules/base.lst
+
+    // vim $(nix-build --no-out-link '<nixpkgs>' -A xorg.xkeyboardconfig)/etc/X11/xkb/keycodes/evdev
+    // vim $(nix-build --no-out-link '<nixpkgs>' -A xorg.xkeyboardconfig)/etc/X11/xkb/symbols/us
+
+    // keycode 79 = Left
+    // keycode 80 = Down
+    // keycode 81 = Right
+    // keycode 83 = Left
+    // keycode 84 = Down
+    // keycode 85 = Right
+    // keycode 87 = Up
+    // keycode 88 = Down
+    // keycode 89 = Right
+    // keycode 90 = 0
+  };
+};

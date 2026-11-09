@@ -1,0 +1,28 @@
+# ya pkg add CColombus/bat
+# ya pkg add dedukun/relative-motions
+
+[plugin]
+prepend_previewers = [
+  # Broad: any text-mimed file
+  { mime = "text/*", run = "bat" },
+  { mime = "application/json", run = "bat" },
+  { mime = "application/x-yaml", run = "bat" },
+  { mime = "application/toml", run = "bat" },
+]
+
+[open]
+prepend_rules = [{ mime = "application/x-subrip", use = ["edit", "reveal"] }]
+
+# [manager]
+# show_hidden = true
+# sort_by = "natural"
+# sort_dir_first = true
+# linemode = "size"
+#
+# [preview]
+# tab_size = 2
+# max_width = 1000
+# max_height = 1000
+# image_delay = 30
+# image_filter = "triangle"
+# image_quality = 75

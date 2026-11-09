@@ -1,0 +1,66 @@
+{
+  config,
+  pkgs,
+  ...
+}:
+let
+  # mypkgs = pkgs.nixpkgsMaster.pkgs;
+  mypkgs = pkgs;
+
+  obs = mypkgs.wrapOBS {
+    plugins = with mypkgs.obs-studio-plugins; [
+      # v4l-utils
+      # advanced-scene-switcher
+      # obs-pipewire-audio-capture
+      droidcam-obs
+      obs-shaderfilter
+      obs-composite-blur
+      obs-vintage-filter
+      # input-overlay
+      # obs-source-clone
+      # looking-glass-obs
+      obs-source-record
+      # obs-3d-effect
+      # obs-teleport
+      obs-backgroundremoval
+      # obs-vaapi
+      # obs-command-source
+      # obs-gstreamer
+      # obs-vkcapture
+      # obs-hyperion
+      # obs-websocket
+      # obs-livesplit-one
+      # obs-move-transition
+      obs-multi-rtmp
+      # obs-ndi
+      # wlrobs
+      # obs-nvfbc
+    ];
+  };
+in
+{
+  # boot.extraModulePackages = with config.boot.kernelPackages; [ avld ];
+  boot.extraModprobeConfig = ''
+    options avld width=1280 height=720 fps=30
+  '';
+
+  security.polkit.enable = true;
+
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+        if (action.id == "org.freedesktop.policykit.exec" &&
+            action.lookup("program") == "/run/current-system/sw/bin/modprobe" &&
+            subject.isInGroup("users")) {
+            return polkit.Result.YES;
+        }
+    });
+  '';
+
+  environment.systemPackages = [
+    obs
+    pkgs.avld
+    mypkgs.android-tools
+    mypkgs.adb-sync
+    # mypkgs.usbmuxd
+  ];
+}
