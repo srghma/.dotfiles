@@ -32,6 +32,10 @@ const my_abbreviations = {
     pjodot: "cd ~/.dotfiles; nvim"
     # nh: "n-history"
     rmf: "rm -rfd"
+    nix: "nix --extra-access-tokens $\"github.com=(gh auth token | str trim)\""
+
+    # Docker - ReMove - All - Containers - (and) - Images
+    # drmaci: "try { docker stop ...(docker ps -aq | lines) }; try { docker rm ...(docker ps -aq | lines) }"
 }
 
 export-env {

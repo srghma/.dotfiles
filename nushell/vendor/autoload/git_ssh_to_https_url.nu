@@ -38,10 +38,12 @@ export def git-ssh-to-https-url [url: string]: string -> string {
 
 # Opens the GitLab Merge Request creation page for the current branch
 export def gpo-open [] {
+    use ../lib/log.nu [log-step, log-info, log-ok, log-warn, log-err, log-header, log-done]
+
     # 1. Detect current branch
     let branch_res = (do { git rev-parse --abbrev-ref HEAD } | complete)
     if $branch_res.exit_code != 0 {
-        print $"(ansi red_bold)❌ Error:(ansi reset) Not inside a git repository or unable to detect branch."
+        log-err "❌ Error: Not inside a git repository or unable to detect branch."
         return
     }
     let branch = ($branch_res.stdout | str trim)
@@ -53,7 +55,7 @@ export def gpo-open [] {
     } else {
         let origin_res = (do { git remote get-url origin } | complete)
         if $origin_res.exit_code != 0 {
-            print $"(ansi red_bold)❌ Error:(ansi reset) Neither 'upstream' nor 'origin' remote found."
+            log-err "❌ Error: Neither 'upstream' nor 'origin' remote found."
             return
         }
         $origin_res.stdout | str trim
@@ -67,7 +69,7 @@ export def gpo-open [] {
     let encoded_branch = ($branch | url encode)
     let final_url = $"($https_url)/-/merge_requests/new?merge_request%5Bsource_branch%5D=($encoded_branch)"
 
-    print $"(ansi cyan)🌐 Opening MR:(ansi reset) (ansi yellow_underline)($final_url)(ansi reset)"
+    log-step $"🌐 Opening MR: (ansi yellow_underline)($final_url)(ansi reset)"
 
     # 4. Open in browser (supports NixOS default path with fallbacks)
     if (which xdg-open | is-not-empty) {

@@ -39,39 +39,15 @@
 # sub   cv25519 2024-02-14 [E] [expires: 2029-02-12]
 
 module _gpg {
+    use ../lib/log.nu [
+        log-step, log-info, log-ok, log-warn, log-err, log-header, log-done
+    ]
+
     const USER_EMAIL = "srghma@gmail.com"
     const BACKUP_DIR = "~/.dotfiles/secrets/gpg"
     const ARCHIVE_PATH = "~/.dotfiles/secrets/gpg.tgz"
 
     # --- Internal Helpers (not visible outside this module) ---
-
-    def _gpg_log_step [msg: string] {
-        print $"(ansi cyan)($msg)(ansi reset)"
-    }
-
-    def _gpg_log_info [msg: string] {
-        print $"(ansi blue)($msg)(ansi reset)"
-    }
-
-    def _gpg_log_ok [msg: string] {
-        print $"(ansi green)($msg)(ansi reset)"
-    }
-
-    def _gpg_log_warn [msg: string] {
-        print $"(ansi yellow)($msg)(ansi reset)"
-    }
-
-    def _gpg_log_err [msg: string] {
-        print $"(ansi red_bold)($msg)(ansi reset)"
-    }
-
-    def _gpg_log_header [msg: string] {
-        print $"(ansi blue_bold)($msg)(ansi reset)"
-    }
-
-    def _gpg_log_done [msg: string] {
-        print $"(ansi green_bold)($msg)(ansi reset)"
-    }
 
     def _gpg_export_file [
         step_msg: string,
@@ -79,15 +55,15 @@ module _gpg {
         err_msg: string,
         action: closure
     ] {
-        _gpg_log_step $step_msg
+        log-step $step_msg
         let res = (do $action | complete)
         if $res.exit_code != 0 {
-            _gpg_log_err $err_msg
+            log-err $err_msg
             if ($res.stderr | is-not-empty) { print $res.stderr }
             return false
         }
         $res.stdout | save -f $out_file
-        _gpg_log_ok $"✔ Saved ($out_file)"
+        log-ok $"✔ Saved ($out_file)"
         true
     }
 
@@ -98,17 +74,17 @@ module _gpg {
     ] {
         if not ($file_path | path exists) {
             if $required {
-                _gpg_log_warn $"⚠️  No ($label) found in ($file_path | path dirname)"
+                log-warn $"⚠️  No ($label) found in ($file_path | path dirname)"
             }
             return
         }
 
-        _gpg_log_info $"🌐 Importing ($label) from ($file_path | path basename)..."
+        log-info $"🌐 Importing ($label) from ($file_path | path basename)..."
         let res = (do { gpg --batch --import $file_path } | complete)
         if $res.exit_code == 0 {
-            _gpg_log_ok $"✅ ($label) imported."
+            log-ok $"✅ ($label) imported."
         } else {
-            _gpg_log_err $"❌ Failed to import ($label)."
+            log-err $"❌ Failed to import ($label)."
             if ($res.stderr | is-not-empty) { print $res.stderr }
         }
     }
@@ -121,7 +97,7 @@ module _gpg {
         let archive_path = ($ARCHIVE_PATH | path expand)
 
         mkdir $backup_dir
-        _gpg_log_header $"🚀 Starting GPG backup to (ansi cyan)($backup_dir)(ansi reset)"
+        log-header $"🚀 Starting GPG backup to (ansi cyan)($backup_dir)(ansi reset)"
 
         let tasks = [
             {
@@ -158,18 +134,18 @@ module _gpg {
         }
 
         # Create tgz archive, secure permissions, and remove raw files
-        _gpg_log_step $"📦 Creating archive (ansi green)($archive_path)(ansi reset)..."
+        log-step $"📦 Creating archive (ansi green)($archive_path)(ansi reset)..."
         let tar_res = (do { ^tar -C $backup_dir -zcf $archive_path . } | complete)
         if $tar_res.exit_code != 0 {
-            _gpg_log_err "❌ Failed to create tgz archive."
+            log-err "❌ Failed to create tgz archive."
             if ($tar_res.stderr | is-not-empty) { print $tar_res.stderr }
             return
         }
         do { ^chmod 600 $archive_path } | complete
         rm -rf $backup_dir
-        _gpg_log_ok $"✔ Removed temporary directory ($backup_dir)"
+        log-ok $"✔ Removed temporary directory ($backup_dir)"
 
-        _gpg_log_done "🎉 GPG backup completed successfully!"
+        log-done "🎉 GPG backup completed successfully!"
     }
 
     # Restores GPG keys, permissions, trust database, and user key trust
@@ -185,23 +161,23 @@ module _gpg {
             if $tar_res.exit_code == 0 {
                 $extracted_from_tar = true
             } else {
-                _gpg_log_err $"❌ Failed to extract ($archive_path)"
+                log-err $"❌ Failed to extract ($archive_path)"
                 return
             }
         }
 
-        _gpg_log_header $"🚀 Starting GPG restore from (ansi cyan)($backup_dir)(ansi reset)..."
+        log-header $"🚀 Starting GPG restore from (ansi cyan)($backup_dir)(ansi reset)..."
 
         # 1. Fix ~/.gnupg permissions
         let gnupg_dir = ("~/.gnupg" | path expand)
         if ($gnupg_dir | path exists) {
-            _gpg_log_info "🔒 Setting proper permissions on ~/.gnupg..."
+            log-info "🔒 Setting proper permissions on ~/.gnupg..."
             let current_user = (whoami | str trim)
             do { ^chown -R $current_user $gnupg_dir } | complete
             do { ^chmod 700 $gnupg_dir } | complete
             do { ^find $gnupg_dir -type f -exec chmod 600 {} + } | complete
             do { ^find $gnupg_dir -type d -exec chmod 700 {} + } | complete
-            _gpg_log_ok "✔ Permissions updated on ~/.gnupg"
+            log-ok "✔ Permissions updated on ~/.gnupg"
         }
 
         # 2. Import secret keys
@@ -213,18 +189,18 @@ module _gpg {
         }
 
         # 4. Set ultimate trust on user key
-        _gpg_log_info $"🛡️  Configuring ultimate trust for (ansi cyan_bold)($USER_EMAIL)(ansi reset)..."
+        log-info $"🛡️  Configuring ultimate trust for (ansi cyan_bold)($USER_EMAIL)(ansi reset)..."
         if (which expect | is-not-empty) {
-            _gpg_log_info "🤖 'expect' found. Automating interactive prompt..."
+            log-info "🤖 'expect' found. Automating interactive prompt..."
             let expect_cmd = $"spawn gpg --edit-key ($USER_EMAIL) trust quit; send \"5\\ry\\r\"; expect eof"
             let exp_res = (do { ^expect -c $expect_cmd } | complete)
             if $exp_res.exit_code == 0 {
-                _gpg_log_ok "✅ Ultimate trust set via expect!"
+                log-ok "✅ Ultimate trust set via expect!"
             } else {
-                _gpg_log_err "❌ expect automation failed."
+                log-err "❌ expect automation failed."
             }
         } else {
-            _gpg_log_warn "⚠️  'expect' not installed. Falling back to native GPG trust..."
+            log-warn "⚠️  'expect' not installed. Falling back to native GPG trust..."
             let gpg_list = (do { gpg --with-colons --list-keys $USER_EMAIL } | complete)
             let fpr = if $gpg_list.exit_code == 0 {
                 let rows = ($gpg_list.stdout | lines | each { split row ':' } | where ($it | get 0?) == 'fpr')
@@ -238,31 +214,31 @@ module _gpg {
             }
 
             if ($fpr | is-not-empty) {
-                _gpg_log_info $"🔑 Found fingerprint: (ansi cyan_bold)($fpr)(ansi reset)"
+                log-info $"🔑 Found fingerprint: (ansi cyan_bold)($fpr)(ansi reset)"
                 let trust_res = (do { $"($fpr):6:\n" | gpg --import-ownertrust } | complete)
                 if $trust_res.exit_code == 0 {
-                    _gpg_log_ok "✅ Ultimate trust set via native pipe!"
+                    log-ok "✅ Ultimate trust set via native pipe!"
                 } else {
-                    _gpg_log_err $"❌ Failed to set ultimate trust for ($fpr)"
+                    log-err $"❌ Failed to set ultimate trust for ($fpr)"
                 }
             } else {
-                _gpg_log_err $"❌ Key for '($USER_EMAIL)' not found in keyring!"
+                log-err $"❌ Key for '($USER_EMAIL)' not found in keyring!"
             }
         }
 
         # 5. Restore full ownertrust database
         let ownertrust_file = ($backup_dir | path join "ownertrust.txt")
         if ($ownertrust_file | path exists) {
-            _gpg_log_info "📜 Restoring trust database from ownertrust.txt..."
+            log-info "📜 Restoring trust database from ownertrust.txt..."
             let ot_res = (do { gpg --import-ownertrust $ownertrust_file } | complete)
             if $ot_res.exit_code == 0 {
-                _gpg_log_ok "✅ ownertrust.txt successfully imported!"
+                log-ok "✅ ownertrust.txt successfully imported!"
             } else {
-                _gpg_log_err "❌ Failed to import ownertrust.txt!"
+                log-err "❌ Failed to import ownertrust.txt!"
                 if ($ot_res.stderr | is-not-empty) { print $ot_res.stderr }
             }
         } else {
-            _gpg_log_warn "⚠️  ownertrust.txt not found, skipping."
+            log-warn "⚠️  ownertrust.txt not found, skipping."
         }
 
         # Clean up temporary extracted folder if extracted from archive
@@ -270,7 +246,7 @@ module _gpg {
             rm -rf $backup_dir
         }
 
-        _gpg_log_done "🎉 GPG restore finished!"
+        log-done "🎉 GPG restore finished!"
     }
 }
 

@@ -54,6 +54,8 @@ export def git-clone-if-missing [
     repo_or_url: any,
     target_dir: path
 ] {
+    use ../lib/log.nu [log-step, log-info, log-ok, log-warn, log-err, log-header, log-done]
+
     let repo_info = if ($repo_or_url | describe | str starts-with "record") {
         $repo_or_url
     } else {
@@ -61,15 +63,15 @@ export def git-clone-if-missing [
     }
 
     if not ($target_dir | path exists) {
-        print $"(ansi cyan)🚀 Cloning (ansi cyan_bold)($repo_info.repo)(ansi reset)(ansi cyan) from (ansi cyan_bold)($repo_info.clone_url)(ansi reset)(ansi cyan)...(ansi reset)"
+        log-step $"🚀 Cloning (ansi cyan_bold)($repo_info.repo)(ansi reset)(ansi cyan) from (ansi cyan_bold)($repo_info.clone_url)(ansi reset)(ansi cyan)..."
 
         ^git clone $repo_info.clone_url $target_dir
         if $env.LAST_EXIT_CODE != 0 {
             error make { msg: $"Git clone failed for ($repo_info.clone_url)" }
         }
-        print $"(ansi green_bold)✅ Cloned ($repo_info.repo) successfully!(ansi reset)"
+        log-done $"✅ Cloned ($repo_info.repo) successfully!"
     } else {
-        print $"(ansi yellow)⚡ Directory (ansi yellow_bold)($repo_info.repo)(ansi reset)(ansi yellow) already exists, skipping clone.(ansi reset)"
+        log-warn $"⚡ Directory (ansi yellow_bold)($repo_info.repo)(ansi reset)(ansi yellow) already exists, skipping clone."
     }
 }
 
@@ -79,6 +81,8 @@ export def --env git-clone-to-pj [
     url?: string,
     dir?: path
 ] {
+    use ../lib/log.nu [log-step, log-info, log-ok, log-warn, log-err, log-header, log-done]
+
     let raw_url = ($in | default $url)
     if ($raw_url | is-empty) {
         error make { msg: "Usage: git-clone-to-pj <url> [dir] OR <url> | git-clone-to-pj" }
@@ -88,7 +92,7 @@ export def --env git-clone-to-pj [
     let projects_root = ($dir | default ("~/projects" | path expand))
 
     if not ($projects_root | path exists) {
-        print $"(ansi yellow)📁 Projects directory not found. Creating (ansi yellow_bold)($projects_root)(ansi reset)..."
+        log-warn $"📁 Projects directory not found. Creating (ansi yellow_bold)($projects_root)(ansi reset)..."
         mkdir $projects_root
     }
 
@@ -99,5 +103,5 @@ export def --env git-clone-to-pj [
 
     # Change directory in current shell session
     cd $target_dir
-    print $"(ansi green_bold)📂 Now in: (ansi reset)(ansi cyan_bold)($target_dir)(ansi reset)"
+    log-done $"📂 Now in: (ansi reset)(ansi cyan_bold)($target_dir)"
 }
