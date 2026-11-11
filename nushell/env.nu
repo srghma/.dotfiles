@@ -11,3 +11,6 @@ $env.NIXPKGS_ALLOW_UNFREE = 1
 if ($env.USER? == "srghma") {
   load-env (open ~/.dotfiles/secrets/aristotle-lean-key.env | from toml)
 }
+
+use std/util "path add"
+path add ($nu.home-dir | path join ".dotfiles" "bin")

@@ -12,7 +12,10 @@ let
   cfg = config.programs.carapace;
 
   nushellInitFile = pkgs.runCommand "carapace-nushell-config.nu" { } ''
-    ${getExe cfg.package} _carapace nushell > "$out"
+    ${getExe cfg.package} _carapace nushell \
+      | sed -e '/\$env\.PATH.*carapace\/bin/d' \
+            -e 's|carapace \$spans\.0|^${getExe cfg.package} $spans.0|' \
+      > "$out"
   '';
 
 in

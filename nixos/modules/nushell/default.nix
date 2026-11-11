@@ -4,7 +4,7 @@
 }:
 {
   imports = [
-    ./my-zoxide.nix # bc original does have nushell support
+    # ./my-zoxide.nix # bc original does have nushell support
     # ./my-starship.nix # bc original does load symlinks
     ./my-oh-my-posh.nix # bc original does load symlinks
     ./carapace.nix # TODO: submit to nixpkgs
