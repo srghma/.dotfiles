@@ -3,7 +3,7 @@ module _monitor {
 
     # Applies a cropped custom virtual monitor over an output using per-mille (‰) margins
     export def monitor-crop [
-        --left (-l): int = 35          # Inset per mille (‰) from left (35 = 3.5%)
+        --left (-l): int = 40          # Inset per mille (‰) from left (35 = 3.5%)
         --right (-r): int = 0          # Inset per mille (‰) from right
         --top (-t): int = 0            # Inset per mille (‰) from top
         --bottom (-b): int = 0         # Inset per mille (‰) from bottom

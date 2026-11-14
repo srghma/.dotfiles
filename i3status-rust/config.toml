@@ -46,16 +46,26 @@ warning = 20.0
 alert = 10.0
 format = " $icon root: $available.eng(w:2) "
 
-# 4. Memory & Swap
+# 4.1 Memory
 [[block]]
 block = "memory"
 interval = 2
-format = " $icon $mem_used_percents.eng(w:2) "
-format_alt = " $icon_swap $swap_used_percents.eng(w:2) "
+format = "󰍛 $mem_total.eng(w:5,p:Gi,force_prefix,hide_prefix,hide_unit): $mem_used.eng(w:5,p:Gi,force_prefix,hide_prefix,hide_unit)=$mem_used_percents.eng(w:2) $mem_total_used.eng(w:5,p:Gi,force_prefix,hide_prefix,hide_unit)=$mem_total_used_percents.eng(w:2)"
+
 warning_mem = 80
 critical_mem = 95
+
 [block.theme_overrides]
-idle_fg = "#B58900"
+idle_fg = "#268BD2"
+
+# 4.2 Swap
+[[block]]
+block = "memory"
+interval = 2
+format = "󰓅 $swap_used.eng(w:5,p:Gi,force_prefix,hide_prefix,hide_unit)/$swap_total.eng(w:5,p:Gi,force_prefix,hide_prefix,hide_unit)=$swap_used_percents.eng(w:2)"
+
+[block.theme_overrides]
+idle_fg = "#9933CC"
 
 # 5. Network
 [[block]]

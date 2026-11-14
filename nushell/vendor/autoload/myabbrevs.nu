@@ -2,9 +2,13 @@ const my_abbreviations = {
     # Custom Git
     gs: "git status"
     ghcr: "gh repo create ($env.PWD | path basename) --source=. --public --remote=origin --push"
-    gpo: "git po"
-    glo: "git graph"
+    gpo: "git push -u origin (git rev-parse --abbrev-ref HEAD)"
+    gpof: "git push -u origin (git rev-parse --abbrev-ref HEAD) --force-with-lease"
+    glo: "git log"
+    ggr: "git graph"
     grH: "git reset HEAD"
+    gst: "git stash save"
+    gsta: "git stash apply"
     "grH~": "git reset HEAD~"
     "grH~~": "git reset HEAD~~"
     "grH~~~": "git reset HEAD~~~"
@@ -32,7 +36,7 @@ const my_abbreviations = {
     pjodot: "cd ~/.dotfiles; nvim"
     # nh: "n-history"
     rmf: "rm -rfd"
-    nix: "nix --extra-access-tokens $\"github.com=(gh auth token | str trim)\""
+    # nix: "nix --extra-access-tokens $\"github.com=(gh auth token | str trim)\""
 
     # Docker - ReMove - All - Containers - (and) - Images
     # drmaci: "try { docker stop ...(docker ps -aq | lines) }; try { docker rm ...(docker ps -aq | lines) }"
