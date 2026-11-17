@@ -178,9 +178,9 @@ play_sound(){
 
 show_message(){
     play_sound &
-    if [[ -n $USE_NOTIFY_SEND ]] && which notify-send; then
+    if [[ -n $USE_NOTIFY_SEND ]] && command -v notify-send >/dev/null; then
         show_notify "$1"
-    elif [[ -z $DONT_USE_WISH ]] && which wish; then
+    elif [[ -z $DONT_USE_WISH ]] && command -v wish >/dev/null; then
         show_popup "$1"
     else
         show_nagbar "$1"

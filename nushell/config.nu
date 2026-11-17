@@ -60,12 +60,16 @@ $env.config.keybindings ++= [
         modifier: shift
         keycode: char_a
         mode: [vi_normal]
-        event: {
-            until: [
-                { send: HistoryHintComplete }
-                { edit: MoveToLineEnd }
-            ]
-        }
+        event: [
+            {
+                until: [
+                    { send: HistoryHintComplete }
+                    { edit: MoveToLineEnd }
+                ]
+            }
+            { send: ViChangeMode, mode: insert }
+            { edit: MoveToLineEnd }
+        ]
     }
     {
         name: ctrl_u_delete_to_line_start

@@ -137,7 +137,7 @@
               # dunsted-volume = pkgs.callPackage inputs.dunsted-volume { };
               # nix-alien-pkgs = inputs.nix-alien-pkgs.packages.${system};
               # kb-light = pkgs.callPackage inputs.kb-light { };
-              # i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
+              i3-battery-popup = pkgs.callPackage ./nixos/pkgs/i3-battery-popup { };
               srghma-i3-volume = pkgs.callPackage ./nixos/pkgs/srghma-i3-volume { };
               srghma-i3-screenshot = pkgs.callPackage ./nixos/pkgs/srghma-i3-screenshot { };
               srghma-i3-brightness = pkgs.callPackage ./nixos/pkgs/srghma-i3-brightness { };
@@ -295,7 +295,7 @@
 
                 # bfg-repo-cleaner # removes passwords from git repo
 
-                #i3-battery-popup
+                i3-battery-popup
                 #nox
                 nix-prefetch-git
                 #gimp

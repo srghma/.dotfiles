@@ -148,6 +148,18 @@ for _, key in ipairs({
 		}),
 	},
 
+	-- Move current pane to a new tab
+	{
+		key = "b",
+		mods = "LEADER",
+		action = wezterm.action_callback(function(_, pane)
+			local tab, _ = pane:move_to_new_tab()
+			if tab then
+				tab:activate()
+			end
+		end),
+	},
+
 	-- Close current pane
 	{
 		key = "x",
@@ -429,8 +441,11 @@ for _, key in ipairs({
 
 	-- -- BIG word navigation (whitespace-delimited)
 	-- Jump forward/backward by semantic zone
-	{ key = "}", mods = "SHIFT", action = act.CopyMode("MoveForwardSemanticZone") },
-	{ key = "{", mods = "SHIFT", action = act.CopyMode("MoveBackwardSemanticZone") },
+	-- { key = "}", mods = "NONE", action = act.CopyMode("MoveForwardSemanticZone") },
+	-- { key = "}", mods = "SHIFT", action = act.CopyMode("MoveForwardSemanticZone") },
+	-- { key = "{", mods = "SHIFT", action = act.CopyMode("MoveBackwardSemanticZone") },
+	-- { key = "}", mods = "SHIFT", action = act.CopyMode("MoveForwardParagraph") },
+	-- { key = "{", mods = "SHIFT", action = act.CopyMode("MoveBackwardParagraph") },
 
 	-- Line navigation
 	{ key = "0", mods = "NONE", action = act.CopyMode("MoveToStartOfLine") },

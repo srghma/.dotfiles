@@ -17,7 +17,7 @@
     fd
     jq
     carapace
-    wezterm
+    # wezterm # `cd ~/projects/wezterm/; gco srghma/my-all; nix profile upgrade nix` to install
     # starship
 
     # System & GUI utilities
