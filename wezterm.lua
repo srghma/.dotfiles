@@ -7,6 +7,34 @@ local smart_splits = wezterm.plugin.require("https://www.github.com/smart-splits
 
 local config = wezterm.config_builder()
 
+-- local function open_frozen_scrollback(window, pane)
+-- 	local dims = pane:get_dimensions()
+-- 	local text = pane:get_logical_lines_as_text(dims.scrollback_rows)
+-- 	local name = os.tmpname()
+-- 	local f = io.open(name, "w+")
+-- 	if not f then
+-- 		return
+-- 	end
+-- 	f:write(text)
+-- 	f:flush()
+-- 	f:close()
+-- 	window:perform_action(
+-- 		act.SpawnCommandInNewTab({
+-- 			args = {
+-- 				"sh",
+-- 				"-c",
+-- 				'nvim -c "setlocal buftype=nofile bufhidden=wipe noswapfile" -c "normal! G" "$1"; rm -f "$1"',
+-- 				"_",
+-- 				name,
+-- 			},
+-- 			set_environment_variables = {
+-- 				KITTY_SCROLLBACK_NVIM = "true",
+-- 			},
+-- 		}),
+-- 		pane
+-- 	)
+-- end
+
 -- ============================================================================
 -- LEADER
 -- ============================================================================
@@ -123,6 +151,11 @@ for _, key in ipairs({
 	{
 		key = "]",
 		mods = "LEADER|CTRL",
+		-- 	action = wezterm.action_callback(open_frozen_scrollback),
+		-- },
+		-- {
+		-- 	key = "[",
+		-- 	mods = "LEADER",
 		action = act.ActivateCopyMode,
 	},
 

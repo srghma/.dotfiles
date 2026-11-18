@@ -66,7 +66,7 @@ return {
   { import = "astrocommunity.search.nvim-spectre" },
   -- { import = "astrocommunity.pack.haskell" },
   -- { import = "astrocommunity.pack.purescript" },
-  { import = "astrocommunity.pack.lean" },
+  -- { import = "astrocommunity.pack.lean" },
   -- dofile "/home/srghma/projects/astrocommunity/lua/astrocommunity/pack/idris2/init.lua",
 
   -- { import = "astrocommunity.pack.purescript" },
