@@ -23,28 +23,26 @@
 -- }
 
 return {
-  'echasnovski/mini.trailspace',
-  event = { 'BufReadPre', 'BufNewFile' },
+  "echasnovski/mini.trailspace",
+  event = { "BufReadPre", "BufNewFile" },
   config = function()
     vim.cmd [[hi MiniTrailspace guibg=#b58900]]
 
-    require('mini.trailspace').setup()
+    require("mini.trailspace").setup()
 
     -- trim any leftover whitespace if conform has not been able to do so
-    vim.api.nvim_create_autocmd({ 'BufWrite' }, {
-      callback = function()
-        require('mini.trailspace').trim()
-      end,
+    vim.api.nvim_create_autocmd({ "BufWrite" }, {
+      callback = function() require("mini.trailspace").trim() end,
     })
 
-		local trailspace = require("mini.trailspace")
-		trailspace.setup()
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = vim.api.nvim_create_augroup("trim-whitespace", { clear = true }),
-			callback = function()
-				trailspace.trim()
-				trailspace.trim_last_lines()
-			end,
-		})
+    local trailspace = require "mini.trailspace"
+    trailspace.setup()
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup("trim-whitespace", { clear = true }),
+      callback = function()
+        trailspace.trim()
+        trailspace.trim_last_lines()
+      end,
+    })
   end,
 }

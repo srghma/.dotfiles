@@ -13,12 +13,12 @@
 
 ---@type LazySpec
 return {
-  'rapan931/lasterisk.nvim',                              -- improved * search
+  "rapan931/lasterisk.nvim", -- improved * search
   lazy = true,
-  event = { 'BufReadPost', 'BufAdd', 'BufNewFile' },
+  event = { "BufReadPost", "BufAdd", "BufNewFile" },
   config = function()
-    vim.keymap.set('n', '*',  function() require("lasterisk").search() end)
-    vim.keymap.set('n', 'g*', function() require("lasterisk").search({ is_whole = false }) end)
-    vim.keymap.set('x', '*',  function() require("lasterisk").search({ is_whole = false }) end)
-  end
+    vim.keymap.set("n", "*", function() require("lasterisk").search() end)
+    vim.keymap.set("n", "g*", function() require("lasterisk").search { is_whole = false } end)
+    vim.keymap.set("x", "*", function() require("lasterisk").search { is_whole = false } end)
+  end,
 }

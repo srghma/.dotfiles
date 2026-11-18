@@ -56,10 +56,10 @@ return {
         augend.integer.alias.hex,
         augend.date.alias["%Y/%m/%d"],
         -- augend.constant.alias.bool,
-        augend.constant.new{ elements = {"and", "or"}, word = true, cyclic = true },
-        augend.constant.new{ elements = {"true", "false"}, word = true, cyclic = true },
-        augend.constant.new{ elements = {"True", "False"}, word = true, cyclic = true },
-        augend.constant.new{ elements = {"&&", "||"}, word = false, cyclic = true },
+        augend.constant.new { elements = { "and", "or" }, word = true, cyclic = true },
+        augend.constant.new { elements = { "true", "false" }, word = true, cyclic = true },
+        augend.constant.new { elements = { "True", "False" }, word = true, cyclic = true },
+        augend.constant.new { elements = { "&&", "||" }, word = false, cyclic = true },
         augend.semver.alias.semver,
         augend.date.new {
           pattern = "%B", -- titlecased month names

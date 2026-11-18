@@ -2,9 +2,9 @@ return {
   {
     "gbprod/substitute.nvim",
     opts = {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
     },
     dependencies = {
       {
@@ -13,7 +13,7 @@ return {
           mappings = {
             x = {
               ["X"] = {
-                function() return require('substitute.exchange').visual() end,
+                function() return require("substitute.exchange").visual() end,
                 desc = "Exchange selection",
               },
               -- ["gx"] = {
@@ -24,12 +24,12 @@ return {
             },
             n = {
               ["cx"] = {
-                function() return require('substitute.exchange').operator() end,
+                function() return require("substitute.exchange").operator() end,
                 noremap = true,
                 desc = "Exchange operator",
               },
               ["cxx"] = {
-                function() return require('substitute.exchange').line() end,
+                function() return require("substitute.exchange").line() end,
                 noremap = true,
                 desc = "Exchange line",
               },

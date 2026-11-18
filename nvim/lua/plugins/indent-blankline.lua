@@ -27,13 +27,13 @@ return {
     -- create the highlight groups in the highlight setup hook, so they are reset
     -- every time the colorscheme changes
     hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-      vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#8B4648" })     -- Darker Red
-      vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#9A8354" })  -- Darker Yellow
-      vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#4A6A8D" })    -- Darker Blue
-      vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#815C42" })  -- Darker Orange
-      vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#4F7047" })   -- Darker Green
-      vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#7A608B" })  -- Darker Violet
-      vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#4B6D71" })    -- Darker Cyan
+      vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#8B4648" }) -- Darker Red
+      vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#9A8354" }) -- Darker Yellow
+      vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#4A6A8D" }) -- Darker Blue
+      vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#815C42" }) -- Darker Orange
+      vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#4F7047" }) -- Darker Green
+      vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#7A608B" }) -- Darker Violet
+      vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#4B6D71" }) -- Darker Cyan
     end)
 
     require("ibl").setup {
@@ -61,7 +61,7 @@ return {
           "toggleterm",
           "Trouble",
         },
-      }
+      },
     }
-  end
+  end,
 }
